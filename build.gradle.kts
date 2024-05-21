@@ -92,16 +92,15 @@ configure<SourceSetContainer> {
 }
 
 springBoot {
-	mainClass.value("pagopa.payhub.ionotification.IoNotificationApplication")
+	mainClass.value("it.gov.pagopa.payhub.ionotification.IoNotificationApplication")
 }
 
 openApiGenerate {
 	generatorName.set("spring")
 	inputSpec.set("$rootDir/openapi/p4pa-io-notification.openapi.yaml")
 	outputDir.set("$projectDir/build/generated")
-	apiPackage.set("org.openapi.example.api")
-	invokerPackage.set("org.openapi.example.invoker")
-	modelPackage.set("org.openapi.example.model")
+	apiPackage.set("openapi.pagopa.payhub.controller")
+	modelPackage.set("openapi.pagopa.payhub.model")
 	configOptions.set(mapOf(
 			"dateLibrary" to "java8",
 			"requestMappingMode" to "api_interface",

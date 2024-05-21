@@ -1,4 +1,4 @@
-package pagopa.payhub.ionotification;
+package it.gov.pagopa.payhub.ionotification;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
