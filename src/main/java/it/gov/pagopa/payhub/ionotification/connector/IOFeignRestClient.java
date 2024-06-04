@@ -1,8 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.connector;
 
-import it.gov.pagopa.payhub.ionotification.dto.KeysDTO;
-import it.gov.pagopa.payhub.ionotification.dto.ServiceRequestDTO;
-import it.gov.pagopa.payhub.ionotification.dto.ServiceResponseDTO;
+import it.gov.pagopa.payhub.ionotification.dto.*;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
@@ -32,6 +30,15 @@ public interface IOFeignRestClient {
     KeysDTO getServiceKeys(
             @PathVariable("serviceId") String serviceId,
             @RequestHeader("Ocp-Apim-Subscription-Key") String subscriptionKey);
+
+    @PostMapping(
+            value = "/api/v1/profiles",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    ProfileResource getProfile(
+            @RequestBody @Valid FiscalCodeDTO fiscalCode,
+            @RequestHeader("Ocp-Apim-Subscription-Key") String token);
 
 
 }

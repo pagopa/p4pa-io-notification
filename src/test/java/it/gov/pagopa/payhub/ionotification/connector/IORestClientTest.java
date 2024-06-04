@@ -23,6 +23,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 
+import java.util.ArrayList;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -66,7 +68,7 @@ class IORestClientTest {
     @Test
     void givenServiceWhenGetServiceTokenThenSuccess() throws JsonProcessingException {
 
-        wireMockServer.stubFor(get(urlEqualTo("/manage/services/"+"SERVICE_ID"+"/keys"))
+        wireMockServer.stubFor(get(urlEqualTo("/manage/services/SERVICE_ID/keys"))
                 .willReturn(aResponse()
                         .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                         .withBody(new ObjectMapper().writeValueAsString(createServiceIOKeys()))
@@ -77,6 +79,23 @@ class IORestClientTest {
         KeysDTO keys = ioRestConnector.getServiceKeys("SERVICE_ID");
 
         assertNotNull(keys);
+    }
+
+    @Test
+    void givenFiscalCodeWhenGetUserProfileTokenThenSuccess() throws JsonProcessingException {
+
+        wireMockServer.stubFor(post(urlEqualTo("/api/v1/profiles"))
+                .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(createUserProfile())))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(new ObjectMapper().writeValueAsString(createProfileResource()))
+                        .withStatus(HttpStatus.OK.value())
+                )
+        );
+
+        ProfileResource profile = ioRestConnector.getProfile(createUserProfile());
+
+        assertNotNull(profile);
     }
 
     private ServiceRequestDTO createServiceRequestDTO() {
@@ -136,6 +155,21 @@ class IORestClientTest {
                 .secondaryKey("SECONDARY_KEY")
                 .build();
     }
+
+    private ProfileResource createProfileResource(){
+        return ProfileResource.builder()
+                .senderAllowed(true)
+                .preferredLanguages(new ArrayList<>())
+                .build();
+    }
+
+    private FiscalCodeDTO createUserProfile(){
+        return FiscalCodeDTO.builder()
+                .fiscalCode("FISCAL_CODE")
+                .build();
+    }
+
+
     private static WireMockServer wireMockServer;
 
     public static class WireMockInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
