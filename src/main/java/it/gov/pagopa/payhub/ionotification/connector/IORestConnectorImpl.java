@@ -1,5 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.connector;
 
+import it.gov.pagopa.payhub.ionotification.dto.KeysDTO;
 import it.gov.pagopa.payhub.ionotification.dto.ServiceRequestDTO;
 import it.gov.pagopa.payhub.ionotification.dto.ServiceResponseDTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,5 +20,10 @@ public class IORestConnectorImpl implements IORestConnector{
     @Override
     public ServiceResponseDTO createService(ServiceRequestDTO serviceRequestDTO) {
         return ioFeignRestClient.createService(serviceRequestDTO, subscriptionKey);
+    }
+
+    @Override
+    public KeysDTO getServiceKeys(String serviceId) {
+        return ioFeignRestClient.getServiceKeys(serviceId, subscriptionKey);
     }
 }
