@@ -21,7 +21,6 @@ public interface IOFeignRestClient {
             @RequestBody @Valid ServiceRequestDTO serviceRequestDTO,
             @RequestHeader("Ocp-Apim-Subscription-Key") String subscriptionKey);
 
-
     @GetMapping(
             value = "/manage/services/{serviceId}/keys",
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -38,7 +37,13 @@ public interface IOFeignRestClient {
     @ResponseStatus(HttpStatus.OK)
     ProfileResource getProfile(
             @RequestBody @Valid FiscalCodeDTO fiscalCode,
-            @RequestHeader("Ocp-Apim-Subscription-Key") String token);
+            @RequestHeader("Ocp-Apim-Subscription-Key") String subscriptionKey);
 
-
+    @PostMapping(
+            value = "/api/v1/messages",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    NotificationResource sendNotification(
+            @RequestBody @Valid NotificationDTO notificationDTO,
+            @RequestHeader("Ocp-Apim-Subscription-Key") String subscriptionKey);
 }

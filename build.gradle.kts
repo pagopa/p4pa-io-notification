@@ -38,6 +38,7 @@ val janinoVersion = "3.1.12"
 val openApiToolsVersion = "0.2.6"
 val wiremockVersion = "3.5.4"
 val snakeYamlVersion = "2.0"
+val hibernateValidatorVersion = "8.0.1.Final"
 
 
 dependencies {
@@ -49,6 +50,7 @@ dependencies {
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 	implementation("org.openapitools:jackson-databind-nullable:$openApiToolsVersion")
 	implementation ("org.springframework.cloud:spring-cloud-starter-openfeign")
+	implementation("org.hibernate.validator:hibernate-validator:$hibernateValidatorVersion")
 
 	// Security fixes
 	implementation("org.yaml:snakeyaml:$snakeYamlVersion")

@@ -29,4 +29,9 @@ public class IORestConnectorImpl implements IORestConnector{
     public ProfileResource getProfile(FiscalCodeDTO fiscalCode) {
         return ioFeignRestClient.getProfile(fiscalCode, subscriptionKey);
     }
+
+    @Override
+    public NotificationResource sendNotification(NotificationDTO notificationDTO) {
+        return ioFeignRestClient.sendNotification(notificationDTO, subscriptionKey);
+    }
 }

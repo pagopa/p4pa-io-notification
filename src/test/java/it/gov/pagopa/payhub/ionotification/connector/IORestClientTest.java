@@ -71,7 +71,7 @@ class IORestClientTest {
         wireMockServer.stubFor(get(urlEqualTo("/manage/services/SERVICE_ID/keys"))
                 .willReturn(aResponse()
                         .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .withBody(new ObjectMapper().writeValueAsString(createServiceIOKeys()))
+                        .withBody(new ObjectMapper().writeValueAsString(getTokenIOResponse()))
                         .withStatus(HttpStatus.OK.value())
                 )
         );
@@ -85,17 +85,34 @@ class IORestClientTest {
     void givenFiscalCodeWhenGetUserProfileTokenThenSuccess() throws JsonProcessingException {
 
         wireMockServer.stubFor(post(urlEqualTo("/api/v1/profiles"))
-                .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(createUserProfile())))
+                .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(getUserProfileRequest())))
                 .willReturn(aResponse()
                         .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .withBody(new ObjectMapper().writeValueAsString(createProfileResource()))
+                        .withBody(new ObjectMapper().writeValueAsString(getUserProfileResponse()))
                         .withStatus(HttpStatus.OK.value())
                 )
         );
 
-        ProfileResource profile = ioRestConnector.getProfile(createUserProfile());
+        ProfileResource profile = ioRestConnector.getProfile(getUserProfileRequest());
 
         assertNotNull(profile);
+    }
+
+    @Test
+    void givenServiceWhenSendNotificationTokenThenSuccess() throws JsonProcessingException {
+
+        wireMockServer.stubFor(post(urlEqualTo("/api/v1/messages"))
+                .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(sendNotificationRequest())))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(new ObjectMapper().writeValueAsString(new NotificationResource("ID")))
+                        .withStatus(HttpStatus.OK.value())
+                )
+        );
+
+        NotificationResource notification = ioRestConnector.sendNotification(sendNotificationRequest());
+
+        assertNotNull(notification);
     }
 
     private ServiceRequestDTO createServiceRequestDTO() {
@@ -149,22 +166,34 @@ class IORestClientTest {
                 .build();
     }
 
-    private KeysDTO createServiceIOKeys() {
+    private KeysDTO getTokenIOResponse() {
         return KeysDTO.builder()
                 .primaryKey("PRIMARY_KEY")
                 .secondaryKey("SECONDARY_KEY")
                 .build();
     }
 
-    private ProfileResource createProfileResource(){
+    private ProfileResource getUserProfileResponse(){
         return ProfileResource.builder()
                 .senderAllowed(true)
                 .preferredLanguages(new ArrayList<>())
                 .build();
     }
 
-    private FiscalCodeDTO createUserProfile(){
+    private FiscalCodeDTO getUserProfileRequest(){
         return FiscalCodeDTO.builder()
+                .fiscalCode("FISCAL_CODE")
+                .build();
+    }
+
+    private NotificationDTO sendNotificationRequest(){
+        MessageContent messageContent = MessageContent.builder()
+                .subject("SUBJECT")
+                .markdown("MARKDOWN")
+                .build();
+        return NotificationDTO.builder()
+                .content(messageContent)
+                .timeToLive(10L)
                 .fiscalCode("FISCAL_CODE")
                 .build();
     }
