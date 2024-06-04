@@ -4,6 +4,13 @@ spring:
     version: ${version}
   jmx.enabled: true
 
+
+rest-client:
+  backend-io-manage:
+    service:
+      base-url: \${IO_MANAGE_BACKEND_SERVICE_BASE_URL:}
+      subscriptionKey: \${IO_BACKEND_SERVICE_SUBSCRIPTION_API_KEY:}
+
 management:
   endpoint:
     health:

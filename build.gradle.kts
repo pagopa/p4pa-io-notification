@@ -26,9 +26,19 @@ repositories {
 	mavenCentral()
 }
 
+
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
+	}
+}
+
 val springDocOpenApiVersion = "2.5.0"
 val janinoVersion = "3.1.12"
-val openApiTools = "0.2.6"
+val openApiToolsVersion = "0.2.6"
+val wiremockVersion = "3.5.4"
+val snakeYamlVersion = "2.0"
+
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
@@ -37,16 +47,22 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocOpenApiVersion")
 	implementation("org.codehaus.janino:janino:$janinoVersion")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-	implementation("org.openapitools:jackson-databind-nullable:$openApiTools")
+	implementation("org.openapitools:jackson-databind-nullable:$openApiToolsVersion")
+	implementation ("org.springframework.cloud:spring-cloud-starter-openfeign")
 
-	compileOnly("org.projectlombok:lombok")
-	annotationProcessor("org.projectlombok:lombok")
+	// Security fixes
+	implementation("org.yaml:snakeyaml:$snakeYamlVersion")
 
 	//	Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.junit.jupiter:junit-jupiter-engine")
 	testImplementation("org.mockito:mockito-core")
+	testImplementation ("org.projectlombok:lombok")
+	testImplementation ("org.wiremock:wiremock-standalone:$wiremockVersion")
+
+	compileOnly("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
 
 }
 
