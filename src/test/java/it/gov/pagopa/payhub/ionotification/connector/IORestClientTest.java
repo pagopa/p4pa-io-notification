@@ -47,7 +47,7 @@ class IORestClientTest {
 
 
     @Test
-    void createService() throws JsonProcessingException {
+    void givenCreateServiceThenSuccess() throws JsonProcessingException {
 
         wireMockServer.stubFor(post(urlEqualTo("/manage/services"))
                 .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(createServiceRequestDTO())))
