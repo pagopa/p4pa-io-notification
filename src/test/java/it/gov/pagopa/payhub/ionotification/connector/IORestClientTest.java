@@ -63,6 +63,22 @@ class IORestClientTest {
         assertNotNull(serviceResponseDTO);
     }
 
+    @Test
+    void givenServiceWhenGetServiceTokenThenSuccess() throws JsonProcessingException {
+
+        wireMockServer.stubFor(get(urlEqualTo("/manage/services/"+"SERVICE_ID"+"/keys"))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(new ObjectMapper().writeValueAsString(createServiceIOKeys()))
+                        .withStatus(HttpStatus.OK.value())
+                )
+        );
+
+        KeysDTO keys = ioRestConnector.getServiceKeys("SERVICE_ID");
+
+        assertNotNull(keys);
+    }
+
     private ServiceRequestDTO createServiceRequestDTO() {
         return ServiceRequestDTO.builder()
                 .serviceName("SERVICE_NAME")
@@ -111,6 +127,13 @@ class IORestClientTest {
                 .tosUrl("TOS_URL")
                 .scope("SCOPE")
                 .topic(new TopicDTO(0,"Altro"))
+                .build();
+    }
+
+    private KeysDTO createServiceIOKeys() {
+        return KeysDTO.builder()
+                .primaryKey("PRIMARY_KEY")
+                .secondaryKey("SECONDARY_KEY")
                 .build();
     }
     private static WireMockServer wireMockServer;
