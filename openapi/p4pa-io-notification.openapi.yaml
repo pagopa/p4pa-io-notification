@@ -208,7 +208,6 @@ components:
       type: object
       required:
         - fiscalCode
-        - MessageContent
       properties:
         fiscalCode:
           type: string
