@@ -6,6 +6,9 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import it.gov.pagopa.payhub.ionotification.config.IORestConnectorConfig;
 import it.gov.pagopa.payhub.ionotification.dto.*;
+import it.gov.pagopa.payhub.model.generated.OrganizationRequestDTO;
+import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
+import it.gov.pagopa.payhub.model.generated.ServiceRequestMetadataDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,10 +120,10 @@ class IORestClientTest {
 
     private ServiceRequestDTO createServiceRequestDTO() {
         return ServiceRequestDTO.builder()
-                .serviceName("SERVICE_NAME")
+                .name("SERVICE_NAME")
                 .description("DESCRIPTION")
-                .organization(createOrganizationDTO())
-                .serviceMetadata(createServiceRequestMetadataDTO())
+                .organization(createOrganizationRequestDTO())
+                .metadata(createServiceRequestMetadataDTO())
                 .build();
     }
 
@@ -136,8 +139,16 @@ class IORestClientTest {
                 .build();
     }
 
-    private static OrganizationDTO createOrganizationDTO() {
-        return OrganizationDTO.builder()
+    private static OrganizationRequestDTO createOrganizationRequestDTO() {
+        return OrganizationRequestDTO.builder()
+                .departmentName("PRODUCT_DEPARTMENT_NAME")
+                .name("ORGANIZATION_NAME")
+                .fiscalCode("ORGANIZATION_VAT")
+                .build();
+    }
+
+    private static OrganizationResponseDTO createOrganizationResponseDTO() {
+        return OrganizationResponseDTO.builder()
                 .departmentName("PRODUCT_DEPARTMENT_NAME")
                 .organizationName("ORGANIZATION_NAME")
                 .organizationFiscalCode("ORGANIZATION_VAT")
@@ -149,7 +160,7 @@ class IORestClientTest {
         return ServiceResponseDTO.builder()
                 .id("SERVICE_ID")
                 .serviceName("SERVICE_NAME")
-                .organization(createOrganizationDTO())
+                .organization(createOrganizationResponseDTO())
                 .serviceMetadata(serviceMetadataDTO)
                 .build();
     }

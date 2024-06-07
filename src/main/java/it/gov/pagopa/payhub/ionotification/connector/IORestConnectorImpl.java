@@ -1,6 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.connector;
 
 import it.gov.pagopa.payhub.ionotification.dto.*;
+import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

@@ -19,7 +19,7 @@ public class ServiceResponseDTO {
     @JsonProperty("name")
     private String serviceName;
     private String description;
-    private OrganizationDTO organization;
+    private OrganizationResponseDTO organization;
     @JsonProperty("require_secure_channel")
     private Boolean requireSecureChannels;
     @JsonProperty("authorized_recipients")
