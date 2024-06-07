@@ -1,6 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.connector;
 
 import it.gov.pagopa.payhub.ionotification.dto.*;
+import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;

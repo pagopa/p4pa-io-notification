@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Builder
-public class OrganizationDTO {
+public class OrganizationResponseDTO {
     @JsonProperty("name")
     private String organizationName;
     @JsonProperty("fiscal_code")
