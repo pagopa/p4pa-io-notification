@@ -9,7 +9,7 @@ paths:
   /create/service/{enteId}/{tipoDovutoId}:
     post:
       tags:
-        - notification
+        - ioNotification
       operationId: createService
       parameters:
         - name: enteId
@@ -71,7 +71,7 @@ paths:
   /send/message/{enteId}/{tipoDovutoId}:
     post:
       tags:
-        - notification
+        - ioNotification
       operationId: sendMessage
       parameters:
         - name: enteId
@@ -134,57 +134,55 @@ components:
     ServiceRequestDTO:
       type: object
       required:
-        - serviceName
+        - name
         - description
         - organization
-        - OrganizationDTO
-        - ServiceMetadataDTO
+        - metadata
       properties:
-        serviceName:
+        name:
           type: string
         description:
           type: string
         organization:
-          $ref: '#/components/schemas/OrganizationDTO'
-        requireSecureChannels:
+          $ref: '#/components/schemas/OrganizationRequestDTO'
+        require_secure_channel:
           type: boolean
-        authorizedCidrs:
+        authorized_cidrs:
           type: array
           items:
             type: string
-        authorizedRecipients:
+        authorized_recipients:
           type: array
           items:
             type: string
-        serviceMetadata:
-          $ref: '#/components/schemas/ServiceMetadataDTO'
-    OrganizationDTO:
+        metadata:
+          $ref: '#/components/schemas/ServiceRequestMetadataDTO'
+    OrganizationRequestDTO:
       type: object
       required:
-        - organizationName
-        - organizationFiscalCode
+        - name
+        - fiscal_code
       properties:
-        organizationName:
+        name:
           type: string
-        organizationFiscalCode:
+        fiscal_code:
           type: string
-        departmentName:
+        department_name:
           type: string
-    ServiceMetadataDTO:
+    ServiceRequestMetadataDTO:
       type: object
       required:
         - scope
-        - topicId
       properties:
-        webUrl:
+        web_url:
           type: string
-        appIos:
+        app_ios:
           type: string
-        appAndroid:
+        app_android:
           type: string
-        tosUrl:
+        tos_url:
           type: string
-        privacyUrl:
+        privacy_url:
           type: string
         address:
           type: string
@@ -196,13 +194,13 @@ components:
           type: string
         cta:
           type: string
-        tokenName:
+        token_name:
           type: string
-        supportUrl:
+        support_url:
           type: string
         scope:
           type: string
-        topicId:
+        topic_id:
           type: integer
     NotificationDTO:
       type: object
