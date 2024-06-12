@@ -9,7 +9,9 @@ public interface IORestConnector {
 
     KeysDTO getServiceKeys(String serviceId);
 
-    ProfileResource getProfile(FiscalCodeDTO fiscalCode);
+    ProfileResource getProfile(FiscalCodeDTO fiscalCode, String primaryKey);
 
-    NotificationResource sendNotification(NotificationDTO notificationDTO);
+    NotificationResource sendNotification(NotificationDTO notificationDTO, String primaryKey);
+
+    ServicesListDTO getAllServices(Integer limit, Integer offset);
 }

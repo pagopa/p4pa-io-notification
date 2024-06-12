@@ -47,4 +47,14 @@ public interface IOFeignRestClient {
     NotificationResource sendNotification(
             @RequestBody @Valid NotificationDTO notificationDTO,
             @RequestHeader("Ocp-Apim-Subscription-Key") String subscriptionKey);
+
+    @GetMapping(
+            value = "/manage/services",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    ServicesListDTO getAllServices(
+            @RequestParam(required = false) Integer limit,
+            @RequestParam(required = false) Integer offset,
+            @RequestHeader("Ocp-Apim-Subscription-Key") String subscriptionKey);
 }

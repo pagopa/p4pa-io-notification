@@ -27,6 +27,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -96,9 +97,24 @@ class IORestClientTest {
                 )
         );
 
-        ProfileResource profile = ioRestConnector.getProfile(getUserProfileRequest());
+        ProfileResource profile = ioRestConnector.getProfile(getUserProfileRequest(), "TOKEN");
 
         assertNotNull(profile);
+    }
+
+    @Test
+    void givenGetAllServicesThenSuccess() throws JsonProcessingException {
+        wireMockServer.stubFor(get(urlEqualTo("/manage/services"))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(new ObjectMapper().writeValueAsString(getAllServicesResponse()))
+                        .withStatus(HttpStatus.OK.value())
+                )
+        );
+
+        ServicesListDTO services = ioRestConnector.getAllServices(null,null);
+
+        assertNotNull(services);
     }
 
     @Test
@@ -113,7 +129,7 @@ class IORestClientTest {
                 )
         );
 
-        NotificationResource notification = ioRestConnector.sendNotification(sendNotificationRequest());
+        NotificationResource notification = ioRestConnector.sendNotification(sendNotificationRequest(), "TOKEN");
 
         assertNotNull(notification);
     }
@@ -206,6 +222,17 @@ class IORestClientTest {
                 .content(messageContent)
                 .timeToLive(10L)
                 .fiscalCode("FISCAL_CODE")
+                .build();
+    }
+
+    private ServicesListDTO getAllServicesResponse(){
+        ServicePaginatedResponseDTO serviceList = ServicePaginatedResponseDTO.builder()
+                .status(new StatusDTO("VALUE", "REASON"))
+                .lastUpdate("DATE")
+                .build();
+        return ServicesListDTO.builder()
+                .serviceList(List.of(serviceList))
+                .pagination(new PaginationDTO(0,0,0))
                 .build();
     }
 

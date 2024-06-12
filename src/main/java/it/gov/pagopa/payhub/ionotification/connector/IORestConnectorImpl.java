@@ -27,12 +27,17 @@ public class IORestConnectorImpl implements IORestConnector{
     }
 
     @Override
-    public ProfileResource getProfile(FiscalCodeDTO fiscalCode) {
-        return ioFeignRestClient.getProfile(fiscalCode, subscriptionKey);
+    public ProfileResource getProfile(FiscalCodeDTO fiscalCode, String primaryKey) {
+        return ioFeignRestClient.getProfile(fiscalCode, primaryKey);
     }
 
     @Override
-    public NotificationResource sendNotification(NotificationDTO notificationDTO) {
-        return ioFeignRestClient.sendNotification(notificationDTO, subscriptionKey);
+    public NotificationResource sendNotification(NotificationDTO notificationDTO, String primaryKey) {
+        return ioFeignRestClient.sendNotification(notificationDTO, primaryKey);
+    }
+
+    @Override
+    public ServicesListDTO getAllServices(Integer limit, Integer offset) {
+        return ioFeignRestClient.getAllServices(limit, offset, subscriptionKey);
     }
 }
