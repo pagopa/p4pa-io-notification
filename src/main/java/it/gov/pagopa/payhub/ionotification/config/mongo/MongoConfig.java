@@ -10,9 +10,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-@EnableMongoRepositories(
-        repositoryBaseClass = MongoRepositoryImpl.class
-)
+@EnableMongoRepositories
 public class MongoConfig {
 
     @Configuration
