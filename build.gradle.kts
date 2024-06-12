@@ -51,6 +51,7 @@ dependencies {
 	implementation("org.openapitools:jackson-databind-nullable:$openApiToolsVersion")
 	implementation ("org.springframework.cloud:spring-cloud-starter-openfeign")
 	implementation("org.hibernate.validator:hibernate-validator:$hibernateValidatorVersion")
+	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 
 	// Security fixes
 	implementation("org.yaml:snakeyaml:$snakeYamlVersion")

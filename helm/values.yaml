@@ -67,6 +67,7 @@ microservice-chart:
 
 
   envSecret:
+    MONGODB_URI: mongodb-connection-string
     IO_BACKEND_SERVICE_SUBSCRIPTION_API_KEY: io-backend-manage-api-key
     APPLICATIONINSIGHTS_CONNECTION_STRING: appinsights-connection-string
 
