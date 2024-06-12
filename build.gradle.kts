@@ -39,7 +39,6 @@ val openApiToolsVersion = "0.2.6"
 val wiremockVersion = "3.5.4"
 val snakeYamlVersion = "2.0"
 val hibernateValidatorVersion = "8.0.1.Final"
-val mongoDbVersion = "3.3.0"
 
 
 dependencies {
@@ -52,7 +51,7 @@ dependencies {
 	implementation("org.openapitools:jackson-databind-nullable:$openApiToolsVersion")
 	implementation ("org.springframework.cloud:spring-cloud-starter-openfeign")
 	implementation("org.hibernate.validator:hibernate-validator:$hibernateValidatorVersion")
-	implementation("org.springframework.boot:spring-boot-starter-data-mongodb:$mongoDbVersion")
+	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 
 	// Security fixes
 	implementation("org.yaml:snakeyaml:$snakeYamlVersion")
