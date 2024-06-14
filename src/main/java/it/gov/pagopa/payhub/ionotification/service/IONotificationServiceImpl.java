@@ -54,7 +54,7 @@ public class IONotificationServiceImpl implements IONotificationService {
         log.info("Service request already exists, call IO to see if Service exists");
 
         // handle errors from io and variables
-        ServicesListDTO servicesListDTO = connector.getAllServices(null, null);
+        ServicesListDTO servicesListDTO = connector.getAllServices();
         Optional<ServicePaginatedResponseDTO> existingServiceOpt = findExistingService(service, servicesListDTO);
 
         if (existingServiceOpt.isPresent()) {
