@@ -6,9 +6,6 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import it.gov.pagopa.payhub.ionotification.config.IORestConnectorConfig;
 import it.gov.pagopa.payhub.ionotification.dto.*;
-import it.gov.pagopa.payhub.model.generated.OrganizationRequestDTO;
-import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
-import it.gov.pagopa.payhub.model.generated.ServiceRequestMetadataDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +23,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
@@ -133,109 +128,6 @@ class IORestClientTest {
 
         assertNotNull(notification);
     }
-
-    private ServiceRequestDTO createServiceRequestDTO() {
-        return ServiceRequestDTO.builder()
-                .name("SERVICE_NAME")
-                .description("DESCRIPTION")
-                .organization(createOrganizationRequestDTO())
-                .metadata(createServiceRequestMetadataDTO())
-                .build();
-    }
-
-    private ServiceRequestMetadataDTO createServiceRequestMetadataDTO() {
-        return ServiceRequestMetadataDTO.builder()
-                .email("EMAIL")
-                .phone("PHONE")
-                .supportUrl("SUPPORT_URL")
-                .privacyUrl("PRIVACY_URL")
-                .tosUrl("TOS_URL")
-                .scope("SCOPE")
-                .topicId(0)
-                .build();
-    }
-
-    private static OrganizationRequestDTO createOrganizationRequestDTO() {
-        return OrganizationRequestDTO.builder()
-                .departmentName("PRODUCT_DEPARTMENT_NAME")
-                .name("ORGANIZATION_NAME")
-                .fiscalCode("ORGANIZATION_VAT")
-                .build();
-    }
-
-    private static OrganizationResponseDTO createOrganizationResponseDTO() {
-        return OrganizationResponseDTO.builder()
-                .departmentName("PRODUCT_DEPARTMENT_NAME")
-                .organizationName("ORGANIZATION_NAME")
-                .organizationFiscalCode("ORGANIZATION_VAT")
-                .build();
-    }
-
-    private ServiceResponseDTO createServiceResponseDTO() {
-        ServiceResponseMetadataDTO serviceMetadataDTO = createServiceResponseMetadataDTO();
-        return ServiceResponseDTO.builder()
-                .id("SERVICE_ID")
-                .serviceName("SERVICE_NAME")
-                .organization(createOrganizationResponseDTO())
-                .serviceMetadata(serviceMetadataDTO)
-                .build();
-    }
-
-    private ServiceResponseMetadataDTO createServiceResponseMetadataDTO() {
-        return ServiceResponseMetadataDTO.builder()
-                .email("EMAIL")
-                .phone("PHONE")
-                .supportUrl("SUPPORT_URL")
-                .privacyUrl("PRIVACY_URL")
-                .tosUrl("TOS_URL")
-                .scope("SCOPE")
-                .topic(new TopicDTO(0,"Altro"))
-                .build();
-    }
-
-    private KeysDTO getTokenIOResponse() {
-        return KeysDTO.builder()
-                .primaryKey("PRIMARY_KEY")
-                .secondaryKey("SECONDARY_KEY")
-                .build();
-    }
-
-    private ProfileResource getUserProfileResponse(){
-        return ProfileResource.builder()
-                .senderAllowed(true)
-                .preferredLanguages(new ArrayList<>())
-                .build();
-    }
-
-    private FiscalCodeDTO getUserProfileRequest(){
-        return FiscalCodeDTO.builder()
-                .fiscalCode("FISCAL_CODE")
-                .build();
-    }
-
-    private NotificationDTO sendNotificationRequest(){
-        MessageContent messageContent = MessageContent.builder()
-                .subject("SUBJECT")
-                .markdown("MARKDOWN")
-                .build();
-        return NotificationDTO.builder()
-                .content(messageContent)
-                .timeToLive(10L)
-                .fiscalCode("FISCAL_CODE")
-                .build();
-    }
-
-    private ServicesListDTO getAllServicesResponse(){
-        ServicePaginatedResponseDTO serviceList = ServicePaginatedResponseDTO.builder()
-                .status(new StatusDTO("VALUE", "REASON"))
-                .lastUpdate("DATE")
-                .build();
-        return ServicesListDTO.builder()
-                .serviceList(List.of(serviceList))
-                .pagination(new PaginationDTO(0,0,0))
-                .build();
-    }
-
 
     private static WireMockServer wireMockServer;
 
