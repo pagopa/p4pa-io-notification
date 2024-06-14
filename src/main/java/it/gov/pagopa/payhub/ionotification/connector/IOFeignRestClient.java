@@ -17,7 +17,7 @@ public interface IOFeignRestClient {
             value = "/manage/services",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     ServiceResponseDTO createService(
             @RequestBody @Valid ServiceRequestDTO serviceRequestDTO,
             @RequestHeader("Ocp-Apim-Subscription-Key") String subscriptionKey);
@@ -44,6 +44,7 @@ public interface IOFeignRestClient {
             value = "/api/v1/messages",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
     NotificationResource sendNotification(
             @RequestBody @Valid NotificationDTO notificationDTO,
             @RequestHeader("Ocp-Apim-Subscription-Key") String subscriptionKey);

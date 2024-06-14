@@ -40,7 +40,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         })
 @TestPropertySource(
         locations = "classpath:application.yml",
-        properties = {"rest-client.backend-io-manage.service.subscriptionKey=token"})
+        properties = {
+                "rest-client.backend-io-manage.service.subscriptionKey=token",
+                "rest-client.backend-io-manage.service.limit=",
+                "rest-client.backend-io-manage.service.offset="
+        })
 class IORestClientTest {
 
     @Autowired
@@ -107,7 +111,7 @@ class IORestClientTest {
                 )
         );
 
-        ServicesListDTO services = ioRestConnector.getAllServices(null,null);
+        ServicesListDTO services = ioRestConnector.getAllServices();
 
         assertNotNull(services);
     }

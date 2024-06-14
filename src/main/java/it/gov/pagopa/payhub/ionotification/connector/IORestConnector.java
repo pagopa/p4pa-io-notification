@@ -13,5 +13,5 @@ public interface IORestConnector {
 
     NotificationResource sendNotification(NotificationDTO notificationDTO, String primaryKey);
 
-    ServicesListDTO getAllServices(Integer limit, Integer offset);
+    ServicesListDTO getAllServices();
 }

@@ -64,7 +64,7 @@ class IONotificationServiceTest {
         doThrow(new MongoException("Error"))
                 .when(repository).createIfNotExists(ioService);
 
-        when(ioRestConnector.getAllServices(0, 0)).thenReturn(getAllServicesResponse());
+        when(ioRestConnector.getAllServices()).thenReturn(getAllServicesResponse());
 
         service.createService(ENTE_ID, TIPO_DOVUTO_ID, serviceRequestDTO);
 
@@ -81,7 +81,7 @@ class IONotificationServiceTest {
         doThrow(new MongoException("Error"))
                 .when(repository).createIfNotExists(ioService);
 
-        when(ioRestConnector.getAllServices(0, 0)).thenReturn(new ServicesListDTO(new ArrayList<>(), new PaginationDTO()));
+        when(ioRestConnector.getAllServices()).thenReturn(new ServicesListDTO(new ArrayList<>(), new PaginationDTO()));
 
         when(ioRestConnector.createService(serviceRequestDTO)).thenReturn(createServiceResponseDTO());
 
