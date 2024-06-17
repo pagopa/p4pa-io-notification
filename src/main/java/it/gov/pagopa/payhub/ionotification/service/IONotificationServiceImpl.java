@@ -67,7 +67,8 @@ public class IONotificationServiceImpl implements IONotificationService {
     private Optional<ServicePaginatedResponseDTO> findExistingService(IOService service, ServicesListDTO servicesListDTO) {
         return servicesListDTO.getServiceList().stream()
                 .filter(existingService -> existingService.getServiceName().equals(service.getServiceName()) &&
-                        existingService.getOrganization().getOrganizationName().equals(service.getOrganizationName()))
+                        existingService.getOrganization().getOrganizationName().equals(service.getOrganizationName()) &&
+                        !existingService.getStatus().getValue().equals("deleted"))
                 .findFirst();
     }
 

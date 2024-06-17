@@ -201,7 +201,7 @@ components:
         scope:
           type: string
         topic_id:
-          type: integer
+          type: number
     NotificationDTO:
       type: object
       required:

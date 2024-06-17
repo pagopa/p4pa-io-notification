@@ -6,6 +6,7 @@ import it.gov.pagopa.payhub.model.generated.OrganizationRequestDTO;
 import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 import it.gov.pagopa.payhub.model.generated.ServiceRequestMetadataDTO;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ public class IOTestMapper {
                 .enteId("ENTE_ID")
                 .tipoDovutoId("TIPO_DOVUTO_ID")
                 .scope(serviceRequestDTO.getMetadata().getScope())
-                .topicId(0)
+                .topicId(BigDecimal.valueOf(0))
                 .serviceName(serviceRequestDTO.getName())
                 .serviceDescription(serviceRequestDTO.getDescription())
                 .organizationName(serviceRequestDTO.getOrganization().getName())
@@ -44,7 +45,7 @@ public class IOTestMapper {
                 .privacyUrl("PRIVACY_URL")
                 .tosUrl("TOS_URL")
                 .scope("SCOPE")
-                .topicId(0)
+                .topicId(BigDecimal.valueOf(0))
                 .build();
     }
 

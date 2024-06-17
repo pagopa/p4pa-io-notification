@@ -6,6 +6,7 @@ import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -20,7 +21,7 @@ public class IOService {
     private String enteId;
     private String tipoDovutoId;
     private String scope;
-    private Integer topicId;
+    private BigDecimal topicId;
     private String serviceName;
     private String serviceDescription;
     private String organizationName;
