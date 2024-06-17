@@ -17,14 +17,12 @@ public class IOTestMapper {
         return IOService.builder()
                 .enteId("ENTE_ID")
                 .tipoDovutoId("TIPO_DOVUTO_ID")
-                .scope(serviceRequestDTO.getMetadata().getScope())
-                .topicId(BigDecimal.valueOf(0))
                 .serviceName(serviceRequestDTO.getName())
                 .serviceDescription(serviceRequestDTO.getDescription())
                 .organizationName(serviceRequestDTO.getOrganization().getName())
                 .organizationDepartmentName(serviceRequestDTO.getOrganization().getDepartmentName())
                 .organizationFiscalCode(serviceRequestDTO.getOrganization().getFiscalCode())
-                .creationDate(LocalDateTime.now())
+                .creationRequestDate(LocalDateTime.now())
                 .build();
     }
 

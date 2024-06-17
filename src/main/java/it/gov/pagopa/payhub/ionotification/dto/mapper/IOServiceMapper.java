@@ -13,14 +13,12 @@ public class IOServiceMapper {
         return IOService.builder()
                 .enteId(enteId)
                 .tipoDovutoId(tipoDovutoId)
-                .scope(serviceRequestDTO.getMetadata().getScope())
-                .topicId(serviceRequestDTO.getMetadata().getTopicId())
                 .serviceName(serviceRequestDTO.getName())
                 .serviceDescription(serviceRequestDTO.getDescription())
                 .organizationName(serviceRequestDTO.getOrganization().getName())
                 .organizationDepartmentName(serviceRequestDTO.getOrganization().getDepartmentName())
                 .organizationFiscalCode(serviceRequestDTO.getOrganization().getFiscalCode())
-                .creationDate(LocalDateTime.now())
+                .creationRequestDate(LocalDateTime.now())
                 .build();
 
     }

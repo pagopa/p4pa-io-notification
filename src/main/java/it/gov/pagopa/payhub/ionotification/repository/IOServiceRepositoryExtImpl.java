@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+
 @Repository
 public class IOServiceRepositoryExtImpl implements IOServiceRepositoryExt{
 
@@ -38,6 +40,13 @@ public class IOServiceRepositoryExtImpl implements IOServiceRepositoryExt{
         mongoTemplate.updateFirst(Query.query(Criteria.where(Fields.enteId).is(service.getEnteId())
                 .and(Fields.tipoDovutoId).is(service.getTipoDovutoId())),
                 new Update()
-                        .set(Fields.serviceId, serviceId), IOService.class);
+                        .set(Fields.serviceId, serviceId)
+                        .set(Fields.tipoDovutoId, service.getTipoDovutoId())
+                        .set(Fields.organizationDepartmentName, service.getOrganizationDepartmentName())
+                        .set(Fields.organizationFiscalCode, service.getOrganizationFiscalCode())
+                        .set(Fields.organizationName, service.getOrganizationName())
+                        .set(Fields.serviceDescription, service.getServiceDescription())
+                        .set(Fields.creationServiceDate, LocalDateTime.now())
+                ,IOService.class);
     }
 }
