@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -25,16 +24,14 @@ import static org.mockito.Mockito.*;
 class IOServiceRepositoryExtTest {
 
     @Autowired
-    IOServiceRepositoryExt ioServiceRepositoryExt;
+    IOServiceRepositoryExt serviceRepository;
 
     @MockBean
     MongoTemplate mongoTemplate;
 
-    @MockBean
-    Criteria criteria;
 
     @Test
-    void givenCreateIfNotExistsWhenServiceDoNotExistsTryThenSuccess(){
+    void givenCreateIfNotExistsWhenServiceDoNotExistsTryThenSuccess() {
 
         when(mongoTemplate.exists(any(Query.class), Mockito.eq(IOService.class)))
                 .thenReturn(false);
@@ -42,19 +39,32 @@ class IOServiceRepositoryExtTest {
 
         when(mongoTemplate.save(any(IOService.class))).thenReturn(service);
 
-        ioServiceRepositoryExt.createIfNotExists(service);
+        serviceRepository.createIfNotExists(service);
 
         verify(mongoTemplate, times(1)).save(service);
 
     }
 
     @Test
-    void givenCreateIfNotExistsTryWhenServiceExistsThenThrowMongoException(){
+    void givenCreateIfNotExistsTryWhenServiceExistsThenThrowMongoException() {
 
         when(mongoTemplate.exists(any(Query.class), Mockito.eq(IOService.class)))
                 .thenReturn(true);
         IOService service = mapIoService(createServiceRequestDTO());
 
-        assertThrows(MongoException.class, () -> ioServiceRepositoryExt.createIfNotExists(service));
+        assertThrows(MongoException.class, () -> serviceRepository.createIfNotExists(service));
+    }
+
+    @Test
+    void givenUpdateServiceThenSuccesses() {
+        IOService service = mapIoService(createServiceRequestDTO());
+
+        serviceRepository.updateService(service, "SERVICE_ID");
+
+        verify(mongoTemplate, times(1)).updateFirst(
+                any(Query.class),
+                any(),
+                eq(IOService.class)
+        );
     }
 }
