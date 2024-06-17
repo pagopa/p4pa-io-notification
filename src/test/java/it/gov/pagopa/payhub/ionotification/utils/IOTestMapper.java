@@ -122,6 +122,7 @@ public class IOTestMapper {
         ServicePaginatedResponseDTO serviceList = ServicePaginatedResponseDTO.builder()
                 .status(new StatusDTO("VALUE", "REASON"))
                 .lastUpdate("DATE")
+                .id("SERVICE_ID")
                 .serviceName("SERVICE_NAME")
                 .organization(createOrganizationResponseDTO())
                 .build();

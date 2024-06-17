@@ -43,25 +43,21 @@ public class IONotificationServiceImpl implements IONotificationService {
     }
 
     private void createNewService(ServiceRequestDTO serviceRequestDTO, IOService service) {
-        // handle errors from io
         log.info("Creating new service from IO");
         ServiceResponseDTO responseDTO = connector.createService(serviceRequestDTO);
-        service.setServiceId(responseDTO.getId());
-        ioServiceRepository.save(service);
+        ioServiceRepository.updateService(service, responseDTO.getId());
     }
 
     private void handleDuplicateService(IOService service, ServiceRequestDTO serviceRequestDTO) {
         log.info("Service request already exists, call IO to see if Service exists");
 
-        // handle errors from io and variables
         ServicesListDTO servicesListDTO = connector.getAllServices();
         Optional<ServicePaginatedResponseDTO> existingServiceOpt = findExistingService(service, servicesListDTO);
 
         if (existingServiceOpt.isPresent()) {
             log.info("Service found in IO, updating serviceId");
             ServicePaginatedResponseDTO existingService = existingServiceOpt.get();
-            service.setServiceId(existingService.getId());
-            ioServiceRepository.save(service);
+            ioServiceRepository.updateService(service, existingService.getId());
         } else {
             log.info("Service not found in IO, creating new service");
             createNewService(serviceRequestDTO, service);

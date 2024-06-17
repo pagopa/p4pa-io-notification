@@ -51,7 +51,7 @@ class IONotificationServiceTest {
 
         service.createService(ENTE_ID, TIPO_DOVUTO_ID, serviceRequestDTO);
 
-        verify(repository, times(1)).save(ioService);
+        verify(repository, times(1)).updateService(ioService, "SERVICE_ID");
     }
 
     @Test
@@ -68,7 +68,7 @@ class IONotificationServiceTest {
 
         service.createService(ENTE_ID, TIPO_DOVUTO_ID, serviceRequestDTO);
 
-        verify(repository, times(1)).save(ioService);
+        verify(repository, times(1)).updateService(ioService, "SERVICE_ID");
     }
 
     @Test
@@ -87,7 +87,7 @@ class IONotificationServiceTest {
 
         service.createService(ENTE_ID, TIPO_DOVUTO_ID, serviceRequestDTO);
 
-        verify(repository, times(1)).save(ioService);
+        verify(repository, times(1)).updateService(ioService, "SERVICE_ID");
     }
 
 

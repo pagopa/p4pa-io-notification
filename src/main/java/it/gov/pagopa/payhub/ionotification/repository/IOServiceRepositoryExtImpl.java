@@ -2,9 +2,11 @@ package it.gov.pagopa.payhub.ionotification.repository;
 
 import com.mongodb.MongoException;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
+import it.gov.pagopa.payhub.ionotification.model.IOService.Fields;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -29,5 +31,13 @@ public class IOServiceRepositoryExtImpl implements IOServiceRepositoryExt{
         } else {
             throw new MongoException("The service exists already");
         }
+    }
+
+    @Override
+    public void updateService(IOService service, String serviceId) {
+        mongoTemplate.updateFirst(Query.query(Criteria.where(Fields.enteId).is(service.getEnteId())
+                .and(Fields.tipoDovutoId).is(service.getTipoDovutoId())),
+                new Update()
+                        .set(Fields.serviceId, serviceId), IOService.class);
     }
 }
