@@ -6,7 +6,7 @@ spring:
   data:
     mongodb:
       uri: \${MONGODB_URI:mongodb://localhost:27017}
-      database: \${MONGODB_DBNAME:p4pa}
+      database: \${MONGODB_DBNAME:payhub}
       # custom configured properties
       config:
         connectionPool:
