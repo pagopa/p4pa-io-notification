@@ -48,7 +48,7 @@ public class IONotificationExceptionHandler {
         }
     }
 
-    private static ResponseEntity<IoNotificationErrorDTO> handleIONotificationErrorException(
+    private ResponseEntity<IoNotificationErrorDTO> handleIONotificationErrorException(
             RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus, IoNotificationErrorDTO.CodeEnum errorEnum){
         String message = ex.getMessage();
         log.info("A {} occurred handling request {}: HttpStatus {} - {}",
@@ -62,7 +62,7 @@ public class IONotificationExceptionHandler {
                 .body(new IoNotificationErrorDTO(errorEnum, message));
     }
 
-    private static String getRequestDetails(HttpServletRequest request) {
+    private String getRequestDetails(HttpServletRequest request) {
         return "%s %s".formatted(request.getMethod(), request.getRequestURI());
     }
 
@@ -84,7 +84,7 @@ public class IONotificationExceptionHandler {
         }
 
         return bodyBuilder
-                .body(new IoNotificationErrorDTO(IoNotificationErrorDTO.CodeEnum.TOO_MANY_REQUESTS, message));
+                .body(new IoNotificationErrorDTO(IoNotificationErrorDTO.CodeEnum.TOO_MANY_REQUESTS, "Too Many Requests"));
     }
 
     public static Long getRetryAfterMs(DataAccessException ex) {
