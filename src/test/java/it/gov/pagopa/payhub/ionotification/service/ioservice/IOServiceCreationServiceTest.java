@@ -67,7 +67,7 @@ class IOServiceCreationServiceTest {
         when(updateResult.getUpsertedId()).thenReturn(null);
         when(ioServiceRepository.createIfNotExists(ioService)).thenReturn(updateResult);
 
-        when(ioDuplicateServiceHandlerService.handleDuplicateService(ioService, serviceRequestDTO))
+        when(ioDuplicateServiceHandlerService.searchIOService(ioService, serviceRequestDTO))
                 .thenReturn(SERVICE_ID);
 
         service.createService(ENTE_ID, TIPO_DOVUTO_ID, serviceRequestDTO);
@@ -86,7 +86,7 @@ class IOServiceCreationServiceTest {
         when(updateResult.getUpsertedId()).thenReturn(null);
         when(ioServiceRepository.createIfNotExists(ioService)).thenReturn(updateResult);
 
-        when(ioDuplicateServiceHandlerService.handleDuplicateService(ioService, serviceRequestDTO))
+        when(ioDuplicateServiceHandlerService.searchIOService(ioService, serviceRequestDTO))
                 .thenReturn(null);
         when(connector.createService(serviceRequestDTO)).thenReturn(createServiceResponseDTO());
 

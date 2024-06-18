@@ -24,7 +24,7 @@ public class IOServiceRepositoryExtImpl implements IOServiceRepositoryExt{
     public UpdateResult createIfNotExists(IOService service) {
         return mongoTemplate.upsert(
                 Query.query(Criteria.where(Fields.enteId).is(service.getEnteId())
-                        .and(Fields.serviceId).is(service.getTipoDovutoId())),
+                        .and(Fields.tipoDovutoId).is(service.getTipoDovutoId())),
                 new Update()
                         .setOnInsert(Fields.enteId, service.getEnteId())
                         .setOnInsert(Fields.tipoDovutoId, service.getTipoDovutoId())

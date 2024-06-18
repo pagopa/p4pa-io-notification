@@ -28,27 +28,33 @@ public class IOServiceCreationServiceImpl implements IOServiceCreationService {
 
     @Override
     public void createService(String enteId, String tipoDovutoId, ServiceRequestDTO serviceRequestDTO) {
-        log.info("Save request of Service creation");
+        log.info("Save request of Service creation for {} and {}",
+                serviceRequestDTO.getName(), serviceRequestDTO.getOrganization().getName());
         IOService service = ioServiceMapper.apply(enteId, tipoDovutoId, serviceRequestDTO);
 
         if (ioServiceRepository.createIfNotExists(service).getUpsertedId() == null) {
             handleExistingService(service, serviceRequestDTO);
         } else {
+            log.info("Create new Service {} for {}",
+                    service.getServiceName(), service.getOrganizationName());
             createService(serviceRequestDTO, service);
         }
     }
 
     private void handleExistingService(IOService service, ServiceRequestDTO serviceRequestDTO) {
-        String serviceId = ioDuplicateServiceHandlerService.handleDuplicateService(service, serviceRequestDTO);
+        String serviceId = ioDuplicateServiceHandlerService.searchIOService(service, serviceRequestDTO);
         if (serviceId != null) {
+            log.info("Update service {} with serviceId: {}", service.getServiceName(), serviceId);
             ioServiceRepository.updateService(service, serviceId);
         } else {
+            log.info("Create new Service {} for {} after not finding it in IO",
+                    service.getServiceName(), service.getOrganizationName());
             createService(serviceRequestDTO, service);
         }
     }
 
     private void createService(ServiceRequestDTO serviceRequestDTO, IOService service) {
-        log.info("Creating new service from IO");
+        log.info("Creating new service {} in IO", serviceRequestDTO.getName());
         ServiceResponseDTO responseDTO = connector.createService(serviceRequestDTO);
         ioServiceRepository.updateService(service, responseDTO.getId());
     }
