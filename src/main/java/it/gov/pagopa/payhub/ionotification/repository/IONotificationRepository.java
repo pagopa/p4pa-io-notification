@@ -1,4 +1,4 @@
-package it.gov.pagopa.payhub.ionotification.repository.ionotification;
+package it.gov.pagopa.payhub.ionotification.repository;
 
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import org.springframework.data.mongodb.repository.MongoRepository;

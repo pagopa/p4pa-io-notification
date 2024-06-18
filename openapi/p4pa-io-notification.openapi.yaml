@@ -147,12 +147,18 @@ components:
           $ref: '#/components/schemas/OrganizationRequestDTO'
         require_secure_channel:
           type: boolean
+          x-field-extra-annotation: |-
+            @JsonProperty("require_secure_channel")
         authorized_cidrs:
           type: array
+          x-field-extra-annotation: |-
+            @JsonProperty("authorized_cidrs")
           items:
             type: string
         authorized_recipients:
           type: array
+          x-field-extra-annotation: |-
+            @JsonProperty("authorized_recipients")
           items:
             type: string
         metadata:
@@ -167,23 +173,38 @@ components:
           type: string
         fiscal_code:
           type: string
+          x-field-extra-annotation: |-
+            @JsonProperty("fiscal_code")
         department_name:
           type: string
+          x-field-extra-annotation: |-
+            @JsonProperty("department_name")
     ServiceRequestMetadataDTO:
       type: object
       required:
         - scope
+        - topic_id
       properties:
         web_url:
           type: string
+          x-field-extra-annotation: |-
+            @JsonProperty("web_url")
         app_ios:
           type: string
+          x-field-extra-annotation: |-
+            @JsonProperty("app_ios")
         app_android:
           type: string
+          x-field-extra-annotation: |-
+            @JsonProperty("app_android")
         tos_url:
           type: string
+          x-field-extra-annotation: |-
+            @JsonProperty("tos_url")
         privacy_url:
           type: string
+          x-field-extra-annotation: |-
+            @JsonProperty("privacy_url")
         address:
           type: string
         phone:
@@ -196,12 +217,18 @@ components:
           type: string
         token_name:
           type: string
+          x-field-extra-annotation: |-
+            @JsonProperty("token_name")
         support_url:
           type: string
+          x-field-extra-annotation: |-
+            @JsonProperty("support_url")
         scope:
           type: string
         topic_id:
-          type: integer
+          type: number
+          x-field-extra-annotation: |-
+            @JsonProperty("topic_id")
     NotificationDTO:
       type: object
       required:

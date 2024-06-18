@@ -111,7 +111,7 @@ configure<SourceSetContainer> {
 }
 
 springBoot {
-	mainClass.value("it.gov.pagopa.payhub.ionotification.IoNotificationApplication")
+	mainClass.value("it.gov.pagopa.payhub.ionotification.IONotificationApplication")
 }
 
 openApiGenerate {
@@ -128,6 +128,7 @@ openApiGenerate {
 			"useTags" to "true",
 			"generateConstructorWithAllArgs" to "false",
 			"generatedConstructorWithRequiredArgs" to "false",
-			"additionalModelTypeAnnotations" to "@lombok.Data @lombok.Builder @lombok.AllArgsConstructor @lombok.RequiredArgsConstructor"
+			"additionalModelTypeAnnotations" to "@lombok.Data @lombok.Builder @lombok.AllArgsConstructor @lombok.RequiredArgsConstructor",
+			"serializationLibrary" to "jackson"
 	))
 }

@@ -60,10 +60,11 @@ microservice-chart:
     APPLICATIONINSIGHTS_INSTRUMENTATION_MICROMETER_ENABLED: "false"
     APPLICATIONINSIGHTS_PREVIEW_PROFILER_ENABLED: "false"
     ENABLE_AUDIT_APPENDER: "TRUE"
+    IO_MANAGE_BACKEND_SERVICE_BASE_URL: "https://api.io.pagopa.it/api/v1"
 
-  externalConfigMapValues:
-    rest-client:
-      IO_MANAGE_BACKEND_SERVICE_BASE_URL: io_manage_backend_base_url
+#  externalConfigMapValues:
+#    rest-client:
+#      IO_MANAGE_BACKEND_SERVICE_BASE_URL: io_manage_backend_base_url
 
 
   envSecret:

@@ -9,11 +9,18 @@ import org.springframework.stereotype.Service;
 public class IORestConnectorImpl implements IORestConnector{
 
     private final String subscriptionKey;
+    private final Integer limit;
+    private final Integer offset;
     private final IOFeignRestClient ioFeignRestClient;
 
     public IORestConnectorImpl(
-            @Value("${rest-client.backend-io-manage.service.subscriptionKey}") String subscriptionKey, IOFeignRestClient ioFeignRestClient) {
+            @Value("${rest-client.backend-io-manage.service.subscriptionKey}") String subscriptionKey,
+            @Value("${rest-client.backend-io-manage.service.limit}") Integer limit,
+            @Value("${rest-client.backend-io-manage.service.offset}") Integer offset,
+            IOFeignRestClient ioFeignRestClient) {
         this.subscriptionKey = subscriptionKey;
+        this.limit = limit;
+        this.offset = offset;
         this.ioFeignRestClient = ioFeignRestClient;
     }
     @Override
@@ -37,7 +44,7 @@ public class IORestConnectorImpl implements IORestConnector{
     }
 
     @Override
-    public ServicesListDTO getAllServices(Integer limit, Integer offset) {
+    public ServicesListDTO getAllServices() {
         return ioFeignRestClient.getAllServices(limit, offset, subscriptionKey);
     }
 }
