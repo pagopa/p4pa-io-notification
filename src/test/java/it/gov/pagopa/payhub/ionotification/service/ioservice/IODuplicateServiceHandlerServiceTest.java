@@ -41,7 +41,7 @@ class IODuplicateServiceHandlerServiceTest {
         ServicesListDTO allServicesResponse = getAllServicesResponse();
         when(connector.getAllServices()).thenReturn(allServicesResponse);
 
-        service.handleDuplicateService(ioService, serviceRequestDTO);
+        service.searchIOService(ioService, serviceRequestDTO);
 
         assertEquals(SERVICE_ID, allServicesResponse.getServiceList().get(0).getId());
     }
@@ -55,6 +55,6 @@ class IODuplicateServiceHandlerServiceTest {
         when(connector.getAllServices())
                 .thenReturn(new ServicesListDTO(new ArrayList<>(), new PaginationDTO()));
 
-        assertNull(service.handleDuplicateService(ioService, serviceRequestDTO));
+        assertNull(service.searchIOService(ioService, serviceRequestDTO));
     }
 }

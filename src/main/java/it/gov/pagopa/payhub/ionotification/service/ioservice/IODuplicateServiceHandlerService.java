@@ -4,5 +4,5 @@ import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 
 public interface IODuplicateServiceHandlerService {
-    String handleDuplicateService(IOService service, ServiceRequestDTO serviceRequestDTO);
+    String searchIOService(IOService service, ServiceRequestDTO serviceRequestDTO);
 }

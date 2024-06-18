@@ -21,17 +21,16 @@ public class IODuplicateServiceHandlerServiceImpl implements  IODuplicateService
     }
 
     @Override
-    public String handleDuplicateService(IOService service, ServiceRequestDTO serviceRequestDTO) {
+    public String searchIOService(IOService service, ServiceRequestDTO serviceRequestDTO) {
         log.info("Service request already exists, call IO to see if Service exists");
-
         ServicesListDTO servicesListDTO = connector.getAllServices();
         Optional<ServicePaginatedResponseDTO> existingServiceOpt = findExistingService(service, servicesListDTO);
 
         if (existingServiceOpt.isPresent()) {
-            log.info("Service found in IO, updating serviceId");
+            log.info("Service found in IO");
             return existingServiceOpt.get().getId();
         } else {
-            log.info("Service not found in IO, creating new service");
+            log.info("Service not found in IO");
             return null;
         }
     }
