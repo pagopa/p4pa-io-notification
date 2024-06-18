@@ -53,19 +53,4 @@ public class IOServiceRepositoryExtImpl implements IOServiceRepositoryExt{
                         .set(Fields.creationServiceDate, LocalDateTime.now())
                 ,IOService.class);
     }
-
-    @Override
-    public void updateService(IOService service, String serviceId) {
-        mongoTemplate.updateFirst(Query.query(Criteria.where(Fields.enteId).is(service.getEnteId())
-                .and(Fields.tipoDovutoId).is(service.getTipoDovutoId())),
-                new Update()
-                        .set(Fields.serviceId, serviceId)
-                        .set(Fields.tipoDovutoId, service.getTipoDovutoId())
-                        .set(Fields.organizationDepartmentName, service.getOrganizationDepartmentName())
-                        .set(Fields.organizationFiscalCode, service.getOrganizationFiscalCode())
-                        .set(Fields.organizationName, service.getOrganizationName())
-                        .set(Fields.serviceDescription, service.getServiceDescription())
-                        .set(Fields.creationServiceDate, LocalDateTime.now())
-                ,IOService.class);
-    }
 }
