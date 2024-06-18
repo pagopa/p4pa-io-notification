@@ -12,11 +12,11 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class IODuplicateServiceHandlerServiceImpl implements  IODuplicateServiceHandlerService {
+public class IOServiceSearchServiceImpl implements IOServiceSearchService {
 
     private final IORestConnector connector;
 
-    public IODuplicateServiceHandlerServiceImpl(IORestConnector connector) {
+    public IOServiceSearchServiceImpl(IORestConnector connector) {
         this.connector = connector;
     }
 

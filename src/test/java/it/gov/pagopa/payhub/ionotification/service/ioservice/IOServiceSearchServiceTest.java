@@ -19,17 +19,17 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class IODuplicateServiceHandlerServiceTest {
+class IOServiceSearchServiceTest {
 
     public static final String SERVICE_ID = "SERVICE_ID";
     @Mock
     IORestConnector connector;
 
-    private IODuplicateServiceHandlerService service;
+    private IOServiceSearchService service;
 
     @BeforeEach
     void setup(){
-        service = new IODuplicateServiceHandlerServiceImpl(connector);
+        service = new IOServiceSearchServiceImpl(connector);
     }
 
     @Test

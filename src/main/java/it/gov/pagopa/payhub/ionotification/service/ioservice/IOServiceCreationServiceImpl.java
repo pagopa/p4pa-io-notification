@@ -14,14 +14,14 @@ import org.springframework.stereotype.Service;
 public class IOServiceCreationServiceImpl implements IOServiceCreationService {
 
     private final IOServiceMapper ioServiceMapper;
-    private final IODuplicateServiceHandlerService ioDuplicateServiceHandlerService;
+    private final IOServiceSearchService ioServiceSearchService;
     private final IOServiceRepository ioServiceRepository;
     private final IORestConnector connector;
 
     public IOServiceCreationServiceImpl(IOServiceMapper ioServiceMapper,
-                                        IODuplicateServiceHandlerService ioDuplicateServiceHandlerService, IOServiceRepository ioServiceRepository, IORestConnector connector) {
+                                        IOServiceSearchService ioServiceSearchService, IOServiceRepository ioServiceRepository, IORestConnector connector) {
         this.ioServiceMapper = ioServiceMapper;
-        this.ioDuplicateServiceHandlerService = ioDuplicateServiceHandlerService;
+        this.ioServiceSearchService = ioServiceSearchService;
         this.ioServiceRepository = ioServiceRepository;
         this.connector = connector;
     }
@@ -35,14 +35,14 @@ public class IOServiceCreationServiceImpl implements IOServiceCreationService {
         if (ioServiceRepository.createIfNotExists(service).getUpsertedId() == null) {
             handleExistingService(service, serviceRequestDTO);
         } else {
-            log.info("Create new Service {} for {}",
+            log.info("Create new Service {} in IO for {}",
                     service.getServiceName(), service.getOrganizationName());
             createService(serviceRequestDTO, service);
         }
     }
 
     private void handleExistingService(IOService service, ServiceRequestDTO serviceRequestDTO) {
-        String serviceId = ioDuplicateServiceHandlerService.searchIOService(service, serviceRequestDTO);
+        String serviceId = ioServiceSearchService.searchIOService(service, serviceRequestDTO);
         if (serviceId != null) {
             log.info("Update service {} with serviceId: {}", service.getServiceName(), serviceId);
             ioServiceRepository.updateService(service, serviceId);
@@ -54,7 +54,6 @@ public class IOServiceCreationServiceImpl implements IOServiceCreationService {
     }
 
     private void createService(ServiceRequestDTO serviceRequestDTO, IOService service) {
-        log.info("Creating new service {} in IO", serviceRequestDTO.getName());
         ServiceResponseDTO responseDTO = connector.createService(serviceRequestDTO);
         ioServiceRepository.updateService(service, responseDTO.getId());
     }
