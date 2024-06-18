@@ -1,6 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.repository;
 
-import com.mongodb.MongoException;
+import com.mongodb.client.result.UpdateResult;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.model.IOService.Fields;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -21,18 +21,20 @@ public class IOServiceRepositoryExtImpl implements IOServiceRepositoryExt{
     }
 
     @Override
-    public IOService createIfNotExists(IOService service) {
-        boolean exists = mongoTemplate.exists(
-                Query.query(Criteria.where("enteId").is(service.getEnteId())
-                .and("tipoDovutoId").is(service.getTipoDovutoId())),
+    public UpdateResult createIfNotExists(IOService service) {
+        return mongoTemplate.upsert(
+                Query.query(Criteria.where(Fields.enteId).is(service.getEnteId())
+                        .and(Fields.serviceId).is(service.getTipoDovutoId())),
+                new Update()
+                        .set(Fields.enteId, service.getEnteId())
+                        .set(Fields.tipoDovutoId, service.getTipoDovutoId())
+                        .set(Fields.serviceName, service.getServiceName())
+                        .set(Fields.serviceDescription, service.getServiceDescription())
+                        .set(Fields.organizationDepartmentName, service.getOrganizationDepartmentName())
+                        .set(Fields.organizationFiscalCode, service.getOrganizationFiscalCode())
+                        .set(Fields.organizationName, service.getOrganizationName())
+                        .setOnInsert(Fields.creationRequestDate, LocalDateTime.now()),
                 IOService.class);
-
-        if(!exists) {
-            mongoTemplate.save(service);
-            return service;
-        } else {
-            throw new MongoException("The service exists already");
-        }
     }
 
     @Override
@@ -41,11 +43,13 @@ public class IOServiceRepositoryExtImpl implements IOServiceRepositoryExt{
                 .and(Fields.tipoDovutoId).is(service.getTipoDovutoId())),
                 new Update()
                         .set(Fields.serviceId, serviceId)
+                        .set(Fields.enteId, service.getEnteId())
                         .set(Fields.tipoDovutoId, service.getTipoDovutoId())
+                        .set(Fields.serviceName, service.getServiceName())
+                        .set(Fields.serviceDescription, service.getServiceDescription())
                         .set(Fields.organizationDepartmentName, service.getOrganizationDepartmentName())
                         .set(Fields.organizationFiscalCode, service.getOrganizationFiscalCode())
                         .set(Fields.organizationName, service.getOrganizationName())
-                        .set(Fields.serviceDescription, service.getServiceDescription())
                         .set(Fields.creationServiceDate, LocalDateTime.now())
                 ,IOService.class);
     }

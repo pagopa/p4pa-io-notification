@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-@EnableMongoRepositories
+@EnableMongoRepositories(basePackages = "it.gov.pagopa.payhub.ionotification.repository")
 public class MongoConfig {
 
     @Configuration

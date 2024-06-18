@@ -1,6 +1,5 @@
 package it.gov.pagopa.payhub.ionotification.service;
 
-import com.mongodb.MongoException;
 import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
 import it.gov.pagopa.payhub.ionotification.dto.ServicePaginatedResponseDTO;
 import it.gov.pagopa.payhub.ionotification.dto.ServiceResponseDTO;
@@ -33,13 +32,12 @@ public class IONotificationServiceImpl implements IONotificationService {
         log.info("Save request of Service creation");
         IOService service = ioServiceMapper.apply(enteId, tipoDovutoId, serviceRequestDTO);
 
-        try {
-            service = ioServiceRepository.createIfNotExists(service);
-            createNewService(serviceRequestDTO, service);
-
-        } catch (MongoException e) {
+        if (ioServiceRepository.createIfNotExists(service).getUpsertedId() == null){
             handleDuplicateService(service, serviceRequestDTO);
+            return;
         }
+
+        createNewService(serviceRequestDTO, service);
     }
 
     private void createNewService(ServiceRequestDTO serviceRequestDTO, IOService service) {
