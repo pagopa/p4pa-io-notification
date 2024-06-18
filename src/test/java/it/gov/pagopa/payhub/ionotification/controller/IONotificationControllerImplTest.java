@@ -1,7 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gov.pagopa.payhub.ionotification.service.IONotificationService;
+import it.gov.pagopa.payhub.ionotification.service.IOService;
 import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +25,12 @@ class IONotificationControllerImplTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private IONotificationService ioNotificationService;
+    private IOService ioService;
 
     @Test
     void givenCreateServiceThenSuccess() throws Exception {
         ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
-        doNothing().when(ioNotificationService)
+        doNothing().when(ioService)
                 .createService("enteId", "tipoDovutoId", serviceRequestDTO);
 
         mockMvc.perform(

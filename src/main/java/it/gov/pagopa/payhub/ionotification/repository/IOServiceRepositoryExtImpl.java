@@ -26,13 +26,13 @@ public class IOServiceRepositoryExtImpl implements IOServiceRepositoryExt{
                 Query.query(Criteria.where(Fields.enteId).is(service.getEnteId())
                         .and(Fields.serviceId).is(service.getTipoDovutoId())),
                 new Update()
-                        .set(Fields.enteId, service.getEnteId())
-                        .set(Fields.tipoDovutoId, service.getTipoDovutoId())
-                        .set(Fields.serviceName, service.getServiceName())
-                        .set(Fields.serviceDescription, service.getServiceDescription())
-                        .set(Fields.organizationDepartmentName, service.getOrganizationDepartmentName())
-                        .set(Fields.organizationFiscalCode, service.getOrganizationFiscalCode())
-                        .set(Fields.organizationName, service.getOrganizationName())
+                        .setOnInsert(Fields.enteId, service.getEnteId())
+                        .setOnInsert(Fields.tipoDovutoId, service.getTipoDovutoId())
+                        .setOnInsert(Fields.serviceName, service.getServiceName())
+                        .setOnInsert(Fields.serviceDescription, service.getServiceDescription())
+                        .setOnInsert(Fields.organizationDepartmentName, service.getOrganizationDepartmentName())
+                        .setOnInsert(Fields.organizationFiscalCode, service.getOrganizationFiscalCode())
+                        .setOnInsert(Fields.organizationName, service.getOrganizationName())
                         .setOnInsert(Fields.creationRequestDate, LocalDateTime.now()),
                 IOService.class);
     }

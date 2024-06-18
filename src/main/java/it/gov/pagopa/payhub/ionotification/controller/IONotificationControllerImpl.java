@@ -1,7 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.controller;
 
 import it.gov.pagopa.payhub.controller.generated.IoNotificationApi;
-import it.gov.pagopa.payhub.ionotification.service.IONotificationService;
+import it.gov.pagopa.payhub.ionotification.service.IOService;
 import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class IONotificationControllerImpl implements IoNotificationApi {
 
-    private final IONotificationService service;
+    private final IOService service;
 
-    public IONotificationControllerImpl(IONotificationService service) {
+    public IONotificationControllerImpl(IOService service) {
         this.service = service;
     }
 
