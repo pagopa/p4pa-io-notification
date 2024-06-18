@@ -1,6 +1,5 @@
 package it.gov.pagopa.payhub.ionotification.service.ioservice;
 
-import it.gov.pagopa.payhub.ionotification.dto.ServiceResponseDTO;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IOServiceMapper;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
@@ -33,8 +32,7 @@ public class IOServiceCreationServiceImpl implements IOServiceCreationService {
             ioDuplicateServiceHandlerService.handleDuplicateService(service, serviceRequestDTO);
 
         } else {
-            ServiceResponseDTO serviceResponseDTO = ioServiceUtilityService.createService(serviceRequestDTO, service);
-            ioServiceUtilityService.updateService(service, serviceResponseDTO.getId());
+            ioServiceUtilityService.createService(serviceRequestDTO, service);
         }
     }
 
