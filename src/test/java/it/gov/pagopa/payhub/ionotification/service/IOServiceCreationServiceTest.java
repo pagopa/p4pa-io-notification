@@ -49,12 +49,11 @@ class IOServiceCreationServiceTest {
         when(updateResult.getUpsertedId()).thenReturn(new BsonObjectId(new ObjectId()));
         when(ioServiceUtilityService.createIfNotExists(ioService)).thenReturn(updateResult);
 
-        when(ioServiceUtilityService.createService(serviceRequestDTO, ioService)).thenReturn(createServiceResponseDTO());
-        doNothing().when(ioServiceUtilityService).updateService(ioService, "SERVICE_ID");
+        doNothing().when(ioServiceUtilityService).createService(serviceRequestDTO, ioService);
 
         service.createService(ENTE_ID, TIPO_DOVUTO_ID, serviceRequestDTO);
 
-        verify(ioServiceUtilityService, times(1)).updateService(ioService, "SERVICE_ID");
+        verify(ioServiceUtilityService, times(1)).createIfNotExists(ioService);
     }
 
     @Test

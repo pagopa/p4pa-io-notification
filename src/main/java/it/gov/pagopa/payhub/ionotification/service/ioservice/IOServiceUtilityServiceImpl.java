@@ -23,9 +23,10 @@ public class IOServiceUtilityServiceImpl implements IOServiceUtilityService {
     }
 
     @Override
-    public ServiceResponseDTO createService(ServiceRequestDTO serviceRequestDTO, IOService service) {
+    public void createService(ServiceRequestDTO serviceRequestDTO, IOService service) {
         log.info("Creating new service from IO");
-        return connector.createService(serviceRequestDTO);
+        ServiceResponseDTO responseDTO = connector.createService(serviceRequestDTO);
+        updateService(service, responseDTO.getId());
     }
 
     @Override
