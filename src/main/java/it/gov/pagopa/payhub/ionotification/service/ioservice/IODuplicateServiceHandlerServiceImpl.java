@@ -1,5 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.service.ioservice;
 
+import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
 import it.gov.pagopa.payhub.ionotification.dto.ServicePaginatedResponseDTO;
 import it.gov.pagopa.payhub.ionotification.dto.ServicesListDTO;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
@@ -13,26 +14,25 @@ import java.util.Optional;
 @Slf4j
 public class IODuplicateServiceHandlerServiceImpl implements  IODuplicateServiceHandlerService {
 
-    private final IOServiceUtilityService ioServiceUtilityService;
+    private final IORestConnector connector;
 
-    public IODuplicateServiceHandlerServiceImpl(IOServiceUtilityService ioServiceUtilityService) {
-        this.ioServiceUtilityService = ioServiceUtilityService;
+    public IODuplicateServiceHandlerServiceImpl(IORestConnector connector) {
+        this.connector = connector;
     }
 
     @Override
-    public void handleDuplicateService(IOService service, ServiceRequestDTO serviceRequestDTO) {
+    public String handleDuplicateService(IOService service, ServiceRequestDTO serviceRequestDTO) {
         log.info("Service request already exists, call IO to see if Service exists");
 
-        ServicesListDTO servicesListDTO = ioServiceUtilityService.getAllServices();
+        ServicesListDTO servicesListDTO = connector.getAllServices();
         Optional<ServicePaginatedResponseDTO> existingServiceOpt = findExistingService(service, servicesListDTO);
 
         if (existingServiceOpt.isPresent()) {
             log.info("Service found in IO, updating serviceId");
-            ServicePaginatedResponseDTO existingService = existingServiceOpt.get();
-            ioServiceUtilityService.updateService(service, existingService.getId());
+            return existingServiceOpt.get().getId();
         } else {
             log.info("Service not found in IO, creating new service");
-            ioServiceUtilityService.createService(serviceRequestDTO, service);
+            return null;
         }
     }
 
