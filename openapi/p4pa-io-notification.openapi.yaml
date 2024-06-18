@@ -246,6 +246,7 @@ components:
           type: string
           enum:
             - IO_NOTIFICATION_SERVICE_NOT_FOUND
+            - IO_NOTIFICATION_WRONG_PAYLOAD
             - IO_NOTIFICATION_GENERIC_ERROR
             - IO_NOTIFICATION_TOO_MANY_REQUESTS
             - IO_NOTIFICATION_INVALID_REQUEST
