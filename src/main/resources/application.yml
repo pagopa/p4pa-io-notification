@@ -18,7 +18,7 @@ spring:
           maxConnecting: \${MONGODB_CONNECTIONPOOL_MAX_CONNECTING:2}
   cloud:
     function:
-      definition: notification
+      definition: notificationQueue
     stream:
       bindings:
         notificationQueue-out-0:

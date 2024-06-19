@@ -26,7 +26,7 @@ public class IONotificationProducer {
     @Configuration
     static class IONotificationProducerConfig {
         @Bean
-        public Supplier<Flux<Message<Object>>> sendingMessage() {
+        public Supplier<Flux<Message<Object>>> notificationQueue() {
             return Flux::empty;
         }
     }
