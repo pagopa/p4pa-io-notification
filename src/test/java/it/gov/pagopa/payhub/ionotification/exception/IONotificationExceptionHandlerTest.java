@@ -4,7 +4,7 @@ import com.mongodb.MongoQueryException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.ServerAddress;
 import com.mongodb.WriteError;
-import it.gov.pagopa.payhub.ionotification.exception.custom.IOWrongPayloadExceptiion;
+import it.gov.pagopa.payhub.ionotification.exception.custom.IOWrongPayloadException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.RetrieveServicesInvocationException;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.BsonDocument;
@@ -63,7 +63,7 @@ class IONotificationExceptionHandlerTest {
 
     @Test
     void handleWrongPayloadException() throws Exception {
-        doThrow(new IOWrongPayloadExceptiion("Error")).when(testControllerSpy).testEndpoint();
+        doThrow(new IOWrongPayloadException("Error")).when(testControllerSpy).testEndpoint();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/test")
                         .contentType(MediaType.APPLICATION_JSON))

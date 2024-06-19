@@ -1,7 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.exception;
 
 import it.gov.pagopa.payhub.ionotification.exception.custom.CreateServiceInvocationException;
-import it.gov.pagopa.payhub.ionotification.exception.custom.IOWrongPayloadExceptiion;
+import it.gov.pagopa.payhub.ionotification.exception.custom.IOWrongPayloadException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.RetrieveServicesInvocationException;
 import it.gov.pagopa.payhub.model.generated.IoNotificationErrorDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +31,7 @@ public class IONotificationExceptionHandler {
         return handleIONotificationErrorException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, IoNotificationErrorDTO.CodeEnum.GENERIC_ERROR);
     }
 
-    @ExceptionHandler({IOWrongPayloadExceptiion.class})
+    @ExceptionHandler({IOWrongPayloadException.class})
     public ResponseEntity<IoNotificationErrorDTO> handleWrongPayloadException(RuntimeException ex, HttpServletRequest request) {
         return handleIONotificationErrorException(ex, request, HttpStatus.BAD_REQUEST, IoNotificationErrorDTO.CodeEnum.WRONG_PAYLOAD);
     }
@@ -42,7 +42,7 @@ public class IONotificationExceptionHandler {
 
         if (isRequestRateTooLargeException(ex)) {
             Long retryAfterMs = getRetryAfterMs(ex);
-            return getErrorDTOResponseEntity(ex, request, retryAfterMs);
+            return handleRequestRateTooLargeException(ex, request, retryAfterMs);
         } else {
             return handleIONotificationErrorException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, IoNotificationErrorDTO.CodeEnum.GENERIC_ERROR);
         }
@@ -66,7 +66,7 @@ public class IONotificationExceptionHandler {
         return "%s %s".formatted(request.getMethod(), request.getRequestURI());
     }
 
-    private ResponseEntity<IoNotificationErrorDTO> getErrorDTOResponseEntity(Exception ex, HttpServletRequest request, Long retryAfterMs) {
+    private ResponseEntity<IoNotificationErrorDTO> handleRequestRateTooLargeException(Exception ex, HttpServletRequest request, Long retryAfterMs) {
         String message = ex.getMessage();
 
         log.info(

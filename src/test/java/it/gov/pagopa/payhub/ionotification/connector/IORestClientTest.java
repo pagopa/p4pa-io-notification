@@ -7,7 +7,7 @@ import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import it.gov.pagopa.payhub.ionotification.config.IORestConnectorConfig;
 import it.gov.pagopa.payhub.ionotification.dto.*;
 import it.gov.pagopa.payhub.ionotification.exception.custom.CreateServiceInvocationException;
-import it.gov.pagopa.payhub.ionotification.exception.custom.IOWrongPayloadExceptiion;
+import it.gov.pagopa.payhub.ionotification.exception.custom.IOWrongPayloadException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.RetrieveServicesInvocationException;
 import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 import org.junit.jupiter.api.Test;
@@ -105,7 +105,7 @@ class IORestClientTest {
                 )
         );
 
-        assertThrows(IOWrongPayloadExceptiion.class, () ->
+        assertThrows(IOWrongPayloadException.class, () ->
                 ioRestConnector.createService(serviceRequestDTO));
     }
 
