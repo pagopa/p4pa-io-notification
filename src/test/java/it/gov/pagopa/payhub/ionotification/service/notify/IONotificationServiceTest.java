@@ -1,6 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.service.notify;
 
-import it.gov.pagopa.payhub.ionotification.event.producer.NotificationProducer;
+import it.gov.pagopa.payhub.ionotification.event.producer.IONotificationProducer;
 import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,20 +18,20 @@ class IONotificationServiceTest {
     private IONotificationService service;
 
     @Mock
-    private NotificationProducer notificationProducer;
+    private IONotificationProducer IONotificationProducer;
 
     @BeforeEach
     void setup(){
-        service = new IONotificationServiceImpl(notificationProducer);
+        service = new IONotificationServiceImpl(IONotificationProducer);
     }
 
     @Test
     void givenSendMessageThenSendToQueue(){
         NotificationQueueDTO notificationQueueDTO = mapToSendMessageToQueue();
-        doNothing().when(notificationProducer).sendNotification(notificationQueueDTO);
+        doNothing().when(IONotificationProducer).sendNotification(notificationQueueDTO);
 
         service.sendMessage(notificationQueueDTO);
 
-        verify(notificationProducer, times(1)).sendNotification(notificationQueueDTO);
+        verify(IONotificationProducer, times(1)).sendNotification(notificationQueueDTO);
     }
 }
