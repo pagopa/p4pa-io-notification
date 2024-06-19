@@ -20,11 +20,20 @@ spring:
     function:
       definition: notificationQueue
     stream:
+      stream:
+        binders:
+          kafka-notification:
+            type: kafka
+            environment:
+              spring.cloud.stream.kafka.binder:
+                brokers: \${KAFKA_BINDER_BROKER_ENDPOINT_LIST:}
+                configuration:
+                  sasl.jaas.config: \${KAFKA_OUTCOME_OUT_SASL_JAAS_CONFIG:}
       bindings:
         notificationQueue-out-0:
-          binder: kafka-outcome-out
+          binder: kafka-notification
           content-type: \${KAFKA_CONTENT_TYPE:application/json}
-          destination: \${KAFKA_TOPIC_OUTCOME:test}
+          destination: \${KAFKA_TOPIC_NOTIFICATION:test}
       kafka:
         binder:
           auto-create-topics: false
