@@ -2,6 +2,7 @@ package it.gov.pagopa.payhub.ionotification.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.payhub.ionotification.service.IOService;
+import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
 import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.createServiceRequestDTO;
+import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.mapToSendMessageToQueue;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,6 +40,21 @@ class IONotificationControllerImplTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(serviceRequestDTO)))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+    }
+
+    @Test
+    void givenSendNotificationThenSuccess() throws Exception {
+        NotificationQueueDTO notificationQueueDTO = mapToSendMessageToQueue();
+        doNothing().when(ioService)
+                .sendMessage(notificationQueueDTO);
+
+        mockMvc.perform(
+                        post("/notification/send/message")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .accept(MediaType.APPLICATION_JSON_VALUE)
+                                .content(objectMapper.writeValueAsString(notificationQueueDTO)))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
     }
