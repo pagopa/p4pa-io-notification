@@ -68,28 +68,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/IoNotificationErrorDTO'
 
-  /send/message/{enteId}/{tipoDovutoId}:
+  /send/message:
     post:
       tags:
         - ioNotification
       operationId: sendMessage
-      parameters:
-        - name: enteId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: tipoDovutoId
-          in: path
-          required: true
-          schema:
-            type: string
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NotificationDTO'
+              $ref: '#/components/schemas/NotificationQueueDTO'
       responses:
         '200':
           description: OK
@@ -229,12 +218,21 @@ components:
           type: number
           x-field-extra-annotation: |-
             @JsonProperty("topic_id")
-    NotificationDTO:
+    NotificationQueueDTO:
       type: object
       required:
         - fiscalCode
+        - enteId
+        - tipoDovutoId
+        - operationType
       properties:
         fiscalCode:
+          type: string
+        enteId:
+          type: string
+        tipoDovutoId:
+          type: string
+        operationType:
           type: string
     IoNotificationErrorDTO:
       type: object

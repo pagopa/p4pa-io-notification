@@ -52,6 +52,7 @@ dependencies {
 	implementation ("org.springframework.cloud:spring-cloud-starter-openfeign")
 	implementation("org.hibernate.validator:hibernate-validator:$hibernateValidatorVersion")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+	implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka")
 
 	// Security fixes
 	implementation("org.yaml:snakeyaml:$snakeYamlVersion")

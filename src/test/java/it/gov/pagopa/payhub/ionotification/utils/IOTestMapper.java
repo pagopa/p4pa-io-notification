@@ -2,6 +2,7 @@ package it.gov.pagopa.payhub.ionotification.utils;
 
 import it.gov.pagopa.payhub.ionotification.dto.*;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
+import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
 import it.gov.pagopa.payhub.model.generated.OrganizationRequestDTO;
 import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 import it.gov.pagopa.payhub.model.generated.ServiceRequestMetadataDTO;
@@ -13,10 +14,33 @@ import java.util.List;
 
 public class IOTestMapper {
 
+    public static final String TIPO_DOVUTO_ID = "TIPO_DOVUTO_ID";
+    public static final String ENTE_ID = "ENTE_ID";
+    public static final String SERVICE_NAME = "SERVICE_NAME";
+    public static final String SERVICE_ID = "SERVICE_ID";
+    public static final String DATE = "DATE";
+    public static final String VALUE = "VALUE";
+    public static final String REASON = "REASON";
+    public static final String FISCAL_CODE = "FISCAL_CODE";
+    public static final String MARKDOWN = "MARKDOWN";
+    public static final String SUBJECT = "SUBJECT";
+    public static final String SECONDARY_KEY = "SECONDARY_KEY";
+    public static final String PRIMARY_KEY = "PRIMARY_KEY";
+    public static final String DESCRIPTION = "DESCRIPTION";
+    public static final String EMAIL = "EMAIL";
+    public static final String SCOPE = "SCOPE";
+    public static final String PHONE = "PHONE";
+    public static final String SUPPORT_URL = "SUPPORT_URL";
+    public static final String PRIVACY_URL = "PRIVACY_URL";
+    public static final String TOS_URL = "TOS_URL";
+    public static final String PRODUCT_DEPARTMENT_NAME = "PRODUCT_DEPARTMENT_NAME";
+    public static final String ORGANIZATION_NAME = "ORGANIZATION_NAME";
+    public static final String ORGANIZATION_VAT = "ORGANIZATION_VAT";
+
     public static IOService mapIoService(ServiceRequestDTO serviceRequestDTO) {
         return IOService.builder()
-                .enteId("ENTE_ID")
-                .tipoDovutoId("TIPO_DOVUTO_ID")
+                .enteId(ENTE_ID)
+                .tipoDovutoId(TIPO_DOVUTO_ID)
                 .serviceName(serviceRequestDTO.getName())
                 .serviceDescription(serviceRequestDTO.getDescription())
                 .organizationName(serviceRequestDTO.getOrganization().getName())
@@ -28,8 +52,8 @@ public class IOTestMapper {
 
     public static ServiceRequestDTO createServiceRequestDTO() {
         return ServiceRequestDTO.builder()
-                .name("SERVICE_NAME")
-                .description("DESCRIPTION")
+                .name(SERVICE_NAME)
+                .description(DESCRIPTION)
                 .organization(createOrganizationRequestDTO())
                 .metadata(createServiceRequestMetadataDTO())
                 .build();
@@ -37,37 +61,37 @@ public class IOTestMapper {
 
     private static ServiceRequestMetadataDTO createServiceRequestMetadataDTO() {
         return ServiceRequestMetadataDTO.builder()
-                .email("EMAIL")
-                .phone("PHONE")
-                .supportUrl("SUPPORT_URL")
-                .privacyUrl("PRIVACY_URL")
-                .tosUrl("TOS_URL")
-                .scope("SCOPE")
+                .email(EMAIL)
+                .phone(PHONE)
+                .supportUrl(SUPPORT_URL)
+                .privacyUrl(PRIVACY_URL)
+                .tosUrl(TOS_URL)
+                .scope(SCOPE)
                 .topicId(BigDecimal.valueOf(0))
                 .build();
     }
 
     private static OrganizationRequestDTO createOrganizationRequestDTO() {
         return OrganizationRequestDTO.builder()
-                .departmentName("PRODUCT_DEPARTMENT_NAME")
-                .name("ORGANIZATION_NAME")
-                .fiscalCode("ORGANIZATION_VAT")
+                .departmentName(PRODUCT_DEPARTMENT_NAME)
+                .name(ORGANIZATION_NAME)
+                .fiscalCode(ORGANIZATION_VAT)
                 .build();
     }
 
     private static OrganizationResponseDTO createOrganizationResponseDTO() {
         return OrganizationResponseDTO.builder()
-                .departmentName("PRODUCT_DEPARTMENT_NAME")
-                .organizationName("ORGANIZATION_NAME")
-                .organizationFiscalCode("ORGANIZATION_VAT")
+                .departmentName(PRODUCT_DEPARTMENT_NAME)
+                .organizationName(ORGANIZATION_NAME)
+                .organizationFiscalCode(ORGANIZATION_VAT)
                 .build();
     }
 
     public static ServiceResponseDTO createServiceResponseDTO() {
         ServiceResponseMetadataDTO serviceMetadataDTO = createServiceResponseMetadataDTO();
         return ServiceResponseDTO.builder()
-                .id("SERVICE_ID")
-                .serviceName("SERVICE_NAME")
+                .id(SERVICE_ID)
+                .serviceName(SERVICE_NAME)
                 .organization(createOrganizationResponseDTO())
                 .serviceMetadata(serviceMetadataDTO)
                 .build();
@@ -75,20 +99,20 @@ public class IOTestMapper {
 
     private static ServiceResponseMetadataDTO createServiceResponseMetadataDTO() {
         return ServiceResponseMetadataDTO.builder()
-                .email("EMAIL")
-                .phone("PHONE")
-                .supportUrl("SUPPORT_URL")
-                .privacyUrl("PRIVACY_URL")
-                .tosUrl("TOS_URL")
-                .scope("SCOPE")
+                .email(EMAIL)
+                .phone(PHONE)
+                .supportUrl(SUPPORT_URL)
+                .privacyUrl(PRIVACY_URL)
+                .tosUrl(TOS_URL)
+                .scope(SCOPE)
                 .topic(new TopicDTO(0,"Altro"))
                 .build();
     }
 
     public static KeysDTO getTokenIOResponse() {
         return KeysDTO.builder()
-                .primaryKey("PRIMARY_KEY")
-                .secondaryKey("SECONDARY_KEY")
+                .primaryKey(PRIMARY_KEY)
+                .secondaryKey(SECONDARY_KEY)
                 .build();
     }
 
@@ -101,33 +125,41 @@ public class IOTestMapper {
 
     public static FiscalCodeDTO getUserProfileRequest(){
         return FiscalCodeDTO.builder()
-                .fiscalCode("FISCAL_CODE")
+                .fiscalCode(FISCAL_CODE)
                 .build();
     }
 
     public static NotificationDTO sendNotificationRequest(){
         MessageContent messageContent = MessageContent.builder()
-                .subject("SUBJECT")
-                .markdown("MARKDOWN")
+                .subject(SUBJECT)
+                .markdown(MARKDOWN)
                 .build();
         return NotificationDTO.builder()
                 .content(messageContent)
                 .timeToLive(10L)
-                .fiscalCode("FISCAL_CODE")
+                .fiscalCode(FISCAL_CODE)
                 .build();
     }
 
     public static ServicesListDTO getAllServicesResponse(){
         ServicePaginatedResponseDTO serviceList = ServicePaginatedResponseDTO.builder()
-                .status(new StatusDTO("VALUE", "REASON"))
-                .lastUpdate("DATE")
-                .id("SERVICE_ID")
-                .serviceName("SERVICE_NAME")
+                .status(new StatusDTO(VALUE, REASON))
+                .lastUpdate(DATE)
+                .id(SERVICE_ID)
+                .serviceName(SERVICE_NAME)
                 .organization(createOrganizationResponseDTO())
                 .build();
         return ServicesListDTO.builder()
                 .serviceList(List.of(serviceList))
                 .pagination(new PaginationDTO(0,0,0))
+                .build();
+    }
+
+    public static NotificationQueueDTO mapToSendMessageToQueue(){
+        return NotificationQueueDTO.builder()
+                .enteId(ENTE_ID)
+                .tipoDovutoId(TIPO_DOVUTO_ID)
+                .fiscalCode(FISCAL_CODE)
                 .build();
     }
 }

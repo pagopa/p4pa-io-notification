@@ -16,6 +16,34 @@ spring:
           maxConnectionLifeTimeMS: \${MONGODB_CONNECTIONPOOL_MAX_CONNECTION_LIFE_MS:0}
           maxConnectionIdleTimeMS: \${MONGODB_CONNECTIONPOOL_MAX_CONNECTION_IDLE_MS:120000}
           maxConnecting: \${MONGODB_CONNECTIONPOOL_MAX_CONNECTING:2}
+  cloud:
+    function:
+      definition: notificationQueue
+    stream:
+      binders:
+        kafka-notification:
+          type: kafka
+          environment:
+            spring.cloud.stream.kafka.binder:
+              brokers: \${KAFKA_BINDER_BROKER_ENDPOINT_LIST:}
+              configuration:
+                sasl.jaas.config: \${KAFKA_OUTCOME_OUT_SASL_JAAS_CONFIG:}
+      bindings:
+        notificationQueue-out-0:
+          binder: kafka-notification
+          content-type: \${KAFKA_CONTENT_TYPE:application/json}
+          destination: \${KAFKA_TOPIC_NOTIFICATION:}
+      kafka:
+        binder:
+          auto-create-topics: false
+          configuration:
+            heartbeat.interval.ms: \${KAFKA_CONFIG_HEARTBEAT_INTERVAL_MS:3000}
+            session.timeout.ms: \${KAFKA_CONFIG_SESSION_TIMEOUT_MS:30000}
+            request.timeout.ms: \${KAFKA_CONFIG_REQUEST_TIMEOUT_MS:60000}
+            metadata.max.age.ms: \${KAFKA_CONFIG_METADATA_MAX_AGE:180000}
+            sasl.mechanism: \${KAFKA_NOTIFICATION_SASL_MECHANISM:}
+            security.protocol: \${KAFKA_NOTIFICATION_SECURITY_PROTOCOL:}
+            max.request.size: \${KAFKA_CONFIG_MAX_REQUEST_SIZE:1000000}
 
 
 rest-client:
