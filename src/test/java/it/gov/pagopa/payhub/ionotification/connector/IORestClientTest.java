@@ -6,6 +6,10 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import it.gov.pagopa.payhub.ionotification.config.IORestConnectorConfig;
 import it.gov.pagopa.payhub.ionotification.dto.*;
+import it.gov.pagopa.payhub.ionotification.exception.custom.CreateServiceInvocationException;
+import it.gov.pagopa.payhub.ionotification.exception.custom.IOWrongPayloadException;
+import it.gov.pagopa.payhub.ionotification.exception.custom.RetrieveServicesInvocationException;
+import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +29,7 @@ import org.springframework.test.context.support.TestPropertySourceUtils;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -53,9 +57,10 @@ class IORestClientTest {
 
     @Test
     void givenCreateServiceThenSuccess() throws JsonProcessingException {
+        ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
 
         wireMockServer.stubFor(post(urlEqualTo("/manage/services"))
-                .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(createServiceRequestDTO())))
+                .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(serviceRequestDTO)))
                 .willReturn(aResponse()
                         .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                         .withBody(new ObjectMapper().writeValueAsString(createServiceResponseDTO()))
@@ -63,10 +68,47 @@ class IORestClientTest {
                 )
         );
 
-        ServiceResponseDTO serviceResponseDTO = ioRestConnector.createService(createServiceRequestDTO());
+        ServiceResponseDTO serviceResponseDTO = ioRestConnector.createService(serviceRequestDTO);
 
         assertNotNull(serviceResponseDTO);
     }
+
+    @Test
+    void givenCreateServiceWhenErrorFromIOThenThrowCreateServiceInvocationException() throws JsonProcessingException {
+
+        ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
+
+        wireMockServer.stubFor(post(urlEqualTo("/manage/services"))
+                .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(serviceRequestDTO)))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withStatus(HttpStatus.FORBIDDEN.value())
+                )
+        );
+
+        CreateServiceInvocationException exception = assertThrows(CreateServiceInvocationException.class, () ->
+                ioRestConnector.createService(serviceRequestDTO));
+
+        assertEquals("The service was not created, please retry it", exception.getMessage());
+    }
+
+    @Test
+    void givenCreateServiceWhenPayloadIsWrongThrowCreateServiceInvocationException() throws JsonProcessingException {
+
+        ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
+
+        wireMockServer.stubFor(post(urlEqualTo("/manage/services"))
+                .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(serviceRequestDTO)))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withStatus(HttpStatus.BAD_REQUEST.value())
+                )
+        );
+
+        assertThrows(IOWrongPayloadException.class, () ->
+                ioRestConnector.createService(serviceRequestDTO));
+    }
+
 
     @Test
     void givenServiceWhenGetServiceTokenThenSuccess() throws JsonProcessingException {
@@ -114,6 +156,19 @@ class IORestClientTest {
         ServicesListDTO services = ioRestConnector.getAllServices();
 
         assertNotNull(services);
+    }
+
+    @Test
+    void givenGetAllServicesWhenErrorFromIOThenThrowRetrieveServicesInvocationException() {
+        wireMockServer.stubFor(get(urlEqualTo("/manage/services"))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withStatus(HttpStatus.FORBIDDEN.value())
+                )
+        );
+
+        assertThrows(RetrieveServicesInvocationException.class, () ->
+                ioRestConnector.getAllServices());
     }
 
     @Test
