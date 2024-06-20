@@ -30,12 +30,18 @@ public class IOServiceSearchServiceImpl implements IOServiceSearchService {
         boolean morePages = true;
 
         while (morePages) {
-            ServicesListDTO servicesListDTO = connector.getAllServices(offset, 20);
-            allServices.addAll(servicesListDTO.getServiceList());
+            ServicesListDTO servicesListDTO = connector.getAllServices(100, offset);
 
-            PaginationDTO pagination = servicesListDTO.getPagination();
-            offset += pagination.getCount();
-            morePages = pagination.getCount() == pagination.getLimit();
+            if (servicesListDTO != null){
+                allServices.addAll(servicesListDTO.getServiceList());
+                PaginationDTO pagination = servicesListDTO.getPagination();
+
+                offset += pagination.getCount();
+                morePages = pagination.getCount() > 0;
+            }else{
+                morePages = false;
+            }
+
         }
 
         return new ServicesListDTO(allServices, new PaginationDTO(offset, 20, allServices.size()));

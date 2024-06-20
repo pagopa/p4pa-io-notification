@@ -37,18 +37,18 @@ class IOServiceSearchServiceTest {
         IOService ioService = mapIoService(serviceRequestDTO);
 
         ServicesListDTO firstPage = new ServicesListDTO(
-                new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 20)),
-                new PaginationDTO(0, 20, 20));
+                new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 100)),
+                new PaginationDTO(0, 100, 100));
         ServicesListDTO secondPage = new ServicesListDTO(
-                new ArrayList<>(getAllServicesResponse().getServiceList().subList(20, 40)),
-                new PaginationDTO(20, 20, 20));
+                new ArrayList<>(getAllServicesResponse().getServiceList().subList(100, 200)),
+                new PaginationDTO(100, 100, 100));
         ServicesListDTO thirdPage = new ServicesListDTO(
-                new ArrayList<>(getAllServicesResponse().getServiceList().subList(40, 50)),
-                new PaginationDTO(40, 20, 10));
+                new ArrayList<>(getAllServicesResponse().getServiceList().subList(200, 201)),
+                new PaginationDTO(200, 100, 1));
 
-        when(connector.getAllServices(0, 20)).thenReturn(firstPage);
-        when(connector.getAllServices(20, 20)).thenReturn(secondPage);
-        when(connector.getAllServices(40, 20)).thenReturn(thirdPage);
+        when(connector.getAllServices(100, 0)).thenReturn(firstPage);
+        when(connector.getAllServices(100, 100)).thenReturn(secondPage);
+        when(connector.getAllServices(100, 200)).thenReturn(thirdPage);
 
         assertTrue(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
                 "Expected service to be present");
@@ -62,7 +62,7 @@ class IOServiceSearchServiceTest {
 
         ServicesListDTO emptyPage = new ServicesListDTO(new ArrayList<>(), new PaginationDTO(0, 20, 0));
 
-        when(connector.getAllServices(0, 20)).thenReturn(emptyPage);
+        when(connector.getAllServices(100, 0)).thenReturn(emptyPage);
 
         assertFalse(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
                 "Expected service to be empty");
