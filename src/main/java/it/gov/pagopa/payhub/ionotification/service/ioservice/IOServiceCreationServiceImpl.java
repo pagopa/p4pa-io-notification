@@ -46,7 +46,7 @@ public class IOServiceCreationServiceImpl implements IOServiceCreationService {
     private void handleExistingService(IOService service, ServiceRequestDTO serviceRequestDTO) {
         Optional<String> serviceId = ioServiceSearchService.searchIOService(service, serviceRequestDTO);
         if (serviceId.isPresent()) {
-            log.info("Update service {} with serviceId: {}", service.getServiceName(), serviceId);
+            log.info("Update service {} with serviceId: {}", service.getServiceName(), serviceId.get());
             ioServiceRepository.updateService(service, serviceId.get());
         } else {
             log.info("Create new Service {} for {} after not finding it in IO",

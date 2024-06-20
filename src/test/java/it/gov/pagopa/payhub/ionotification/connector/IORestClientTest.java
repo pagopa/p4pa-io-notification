@@ -148,12 +148,12 @@ class IORestClientTest {
         wireMockServer.stubFor(get(urlEqualTo("/manage/services"))
                 .willReturn(aResponse()
                         .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .withBody(new ObjectMapper().writeValueAsString(getAllServicesResponse()))
+                        .withBody(new ObjectMapper().writeValueAsString(getAllServicesResponseFeign()))
                         .withStatus(HttpStatus.OK.value())
                 )
         );
 
-        ServicesListDTO services = ioRestConnector.getAllServices();
+        ServicesListDTO services = ioRestConnector.getAllServices(null, null);
 
         assertNotNull(services);
     }
@@ -168,7 +168,7 @@ class IORestClientTest {
         );
 
         assertThrows(RetrieveServicesInvocationException.class, () ->
-                ioRestConnector.getAllServices());
+                ioRestConnector.getAllServices(0, 20));
     }
 
     @Test
