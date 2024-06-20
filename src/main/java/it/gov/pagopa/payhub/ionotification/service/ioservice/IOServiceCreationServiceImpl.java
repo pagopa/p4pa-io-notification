@@ -9,6 +9,8 @@ import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @Slf4j
 public class IOServiceCreationServiceImpl implements IOServiceCreationService {
@@ -42,10 +44,10 @@ public class IOServiceCreationServiceImpl implements IOServiceCreationService {
     }
 
     private void handleExistingService(IOService service, ServiceRequestDTO serviceRequestDTO) {
-        String serviceId = ioServiceSearchService.searchIOService(service, serviceRequestDTO);
-        if (serviceId != null) {
+        Optional<String> serviceId = ioServiceSearchService.searchIOService(service, serviceRequestDTO);
+        if (serviceId.isPresent()) {
             log.info("Update service {} with serviceId: {}", service.getServiceName(), serviceId);
-            ioServiceRepository.updateService(service, serviceId);
+            ioServiceRepository.updateService(service, serviceId.get());
         } else {
             log.info("Create new Service {} for {} after not finding it in IO",
                     service.getServiceName(), service.getOrganizationName());

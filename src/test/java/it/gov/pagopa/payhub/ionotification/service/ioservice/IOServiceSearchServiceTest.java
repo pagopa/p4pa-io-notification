@@ -14,14 +14,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 
 import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class IOServiceSearchServiceTest {
 
-    public static final String SERVICE_ID = "SERVICE_ID";
     @Mock
     IORestConnector connector;
 
@@ -33,7 +32,7 @@ class IOServiceSearchServiceTest {
     }
 
     @Test
-    void givenHandleDuplicateServiceWhenServiceExistsInIOThenGetAllServices(){
+    void givenSearchIOServiceWhenServiceExistsInIOThenGetAllServices(){
         ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
 
         IOService ioService = mapIoService(serviceRequestDTO);
@@ -41,13 +40,12 @@ class IOServiceSearchServiceTest {
         ServicesListDTO allServicesResponse = getAllServicesResponse();
         when(connector.getAllServices()).thenReturn(allServicesResponse);
 
-        service.searchIOService(ioService, serviceRequestDTO);
-
-        assertEquals(SERVICE_ID, allServicesResponse.getServiceList().get(0).getId());
+        assertTrue(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
+                "Expected service to be present");
     }
 
     @Test
-    void givenHandleDuplicateServiceWhenServiceDoesNotExistsInIOThenDoNothing(){
+    void givenSearchIOServiceWhenServiceDoesNotExistsInIOThenDoNothing(){
         ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
 
         IOService ioService = mapIoService(serviceRequestDTO);
@@ -55,6 +53,7 @@ class IOServiceSearchServiceTest {
         when(connector.getAllServices())
                 .thenReturn(new ServicesListDTO(new ArrayList<>(), new PaginationDTO()));
 
-        assertNull(service.searchIOService(ioService, serviceRequestDTO));
+        assertFalse(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
+                "Expected service to be empty");
     }
 }
