@@ -42,7 +42,7 @@ public class IOServiceSearchServiceImpl implements IOServiceSearchService {
             }
         }
 
-        return new ServicesListDTO(allServices, new PaginationDTO(offset, 20, allServices.size()));
+        return new ServicesListDTO(allServices, new PaginationDTO(offset, limit, allServices.size()));
     }
 
     @Override
