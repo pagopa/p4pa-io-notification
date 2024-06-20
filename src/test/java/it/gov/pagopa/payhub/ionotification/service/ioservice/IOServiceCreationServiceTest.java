@@ -14,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.*;
 import static org.mockito.Mockito.*;
 
@@ -68,7 +70,7 @@ class IOServiceCreationServiceTest {
         when(ioServiceRepository.createIfNotExists(ioService)).thenReturn(updateResult);
 
         when(ioServiceSearchService.searchIOService(ioService, serviceRequestDTO))
-                .thenReturn(SERVICE_ID);
+                .thenReturn(Optional.of(SERVICE_ID));
 
         service.createService(ENTE_ID, TIPO_DOVUTO_ID, serviceRequestDTO);
 
@@ -87,7 +89,7 @@ class IOServiceCreationServiceTest {
         when(ioServiceRepository.createIfNotExists(ioService)).thenReturn(updateResult);
 
         when(ioServiceSearchService.searchIOService(ioService, serviceRequestDTO))
-                .thenReturn(null);
+                .thenReturn(Optional.empty());
         when(connector.createService(serviceRequestDTO)).thenReturn(createServiceResponseDTO());
 
         service.createService(ENTE_ID, TIPO_DOVUTO_ID, serviceRequestDTO);
