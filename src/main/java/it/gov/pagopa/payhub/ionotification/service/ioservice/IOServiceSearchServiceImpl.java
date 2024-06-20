@@ -1,6 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.service.ioservice;
 
 import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
+import it.gov.pagopa.payhub.ionotification.dto.PaginationDTO;
 import it.gov.pagopa.payhub.ionotification.dto.ServicePaginatedResponseDTO;
 import it.gov.pagopa.payhub.ionotification.dto.ServicesListDTO;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
@@ -8,6 +9,8 @@ import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,10 +23,28 @@ public class IOServiceSearchServiceImpl implements IOServiceSearchService {
         this.connector = connector;
     }
 
+
+    private ServicesListDTO getAllServicesWithPagination() {
+        List<ServicePaginatedResponseDTO> allServices = new ArrayList<>();
+        int offset = 0;
+        boolean morePages = true;
+
+        while (morePages) {
+            ServicesListDTO servicesListDTO = connector.getAllServices(offset, 20);
+            allServices.addAll(servicesListDTO.getServiceList());
+
+            PaginationDTO pagination = servicesListDTO.getPagination();
+            offset += pagination.getCount();
+            morePages = pagination.getCount() == pagination.getLimit();
+        }
+
+        return new ServicesListDTO(allServices, new PaginationDTO(offset, 20, allServices.size()));
+    }
+
     @Override
     public Optional<String> searchIOService(IOService service, ServiceRequestDTO serviceRequestDTO) {
         log.info("Service request already exists, call IO to see if Service exists");
-        ServicesListDTO servicesListDTO = connector.getAllServices();
+        ServicesListDTO servicesListDTO = getAllServicesWithPagination();
         Optional<ServicePaginatedResponseDTO> existingServiceOpt = findExistingService(service, servicesListDTO);
 
         return existingServiceOpt.map(ServicePaginatedResponseDTO::getId);

@@ -142,6 +142,32 @@ public class IOTestMapper {
     }
 
     public static ServicesListDTO getAllServicesResponse(){
+        List<ServicePaginatedResponseDTO>  serviceList = new ArrayList<>();
+        ServicePaginatedResponseDTO serviceList1 = ServicePaginatedResponseDTO.builder()
+                .status(new StatusDTO(VALUE, REASON))
+                .lastUpdate(DATE)
+                .id(SERVICE_ID)
+                .serviceName(SERVICE_NAME)
+                .organization(createOrganizationResponseDTO())
+                .build();
+        serviceList.add(serviceList1);
+        for (int i = 2; i <= 51; i++) {
+            ServicePaginatedResponseDTO serviceListN = ServicePaginatedResponseDTO.builder()
+                    .status(new StatusDTO("deleted", "reason " + i))
+                    .lastUpdate("2024-06-20T07:42:26.000Z")
+                    .id("01J0T9888W308FZR07HJQNW22" + (char) ('M' + i))
+                    .serviceName("Service " + i)
+                    .organization(new OrganizationResponseDTO("Organization " + i, "description " + i, "department " + i))
+                    .build();
+            serviceList.add(serviceListN);
+        }
+        return ServicesListDTO.builder()
+                .serviceList(serviceList)
+                .pagination(new PaginationDTO(0,0,0))
+                .build();
+    }
+
+    public static ServicesListDTO getAllServicesResponseFeign(){
         ServicePaginatedResponseDTO serviceList = ServicePaginatedResponseDTO.builder()
                 .status(new StatusDTO(VALUE, REASON))
                 .lastUpdate(DATE)
