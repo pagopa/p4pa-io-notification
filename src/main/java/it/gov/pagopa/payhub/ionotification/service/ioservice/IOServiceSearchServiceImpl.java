@@ -26,22 +26,20 @@ public class IOServiceSearchServiceImpl implements IOServiceSearchService {
 
     private ServicesListDTO getAllServicesWithPagination() {
         List<ServicePaginatedResponseDTO> allServices = new ArrayList<>();
-        int offset = 0;
         boolean morePages = true;
+        int offset = 0;
+        int limit = 99;
 
         while (morePages) {
-            ServicesListDTO servicesListDTO = connector.getAllServices(99, offset);
+            ServicesListDTO servicesListDTO = connector.getAllServices(limit, offset);
 
-            if (servicesListDTO != null){
-                allServices.addAll(servicesListDTO.getServiceList());
-                PaginationDTO pagination = servicesListDTO.getPagination();
+            allServices.addAll(servicesListDTO.getServiceList());
+            PaginationDTO pagination = servicesListDTO.getPagination();
 
-                offset += pagination.getCount();
-                morePages = pagination.getCount() > 0;
-            }else{
+            offset += pagination.getCount();
+            if (pagination.getCount() < pagination.getLimit()) {
                 morePages = false;
             }
-
         }
 
         return new ServicesListDTO(allServices, new PaginationDTO(offset, 20, allServices.size()));

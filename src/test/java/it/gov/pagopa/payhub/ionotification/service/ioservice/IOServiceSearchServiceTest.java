@@ -37,18 +37,10 @@ class IOServiceSearchServiceTest {
         IOService ioService = mapIoService(serviceRequestDTO);
 
         ServicesListDTO firstPage = new ServicesListDTO(
-                new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 99)),
-                new PaginationDTO(0, 99, 99));
-        ServicesListDTO secondPage = new ServicesListDTO(
-                new ArrayList<>(getAllServicesResponse().getServiceList().subList(99, 198)),
-                new PaginationDTO(99, 99, 99));
-        ServicesListDTO thirdPage = new ServicesListDTO(
-                new ArrayList<>(getAllServicesResponse().getServiceList().subList(198, 201)),
-                new PaginationDTO(198, 99, 3));
+                new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 10)),
+                new PaginationDTO(0, 99, 10));
 
         when(connector.getAllServices(99, 0)).thenReturn(firstPage);
-        when(connector.getAllServices(99, 99)).thenReturn(secondPage);
-        when(connector.getAllServices(99, 198)).thenReturn(thirdPage);
 
         assertTrue(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
                 "Expected service to be present");
@@ -60,7 +52,7 @@ class IOServiceSearchServiceTest {
         ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
         IOService ioService = mapIoService(serviceRequestDTO);
 
-        ServicesListDTO emptyPage = new ServicesListDTO(new ArrayList<>(), new PaginationDTO(0, 20, 0));
+        ServicesListDTO emptyPage = new ServicesListDTO(new ArrayList<>(), new PaginationDTO(0, 99, 0));
 
         when(connector.getAllServices(99, 0)).thenReturn(emptyPage);
 

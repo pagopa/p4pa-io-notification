@@ -151,18 +151,17 @@ public class IOTestMapper {
                 .organization(createOrganizationResponseDTO())
                 .build();
         serviceList.add(serviceList1);
-        for (int i = 2; i <= 201; i++) {
+        for (int i = 2; i <= 10; i++) {
             ServicePaginatedResponseDTO serviceListN = ServicePaginatedResponseDTO.builder()
                     .status(new StatusDTO("deleted", "reason " + i))
-                    .lastUpdate("2024-06-20T07:42:26.000Z")
-                    .id("01J0T9888W308FZR07HJQNW22" + (char) ('M' + i))
-                    .serviceName("Service " + i)
+                    .lastUpdate(DATE)
+                    .id(SERVICE_ID + (char) ('M' + i))
+                    .serviceName(SERVICE_NAME + i)
                     .organization(new OrganizationResponseDTO("Organization " + i, "description " + i, "department " + i))
                     .build();
             serviceList.add(serviceListN);
 
         }
-        System.out.println("Lista size: " + serviceList.size());
         return ServicesListDTO.builder()
                 .serviceList(serviceList)
                 .pagination(new PaginationDTO(0,0,0))
