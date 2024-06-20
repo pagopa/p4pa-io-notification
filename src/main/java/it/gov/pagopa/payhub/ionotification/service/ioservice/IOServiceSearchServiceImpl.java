@@ -30,7 +30,7 @@ public class IOServiceSearchServiceImpl implements IOServiceSearchService {
         boolean morePages = true;
 
         while (morePages) {
-            ServicesListDTO servicesListDTO = connector.getAllServices(100, offset);
+            ServicesListDTO servicesListDTO = connector.getAllServices(99, offset);
 
             if (servicesListDTO != null){
                 allServices.addAll(servicesListDTO.getServiceList());
