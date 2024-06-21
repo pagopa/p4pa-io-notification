@@ -5,6 +5,7 @@ import it.gov.pagopa.payhub.ionotification.dto.PaginationDTO;
 import it.gov.pagopa.payhub.ionotification.dto.ServicesListDTO;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +25,7 @@ class IOServiceSearchServiceTest {
     @Mock
     IORestConnector connector;
 
-    IOServiceSearchService service;
+    private IOServiceSearchService service;
 
     @BeforeEach
     void setup(){
@@ -73,14 +74,9 @@ class IOServiceSearchServiceTest {
         serviceRequestDTO.setName("WRONG_NAME");
         IOService ioService = mapIoService(serviceRequestDTO);
 
-        ServicesListDTO firstPage = new ServicesListDTO(
-                new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 10)),
-                new PaginationDTO(0, 5, 5));
+        ServicesListDTO firstPage = getServicesListDTO();
 
-        when(connector.getAllServices(5, 0)).thenReturn(firstPage);
-
-        assertFalse(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
-                "Expected service to be empty");
+        getServiceEmpty(firstPage, ioService, serviceRequestDTO);
     }
 
     @Test
@@ -89,14 +85,9 @@ class IOServiceSearchServiceTest {
         serviceRequestDTO.getOrganization().setName("WRONG_ORGANIZATION_NAME");
         IOService ioService = mapIoService(serviceRequestDTO);
 
-        ServicesListDTO firstPage = new ServicesListDTO(
-                new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 10)),
-                new PaginationDTO(0, 5, 5));
+        ServicesListDTO firstPage = getServicesListDTO();
 
-        when(connector.getAllServices(5, 0)).thenReturn(firstPage);
-
-        assertFalse(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
-                "Expected service to be empty");
+        getServiceEmpty(firstPage, ioService, serviceRequestDTO);
     }
 
 
@@ -107,14 +98,9 @@ class IOServiceSearchServiceTest {
         serviceRequestDTO.getOrganization().setName("Organization3");
         IOService ioService = mapIoService(serviceRequestDTO);
 
-        ServicesListDTO firstPage = new ServicesListDTO(
-                new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 10)),
-                new PaginationDTO(0, 5, 5));
+        ServicesListDTO firstPage = getServicesListDTO();
 
-        when(connector.getAllServices(5, 0)).thenReturn(firstPage);
-
-        assertFalse(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
-                "Expected service to be empty");
+        getServiceEmpty(firstPage, ioService, serviceRequestDTO);
     }
 
     @Test
@@ -122,9 +108,20 @@ class IOServiceSearchServiceTest {
         ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
         IOService ioService = mapIoService(serviceRequestDTO);
 
-        ServicesListDTO emptyPage = new ServicesListDTO(new ArrayList<>(), new PaginationDTO(0, 99, 0));
+        ServicesListDTO emptyPage = new ServicesListDTO(new ArrayList<>(), new PaginationDTO(0, 5, 0));
 
-        when(connector.getAllServices(5, 0)).thenReturn(emptyPage);
+        getServiceEmpty(emptyPage, ioService, serviceRequestDTO);
+    }
+
+    @NotNull
+    private static ServicesListDTO getServicesListDTO() {
+        return new ServicesListDTO(
+                new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 10)),
+                new PaginationDTO(0, 5, 5));
+    }
+
+    private void getServiceEmpty(ServicesListDTO firstPage, IOService ioService, ServiceRequestDTO serviceRequestDTO) {
+        when(connector.getAllServices(5, 0)).thenReturn(firstPage);
 
         assertFalse(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
                 "Expected service to be empty");
