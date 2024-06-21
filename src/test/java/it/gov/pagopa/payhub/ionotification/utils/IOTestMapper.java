@@ -157,11 +157,11 @@ public class IOTestMapper {
                     .lastUpdate(DATE)
                     .id(SERVICE_ID + (char) ('M' + i))
                     .serviceName(SERVICE_NAME + i)
-                    .organization(new OrganizationResponseDTO("Organization " + i, "description " + i, "department " + i))
+                    .organization(new OrganizationResponseDTO("Organization" + i, "description " + i, "department " + i))
                     .build();
             serviceList.add(serviceListN);
-
         }
+        System.out.println("size: " + serviceList.size());
         return ServicesListDTO.builder()
                 .serviceList(serviceList)
                 .pagination(new PaginationDTO(0,0,0))

@@ -28,7 +28,7 @@ public class IORestConnectorImpl implements IORestConnector{
         try {
             return ioFeignRestClient.createService(serviceRequestDTO, subscriptionKey);
         } catch (FeignException e) {
-            log.error("An error occurred while creating service: {}", e.getMessage(), e);
+            log.error("An error occurred while creating service: {}", e.getMessage());
             if (e.status() == 400){
                 throw new IOWrongPayloadException(String.format("There is something wrong with the payload: %s", e.getMessage()));
             }
@@ -56,7 +56,7 @@ public class IORestConnectorImpl implements IORestConnector{
         try {
             return ioFeignRestClient.getAllServices(limit, offset, subscriptionKey);
         } catch (FeignException e) {
-            log.error("An error occurred while retrieving all services: {}", e.getMessage(), e);
+            log.error("An error occurred while retrieving all services: {}", e.getMessage());
             throw new RetrieveServicesInvocationException("It was not possible to retrieve all services from IO, please retry it");
         }
     }
