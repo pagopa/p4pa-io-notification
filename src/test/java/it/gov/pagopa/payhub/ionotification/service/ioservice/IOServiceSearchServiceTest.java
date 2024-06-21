@@ -24,23 +24,44 @@ class IOServiceSearchServiceTest {
     @Mock
     IORestConnector connector;
 
-    private IOServiceSearchService service;
+    IOServiceSearchService service;
 
     @BeforeEach
     void setup(){
-        service = new IOServiceSearchServiceImpl(connector);
+        service = new IOServiceSearchServiceImpl(connector, 0, 5);
     }
+
 
     @Test
     void givenSearchIOServiceWhenServiceExistsInIOThenGetAllServices() {
         ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
         IOService ioService = mapIoService(serviceRequestDTO);
 
+        ServicesListDTO allServicesResponse = getAllServicesResponse();
         ServicesListDTO firstPage = new ServicesListDTO(
-                new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 10)),
-                new PaginationDTO(0, 99, 10));
+                new ArrayList<>(allServicesResponse.getServiceList().subList(0, 5)),
+                new PaginationDTO(0, 5, 5));
+        ServicesListDTO secondPage = new ServicesListDTO(
+                new ArrayList<>(allServicesResponse.getServiceList().subList(5, 8)),
+                new PaginationDTO(5, 5, 3));
 
-        when(connector.getAllServices(99, 0)).thenReturn(firstPage);
+        when(connector.getAllServices(5, 0)).thenReturn(firstPage);
+        when(connector.getAllServices(5, 5)).thenReturn(secondPage);
+
+        assertTrue(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
+                "Expected service to be present");
+    }
+
+    @Test
+    void givenSearchIOServiceWhenServiceExistsInIOAndLastPageCountIsEqualToLimitThenGetAllServices() {
+        ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
+        IOService ioService = mapIoService(serviceRequestDTO);
+
+        ServicesListDTO firstPage = new ServicesListDTO(
+                new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 5)),
+                new PaginationDTO(0, 5, 5));
+
+        when(connector.getAllServices(5, 0)).thenReturn(firstPage);
 
         assertTrue(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
                 "Expected service to be present");
@@ -54,9 +75,9 @@ class IOServiceSearchServiceTest {
 
         ServicesListDTO firstPage = new ServicesListDTO(
                 new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 10)),
-                new PaginationDTO(0, 99, 10));
+                new PaginationDTO(0, 5, 5));
 
-        when(connector.getAllServices(99, 0)).thenReturn(firstPage);
+        when(connector.getAllServices(5, 0)).thenReturn(firstPage);
 
         assertFalse(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
                 "Expected service to be empty");
@@ -65,14 +86,14 @@ class IOServiceSearchServiceTest {
     @Test
     void givenSearchIOServiceWhenGetAllServicesThenWrongOrganizationName() {
         ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
-        serviceRequestDTO.getOrganization().setName("WRONG_NAME");
+        serviceRequestDTO.getOrganization().setName("WRONG_ORGANIZATION_NAME");
         IOService ioService = mapIoService(serviceRequestDTO);
 
         ServicesListDTO firstPage = new ServicesListDTO(
                 new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 10)),
-                new PaginationDTO(0, 99, 10));
+                new PaginationDTO(0, 5, 5));
 
-        when(connector.getAllServices(99, 0)).thenReturn(firstPage);
+        when(connector.getAllServices(5, 0)).thenReturn(firstPage);
 
         assertFalse(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
                 "Expected service to be empty");
@@ -88,9 +109,9 @@ class IOServiceSearchServiceTest {
 
         ServicesListDTO firstPage = new ServicesListDTO(
                 new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 10)),
-                new PaginationDTO(0, 99, 10));
+                new PaginationDTO(0, 5, 5));
 
-        when(connector.getAllServices(99, 0)).thenReturn(firstPage);
+        when(connector.getAllServices(5, 0)).thenReturn(firstPage);
 
         assertFalse(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
                 "Expected service to be empty");
@@ -103,7 +124,7 @@ class IOServiceSearchServiceTest {
 
         ServicesListDTO emptyPage = new ServicesListDTO(new ArrayList<>(), new PaginationDTO(0, 99, 0));
 
-        when(connector.getAllServices(99, 0)).thenReturn(emptyPage);
+        when(connector.getAllServices(5, 0)).thenReturn(emptyPage);
 
         assertFalse(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
                 "Expected service to be empty");

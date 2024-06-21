@@ -7,6 +7,7 @@ import it.gov.pagopa.payhub.ionotification.dto.ServicesListDTO;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,9 +19,15 @@ import java.util.Optional;
 public class IOServiceSearchServiceImpl implements IOServiceSearchService {
 
     private final IORestConnector connector;
+    private int offset;
+    private final int limit;
 
-    public IOServiceSearchServiceImpl(IORestConnector connector) {
+    public IOServiceSearchServiceImpl(IORestConnector connector,
+                                      @Value("${rest-client.backend-io-manage.service.offset}") int offset,
+                                      @Value("${rest-client.backend-io-manage.service.limit}") int limit) {
         this.connector = connector;
+        this.offset = offset;
+        this.limit = limit;
     }
 
 
@@ -37,17 +44,17 @@ public class IOServiceSearchServiceImpl implements IOServiceSearchService {
     private List<ServicePaginatedResponseDTO> retrieveAllServices() {
         List<ServicePaginatedResponseDTO> allServices = new ArrayList<>();
         boolean morePages = true;
-        int offset = 0;
-        int limit = 99;
 
         while (morePages) {
             ServicesListDTO servicesListDTO = connector.getAllServices(limit, offset);
 
-            allServices.addAll(servicesListDTO.getServiceList());
-            PaginationDTO pagination = servicesListDTO.getPagination();
+            if (servicesListDTO!=null) {
+                allServices.addAll(servicesListDTO.getServiceList());
+                PaginationDTO pagination = servicesListDTO.getPagination();
 
-            offset += pagination.getCount();
-            if (pagination.getCount() < pagination.getLimit()) {
+                offset += pagination.getCount();
+                morePages = pagination.getCount() >= pagination.getLimit();
+            }else {
                 morePages = false;
             }
         }
