@@ -98,10 +98,10 @@ class IONotificationExceptionHandlerTest {
     }
 
     @Test
-    void handleTooManyRequestsWriteDbException() throws Exception {
+    void handleWriteDbWithoutTooManyRequestsException() throws Exception {
 
         String writeErrorMessage = """
-            Error=16500, Details='Response status code does not indicate success: TooManyRequests (429); Substatus: 3200; ActivityId: 822d212d-5aac-4f5d-a2d4-76d6da7b619e; Reason: (
+            Error=16500, Substatus: 3200; ActivityId: 822d212d-5aac-4f5d-a2d4-76d6da7b619e; Reason: (
             Errors : [
               "Request rate is large. More Request Units may be needed, so no changes were made. Please retry this request later. Learn more: http://aka.ms/cosmosdb-error-429"
             ]
@@ -112,7 +112,7 @@ class IONotificationExceptionHandlerTest {
     }
 
     @Test
-    void handleTooManyRequestsWriteDbWithRetryAfterException() throws Exception {
+    void handleTooManyRequestsWriteDbException() throws Exception {
 
         String writeErrorMessage = """
             RetryAfterMs=34, Details='Response status code does not indicate success: TooManyRequests (429); Substatus: 3200; ActivityId: 822d212d-5aac-4f5d-a2d4-76d6da7b619e; Reason: (
@@ -136,6 +136,7 @@ class IONotificationExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.status().isInternalServerError())
                 .andExpect(MockMvcResultMatchers.content().json("{\"message\":\"DUMMY\"}", false));
     }
+
 
     private void handleMongoWriteException(String writeErrorMessage) throws Exception {
         final MongoWriteException mongoWriteException = new MongoWriteException(
