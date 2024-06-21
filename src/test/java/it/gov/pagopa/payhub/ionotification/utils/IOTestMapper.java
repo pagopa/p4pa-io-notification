@@ -160,8 +160,8 @@ public class IOTestMapper {
                     .organization(new OrganizationResponseDTO("Organization" + i, "description " + i, "department " + i))
                     .build();
             serviceList.add(serviceListN);
-
         }
+        System.out.println("size: " + serviceList.size());
         return ServicesListDTO.builder()
                 .serviceList(serviceList)
                 .pagination(new PaginationDTO(0,0,0))
