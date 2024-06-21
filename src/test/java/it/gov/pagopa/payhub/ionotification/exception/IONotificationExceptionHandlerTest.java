@@ -98,7 +98,7 @@ class IONotificationExceptionHandlerTest {
     }
 
     @Test
-    void handleTooManyWriteDbException() throws Exception {
+    void handleTooManyRequestsWriteDbException() throws Exception {
 
         String writeErrorMessage = """
             Error=16500, Details='Response status code does not indicate success: TooManyRequests (429); Substatus: 3200; ActivityId: 822d212d-5aac-4f5d-a2d4-76d6da7b619e; Reason: (
@@ -108,16 +108,21 @@ class IONotificationExceptionHandlerTest {
             );
             """;
 
-        final MongoWriteException mongoWriteException = new MongoWriteException(
-                new WriteError(16500, writeErrorMessage, BsonDocument.parse("{}")), new ServerAddress());
-        doThrow(
-                new DataIntegrityViolationException(mongoWriteException.getMessage(), mongoWriteException))
-                .when(testControllerSpy).testEndpoint();
+        handleMongoWriteException(writeErrorMessage);
+    }
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/test")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isTooManyRequests())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Too Many Requests"));
+    @Test
+    void handleTooManyRequestsWriteDbWithRetryAfterException() throws Exception {
+
+        String writeErrorMessage = """
+            RetryAfterMs=34, Details='Response status code does not indicate success: TooManyRequests (429); Substatus: 3200; ActivityId: 822d212d-5aac-4f5d-a2d4-76d6da7b619e; Reason: (
+            Errors : [
+              "Request rate is large. More Request Units may be needed, so no changes were made. Please retry this request later. Learn more: http://aka.ms/cosmosdb-error-429"
+            ]
+            );
+            """;
+
+        handleMongoWriteException(writeErrorMessage);
     }
 
     @Test
@@ -130,5 +135,18 @@ class IONotificationExceptionHandlerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isInternalServerError())
                 .andExpect(MockMvcResultMatchers.content().json("{\"message\":\"DUMMY\"}", false));
+    }
+
+    private void handleMongoWriteException(String writeErrorMessage) throws Exception {
+        final MongoWriteException mongoWriteException = new MongoWriteException(
+                new WriteError(16500, writeErrorMessage, BsonDocument.parse("{}")), new ServerAddress());
+        doThrow(
+                new DataIntegrityViolationException(mongoWriteException.getMessage(), mongoWriteException))
+                .when(testControllerSpy).testEndpoint();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isTooManyRequests())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Too Many Requests"));
     }
 }

@@ -46,6 +46,55 @@ class IOServiceSearchServiceTest {
                 "Expected service to be present");
     }
 
+    @Test
+    void givenSearchIOServiceWhenGetAllServicesThenWrongServiceName() {
+        ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
+        serviceRequestDTO.setName("WRONG_NAME");
+        IOService ioService = mapIoService(serviceRequestDTO);
+
+        ServicesListDTO firstPage = new ServicesListDTO(
+                new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 10)),
+                new PaginationDTO(0, 99, 10));
+
+        when(connector.getAllServices(99, 0)).thenReturn(firstPage);
+
+        assertFalse(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
+                "Expected service to be empty");
+    }
+
+    @Test
+    void givenSearchIOServiceWhenGetAllServicesThenWrongOrganizationName() {
+        ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
+        serviceRequestDTO.getOrganization().setName("WRONG_NAME");
+        IOService ioService = mapIoService(serviceRequestDTO);
+
+        ServicesListDTO firstPage = new ServicesListDTO(
+                new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 10)),
+                new PaginationDTO(0, 99, 10));
+
+        when(connector.getAllServices(99, 0)).thenReturn(firstPage);
+
+        assertFalse(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
+                "Expected service to be empty");
+    }
+
+
+    @Test
+    void givenSearchIOServiceWhenGetAllServicesThenStatusDeleted() {
+        ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
+        serviceRequestDTO.setName("SERVICE_NAME3");
+        serviceRequestDTO.getOrganization().setName("Organization3");
+        IOService ioService = mapIoService(serviceRequestDTO);
+
+        ServicesListDTO firstPage = new ServicesListDTO(
+                new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 10)),
+                new PaginationDTO(0, 99, 10));
+
+        when(connector.getAllServices(99, 0)).thenReturn(firstPage);
+
+        assertFalse(service.searchIOService(ioService, serviceRequestDTO).isPresent(),
+                "Expected service to be empty");
+    }
 
     @Test
     void givenSearchIOServiceWhenServiceDoesNotExistsInIOThenDoNothing() {

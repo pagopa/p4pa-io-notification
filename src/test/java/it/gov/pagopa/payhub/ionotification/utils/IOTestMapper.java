@@ -157,7 +157,7 @@ public class IOTestMapper {
                     .lastUpdate(DATE)
                     .id(SERVICE_ID + (char) ('M' + i))
                     .serviceName(SERVICE_NAME + i)
-                    .organization(new OrganizationResponseDTO("Organization " + i, "description " + i, "department " + i))
+                    .organization(new OrganizationResponseDTO("Organization" + i, "description " + i, "department " + i))
                     .build();
             serviceList.add(serviceListN);
 

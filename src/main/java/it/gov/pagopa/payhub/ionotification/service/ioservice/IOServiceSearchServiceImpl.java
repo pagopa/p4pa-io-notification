@@ -26,7 +26,8 @@ public class IOServiceSearchServiceImpl implements IOServiceSearchService {
 
     @Override
     public Optional<String> searchIOService(IOService service, ServiceRequestDTO serviceRequestDTO) {
-        log.info("Service request already exists, call IO to see if Service exists");
+        log.info("Service {} for {} request already exists, call IO to see if Service exists",
+                service.getServiceName(), service.getOrganizationName());
         List<ServicePaginatedResponseDTO> services = retrieveAllServices();
         Optional<ServicePaginatedResponseDTO> existingServiceOpt = findExistingService(service, services);
 
