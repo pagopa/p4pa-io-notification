@@ -26,7 +26,7 @@ public class IOServiceMapper {
 
     public ServiceDTO mapService(IOService service){
         return ServiceDTO.builder()
-                .serviceId(service.getServiceId())
+                .serviceId(service.getServiceId() != null ? service.getServiceId() : null)
                 .serviceName(service.getServiceName())
                 .status(service.getStatus())
                 .serviceDescription(service.getServiceDescription())
@@ -34,7 +34,7 @@ public class IOServiceMapper {
                 .organizationDepartmentName(service.getOrganizationDepartmentName())
                 .organizationFiscalCode(service.getOrganizationFiscalCode())
                 .creationRequestDate(String.valueOf(service.getCreationRequestDate()))
-                .creationRequestDate(String.valueOf(service.getCreationRequestDate()))
+                .creationServiceDate(service.getCreationServiceDate() != null ? String.valueOf(service.getCreationServiceDate()) : null)
                 .build();
     }
 }
