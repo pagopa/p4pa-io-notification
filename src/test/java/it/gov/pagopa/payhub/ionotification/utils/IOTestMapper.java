@@ -2,15 +2,14 @@ package it.gov.pagopa.payhub.ionotification.utils;
 
 import it.gov.pagopa.payhub.ionotification.dto.*;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
-import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
-import it.gov.pagopa.payhub.model.generated.OrganizationRequestDTO;
-import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
-import it.gov.pagopa.payhub.model.generated.ServiceRequestMetadataDTO;
+import it.gov.pagopa.payhub.model.generated.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants.SERVICE_STATUS_CREATED;
 
 public class IOTestMapper {
 
@@ -47,6 +46,8 @@ public class IOTestMapper {
                 .organizationDepartmentName(serviceRequestDTO.getOrganization().getDepartmentName())
                 .organizationFiscalCode(serviceRequestDTO.getOrganization().getFiscalCode())
                 .creationRequestDate(LocalDateTime.now())
+                .creationServiceDate(LocalDateTime.now())
+                .status(SERVICE_STATUS_CREATED)
                 .build();
     }
 
@@ -161,7 +162,6 @@ public class IOTestMapper {
                     .build();
             serviceList.add(serviceListN);
         }
-        System.out.println("size: " + serviceList.size());
         return ServicesListDTO.builder()
                 .serviceList(serviceList)
                 .pagination(new PaginationDTO(0,0,0))
@@ -187,6 +187,15 @@ public class IOTestMapper {
                 .enteId(ENTE_ID)
                 .tipoDovutoId(TIPO_DOVUTO_ID)
                 .fiscalCode(FISCAL_CODE)
+                .build();
+    }
+
+    public static ServiceDTO getServiceResponse(){
+        return ServiceDTO.builder()
+                .serviceId(SERVICE_ID)
+                .status(SERVICE_STATUS_CREATED)
+                .serviceName(SERVICE_NAME)
+                .organizationName(ORGANIZATION_NAME)
                 .build();
     }
 }

@@ -6,6 +6,7 @@ import com.mongodb.ServerAddress;
 import com.mongodb.WriteError;
 import it.gov.pagopa.payhub.ionotification.exception.custom.IOWrongPayloadException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.RetrieveServicesInvocationException;
+import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.BsonDocument;
 import org.junit.jupiter.api.Test;
@@ -71,6 +72,15 @@ class IONotificationExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"));
     }
 
+    @Test
+    void handleNotFoundException() throws Exception {
+        doThrow(new ServiceNotFoundException("Error")).when(testControllerSpy).testEndpoint();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"));
+    }
 
     @Test
     void handleUncategorizedMongoDbException() throws Exception {
