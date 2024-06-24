@@ -11,6 +11,9 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 
+import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants.SERVICE_STATUS_CREATED;
+import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants.SERVICE_STATUS_REQUESTED;
+
 @Repository
 public class IOServiceRepositoryExtImpl implements IOServiceRepositoryExt{
 
@@ -27,6 +30,7 @@ public class IOServiceRepositoryExtImpl implements IOServiceRepositoryExt{
                         .and(Fields.tipoDovutoId).is(service.getTipoDovutoId())),
                 new Update()
                         .setOnInsert(Fields.enteId, service.getEnteId())
+                        .setOnInsert(Fields.status, SERVICE_STATUS_REQUESTED)
                         .setOnInsert(Fields.tipoDovutoId, service.getTipoDovutoId())
                         .setOnInsert(Fields.serviceName, service.getServiceName())
                         .setOnInsert(Fields.serviceDescription, service.getServiceDescription())
@@ -44,6 +48,7 @@ public class IOServiceRepositoryExtImpl implements IOServiceRepositoryExt{
                 new Update()
                         .set(Fields.serviceId, serviceId)
                         .set(Fields.enteId, service.getEnteId())
+                        .set(Fields.status, SERVICE_STATUS_CREATED)
                         .set(Fields.tipoDovutoId, service.getTipoDovutoId())
                         .set(Fields.serviceName, service.getServiceName())
                         .set(Fields.serviceDescription, service.getServiceDescription())

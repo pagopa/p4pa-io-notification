@@ -3,6 +3,7 @@ package it.gov.pagopa.payhub.ionotification.controller;
 import it.gov.pagopa.payhub.controller.generated.IoNotificationApi;
 import it.gov.pagopa.payhub.ionotification.service.IOService;
 import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
+import it.gov.pagopa.payhub.model.generated.ServiceDTO;
 import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +28,11 @@ public class IONotificationControllerImpl implements IoNotificationApi {
     public ResponseEntity<Void> sendMessage(NotificationQueueDTO notificationQueueDTO) {
         ioService.sendMessage(notificationQueueDTO);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<ServiceDTO> getService(String enteId, String tipoDovutoId) {
+        ServiceDTO serviceDTO = ioService.getService(enteId, tipoDovutoId);
+        return new ResponseEntity<>(serviceDTO, HttpStatus.OK);
     }
 }

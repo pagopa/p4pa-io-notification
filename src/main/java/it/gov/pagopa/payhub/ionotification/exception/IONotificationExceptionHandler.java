@@ -3,6 +3,7 @@ package it.gov.pagopa.payhub.ionotification.exception;
 import it.gov.pagopa.payhub.ionotification.exception.custom.CreateServiceInvocationException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.IOWrongPayloadException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.RetrieveServicesInvocationException;
+import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceNotFoundException;
 import it.gov.pagopa.payhub.model.generated.IoNotificationErrorDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,11 @@ public class IONotificationExceptionHandler {
     @ExceptionHandler({IOWrongPayloadException.class})
     public ResponseEntity<IoNotificationErrorDTO> handleWrongPayloadException(RuntimeException ex, HttpServletRequest request) {
         return handleIONotificationErrorException(ex, request, HttpStatus.BAD_REQUEST, IoNotificationErrorDTO.CodeEnum.WRONG_PAYLOAD);
+    }
+
+    @ExceptionHandler({ServiceNotFoundException.class})
+    public ResponseEntity<IoNotificationErrorDTO> handleNotFoundException(RuntimeException ex, HttpServletRequest request) {
+        return handleIONotificationErrorException(ex, request, HttpStatus.NOT_FOUND, IoNotificationErrorDTO.CodeEnum.SERVICE_NOT_FOUND);
     }
 
     @ExceptionHandler(DataAccessException.class)

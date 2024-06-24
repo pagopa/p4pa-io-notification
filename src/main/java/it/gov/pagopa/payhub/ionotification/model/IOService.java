@@ -19,6 +19,7 @@ public class IOService {
     private String serviceId;
     private String enteId;
     private String tipoDovutoId;
+    private String status;
     private String serviceName;
     private String serviceDescription;
     private String organizationName;
