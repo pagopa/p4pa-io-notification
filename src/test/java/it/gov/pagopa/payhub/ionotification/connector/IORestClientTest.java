@@ -57,8 +57,7 @@ class IORestClientTest {
     void givenCreateServiceThenSuccess() throws JsonProcessingException {
         ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
 
-        WireMock.configureFor("localhost", wireMockServer.port());
-        stubFor(post(urlEqualTo("/manage/services"))
+        wireMockServer.stubFor(post(urlEqualTo("/manage/services"))
                 .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(serviceRequestDTO)))
                 .willReturn(aResponse()
                         .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
