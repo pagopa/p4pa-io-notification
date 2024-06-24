@@ -6,6 +6,7 @@ import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class IOServiceMapper {
@@ -26,15 +27,15 @@ public class IOServiceMapper {
 
     public ServiceDTO mapService(IOService service){
         return ServiceDTO.builder()
-                .serviceId(service.getServiceId() != null ? service.getServiceId() : null)
+                .serviceId(service.getServiceId())
                 .serviceName(service.getServiceName())
                 .status(service.getStatus())
                 .serviceDescription(service.getServiceDescription())
                 .organizationName(service.getOrganizationName())
                 .organizationDepartmentName(service.getOrganizationDepartmentName())
                 .organizationFiscalCode(service.getOrganizationFiscalCode())
-                .creationRequestDate(String.valueOf(service.getCreationRequestDate()))
-                .creationServiceDate(service.getCreationServiceDate() != null ? String.valueOf(service.getCreationServiceDate()) : null)
+                .creationRequestDate(service.getCreationRequestDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .creationServiceDate(service.getCreationServiceDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                 .build();
     }
 }
