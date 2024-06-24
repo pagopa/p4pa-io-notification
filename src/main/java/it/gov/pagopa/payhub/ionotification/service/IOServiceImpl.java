@@ -6,7 +6,6 @@ import it.gov.pagopa.payhub.ionotification.service.notify.IONotificationService;
 import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
 import it.gov.pagopa.payhub.model.generated.ServiceDTO;
 import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +15,6 @@ public class IOServiceImpl implements IOService {
     private final IONotificationService ioNotificationService;
     private final IOManageService ioService;
 
-    @Autowired
     public IOServiceImpl(IOServiceCreationService ioServiceCreationService, IONotificationService ioNotificationService, IOManageService ioService) {
         this.ioServiceCreationService = ioServiceCreationService;
         this.ioNotificationService = ioNotificationService;
