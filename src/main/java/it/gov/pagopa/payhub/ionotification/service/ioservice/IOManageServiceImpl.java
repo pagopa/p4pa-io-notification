@@ -5,9 +5,12 @@ import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceNotFoundExcep
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IOServiceRepository;
 import it.gov.pagopa.payhub.model.generated.ServiceDTO;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
+@Service
+@Slf4j
 public class IOManageServiceImpl implements IOManageService {
 
     private final IOServiceMapper ioServiceMapper;
@@ -22,9 +25,11 @@ public class IOManageServiceImpl implements IOManageService {
     public ServiceDTO getService(String enteId, String tipoDovutoId) {
         Optional<IOService> service = ioServiceRepository.findByEnteIdAndTipoDovutoId(enteId, tipoDovutoId);
         if (service.isEmpty()){
+            log.error("Service for {} associated with {} was not found", tipoDovutoId, enteId);
             throw new ServiceNotFoundException(String.format(
                     "The service for %s associated with %s does not exist", tipoDovutoId, enteId));
         }
+        log.info("Service {} associated with {} found", service.get().getServiceName(), service.get().getOrganizationName());
         return ioServiceMapper.mapService(service.get());
     }
 }
