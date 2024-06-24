@@ -185,6 +185,7 @@ components:
       properties:
         serviceId:
           type: string
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)"
         status:
           type: string
         serviceName:
@@ -201,6 +202,7 @@ components:
           type: string
         creationServiceDate:
           type: string
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)"
     ServiceRequestDTO:
       type: object
       required:
