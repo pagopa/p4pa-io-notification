@@ -46,6 +46,8 @@ public class IOTestMapper {
                 .organizationDepartmentName(serviceRequestDTO.getOrganization().getDepartmentName())
                 .organizationFiscalCode(serviceRequestDTO.getOrganization().getFiscalCode())
                 .creationRequestDate(LocalDateTime.now())
+                .creationServiceDate(LocalDateTime.now())
+                .status(SERVICE_STATUS_CREATED)
                 .build();
     }
 
