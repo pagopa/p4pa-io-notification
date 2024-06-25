@@ -6,6 +6,7 @@ import com.mongodb.ServerAddress;
 import com.mongodb.WriteError;
 import it.gov.pagopa.payhub.ionotification.exception.custom.IOWrongPayloadException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.RetrieveServicesInvocationException;
+import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceAlreadyDeletedException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.BsonDocument;
@@ -69,6 +70,16 @@ class IONotificationExceptionHandlerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/test")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"));
+    }
+
+    @Test
+    void handleServiceAlreadyDeletedException() throws Exception {
+        doThrow(new ServiceAlreadyDeletedException("Error")).when(testControllerSpy).testEndpoint();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isForbidden())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"));
     }
 

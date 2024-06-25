@@ -1,9 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.exception;
 
-import it.gov.pagopa.payhub.ionotification.exception.custom.CreateServiceInvocationException;
-import it.gov.pagopa.payhub.ionotification.exception.custom.IOWrongPayloadException;
-import it.gov.pagopa.payhub.ionotification.exception.custom.RetrieveServicesInvocationException;
-import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceNotFoundException;
+import it.gov.pagopa.payhub.ionotification.exception.custom.*;
 import it.gov.pagopa.payhub.model.generated.IoNotificationErrorDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +24,7 @@ public class IONotificationExceptionHandler {
 
     private static final Pattern RETRY_AFTER_MS_PATTERN = Pattern.compile("RetryAfterMs=(\\d+)");
 
-    @ExceptionHandler({RetrieveServicesInvocationException.class, CreateServiceInvocationException.class})
+    @ExceptionHandler({RetrieveServicesInvocationException.class, CreateServiceInvocationException.class, DeleteServiceInvocationException.class,})
     public ResponseEntity<IoNotificationErrorDTO> handleFeignClientException(RuntimeException ex, HttpServletRequest request) {
         return handleIONotificationErrorException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, IoNotificationErrorDTO.CodeEnum.GENERIC_ERROR);
     }
@@ -35,6 +32,11 @@ public class IONotificationExceptionHandler {
     @ExceptionHandler({IOWrongPayloadException.class})
     public ResponseEntity<IoNotificationErrorDTO> handleWrongPayloadException(RuntimeException ex, HttpServletRequest request) {
         return handleIONotificationErrorException(ex, request, HttpStatus.BAD_REQUEST, IoNotificationErrorDTO.CodeEnum.WRONG_PAYLOAD);
+    }
+
+    @ExceptionHandler({ServiceAlreadyDeletedException.class})
+    public ResponseEntity<IoNotificationErrorDTO> handleServiceAlreadyDeletedException(RuntimeException ex, HttpServletRequest request) {
+        return handleIONotificationErrorException(ex, request, HttpStatus.FORBIDDEN, IoNotificationErrorDTO.CodeEnum.SERVICE_ALREADY_DELETED);
     }
 
     @ExceptionHandler({ServiceNotFoundException.class})
@@ -55,7 +57,7 @@ public class IONotificationExceptionHandler {
     }
 
     private ResponseEntity<IoNotificationErrorDTO> handleIONotificationErrorException(
-            RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus, IoNotificationErrorDTO.CodeEnum errorEnum){
+            RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus, IoNotificationErrorDTO.CodeEnum errorEnum) {
         String message = ex.getMessage();
         log.info("A {} occurred handling request {}: HttpStatus {} - {}",
                 ex.getClass(),

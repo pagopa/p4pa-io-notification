@@ -67,9 +67,11 @@ public class IORestConnectorImpl implements IORestConnector {
         } catch (FeignException e) {
             log.error("An error occurred while deleting service: {}", e.getMessage());
             if (e.status() == 404) {
-                throw new ServiceNotFoundException(String.format("The service with serviceId %s does not exist", serviceId));
+                throw new ServiceNotFoundException(String.format("The service with serviceId %s does not exist in IO", serviceId));
+            } else if (e.status() == 409) {
+                throw new ServiceAlreadyDeletedException(String.format("The service with serviceId %s is already deleted from IO", serviceId));
             }
-            throw new DeleteServiceInvocationException(String.format("It was not possible to delete the service with serviceId: %s", serviceId));
+            throw new DeleteServiceInvocationException(String.format("It was not possible to delete the service with serviceId: %s in IO", serviceId));
         }
     }
 }

@@ -2,6 +2,7 @@ package it.gov.pagopa.payhub.ionotification.service.ioservice;
 
 import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IOServiceMapper;
+import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceAlreadyDeletedException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceNotFoundException;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IOServiceRepository;
@@ -87,5 +88,35 @@ public class IOManageServiceTest {
                 service.deleteService(SERVICE_ID));
 
         verify(ioServiceRepository, times(1)).findByServiceId(SERVICE_ID);
+    }
+
+    @Test
+    void givenDeleteServiceWhenServiceAlreadyDeletedThenThrowServiceAlreadyDeletedException(){
+        IOService ioService = mapIoService(createServiceRequestDTO());
+        ioService.setStatus(SERVICE_STATUS_DELETED);
+
+        when(ioServiceRepository.findByServiceId(SERVICE_ID)).thenReturn(Optional.of(ioService));
+
+        assertThrows(ServiceAlreadyDeletedException.class, () ->
+                service.deleteService(SERVICE_ID));
+
+        verify(ioServiceRepository, times(1)).findByServiceId(SERVICE_ID);
+    }
+
+    @Test
+    void givenDeleteServiceWhenServiceAlreadyDeletedFromIOThenUpdateServiceStatus(){
+        IOService ioService = mapIoService(createServiceRequestDTO());
+
+        when(ioServiceRepository.findByServiceId(SERVICE_ID)).thenReturn(Optional.of(ioService));
+
+        doThrow(ServiceAlreadyDeletedException.class).when(ioRestConnector).deleteService(SERVICE_ID);
+
+        when(ioServiceRepository.save(ioService)).thenReturn(ioService);
+
+        service.deleteService(SERVICE_ID);
+
+        assertEquals(SERVICE_STATUS_DELETED, ioService.getStatus());
+        verify(ioServiceRepository, times(1)).findByServiceId(SERVICE_ID);
+        verify(ioServiceRepository, times(1)).save(ioService);
     }
 }

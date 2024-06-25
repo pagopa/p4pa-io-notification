@@ -2,6 +2,7 @@ package it.gov.pagopa.payhub.ionotification.service.ioservice;
 
 import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IOServiceMapper;
+import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceAlreadyDeletedException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceNotFoundException;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IOServiceRepository;
@@ -41,20 +42,31 @@ public class IOManageServiceImpl implements IOManageService {
 
     @Override
     public void deleteService(String serviceId) {
-        Optional<IOService> service = ioServiceRepository.findByServiceId(serviceId);
+        IOService service = ioServiceRepository.findByServiceId(serviceId)
+                .orElseThrow(() -> {
+                    log.error("Service with serviceId {} was not found", serviceId);
+                    return new ServiceNotFoundException(String.format("The service with serviceId %s does not exist", serviceId));
+                });
 
-        if (service.isEmpty()){
-            log.error("Service with serviceId {} was not found", serviceId);
-            throw new ServiceNotFoundException(String.format(
-                    "The service with serviceId %s does not exist", serviceId));
+        if (service.getStatus().equals(SERVICE_STATUS_DELETED)){
+            throw new ServiceAlreadyDeletedException(
+                    String.format("The service with serviceId %s is already deleted", serviceId));
         }
-        deleteServiceFromIO(serviceId, service.get());
+
+        deleteServiceFromIO(serviceId, service);
     }
 
     private void deleteServiceFromIO(String serviceId, IOService service) {
         log.info("Delete service {} associated with {} from IO", service.getServiceName(), service.getOrganizationName());
-        ioRestConnector.deleteService(serviceId);
+        try{
+            ioRestConnector.deleteService(serviceId);
+            updateDeletedService(service);
+        }catch (ServiceAlreadyDeletedException e){
+            updateDeletedService(service);
+        }
+    }
 
+    private void updateDeletedService(IOService service) {
         String status = SERVICE_STATUS_DELETED;
         service.setStatus(status);
         log.info("Update service {} with status {}", service.getServiceName(), status);

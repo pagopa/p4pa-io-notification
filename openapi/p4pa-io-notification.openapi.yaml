@@ -180,6 +180,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IoNotificationErrorDTO'
+        '403':
+          description: Service already deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IoNotificationErrorDTO'
         '429':
           description: Too many requests
           content:
@@ -341,6 +347,7 @@ components:
           type: string
           enum:
             - IO_NOTIFICATION_SERVICE_NOT_FOUND
+            - IO_NOTIFICATION_SERVICE_ALREADY_DELETED
             - IO_NOTIFICATION_WRONG_PAYLOAD
             - IO_NOTIFICATION_GENERIC_ERROR
             - IO_NOTIFICATION_TOO_MANY_REQUESTS
