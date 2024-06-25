@@ -17,8 +17,7 @@ import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(IONotificationControllerImpl.class)
@@ -77,5 +76,17 @@ class IONotificationControllerImplTest {
 
         ServiceDTO resultResponse = objectMapper.readValue(result.getResponse().getContentAsString(), ServiceDTO.class);
         assertEquals(serviceDTO, resultResponse);
+    }
+
+    @Test
+    void givenDeleteServiceThenSuccess() throws Exception {
+        doNothing().when(ioService)
+                .deleteService("serviceId");
+
+        mockMvc.perform(put("/notification/service/serviceId")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
     }
 }

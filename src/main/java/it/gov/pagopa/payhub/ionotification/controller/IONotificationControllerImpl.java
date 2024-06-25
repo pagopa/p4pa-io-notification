@@ -35,4 +35,10 @@ public class IONotificationControllerImpl implements IoNotificationApi {
         ServiceDTO serviceDTO = ioService.getService(enteId, tipoDovutoId);
         return new ResponseEntity<>(serviceDTO, HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<Void> deleteService(String serviceId) {
+        ioService.deleteService(serviceId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

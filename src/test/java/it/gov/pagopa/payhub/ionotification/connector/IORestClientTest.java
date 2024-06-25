@@ -212,6 +212,14 @@ class IORestClientTest {
         assertThrows(DeleteServiceInvocationException.class, () -> ioRestConnector.deleteService("service_forbidden"));
     }
 
+    @Test
+    void givenDeleteServiceWhenConflictThenThrowServiceAlreadyDeletedException() {
+
+        stubDeleteService("service_conflict", HttpStatus.CONFLICT.value());
+
+        assertThrows(ServiceAlreadyDeletedException.class, () -> ioRestConnector.deleteService("service_conflict"));
+    }
+
     private static void stubDeleteService(String serviceId, int httpStatusvalue) {
         wireMockServer.stubFor(delete(urlEqualTo("/manage/services/"+ serviceId))
                 .willReturn(aResponse()

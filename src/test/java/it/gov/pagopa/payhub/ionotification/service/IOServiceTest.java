@@ -29,13 +29,13 @@ class IOServiceTest {
     IONotificationService ioNotificationService;
 
     @Mock
-    IOManageService ioService;
+    IOManageService ioManageService;
 
     private IOService service;
 
     @BeforeEach
     void setup(){
-        service = new IOServiceImpl(ioServiceCreationService, ioNotificationService, ioService);
+        service = new IOServiceImpl(ioServiceCreationService, ioNotificationService, ioManageService);
     }
 
     @Test
@@ -67,12 +67,21 @@ class IOServiceTest {
     @Test
     void givenGetServiceThenSuccess(){
 
-        when(ioService.getService(ENTE_ID, TIPO_DOVUTO_ID)).thenReturn(getServiceResponse());
+        when(ioManageService.getService(ENTE_ID, TIPO_DOVUTO_ID)).thenReturn(getServiceResponse());
 
         ServiceDTO serviceDTO = service.getService(ENTE_ID, TIPO_DOVUTO_ID);
 
         assertNotNull(serviceDTO);
 
+    }
+
+    @Test
+    void givenDeleteServiceThenSuccess(){
+        doNothing().when(ioManageService).deleteService(SERVICE_ID);
+
+        service.deleteService(SERVICE_ID);
+
+        verify(ioManageService, times(1)).deleteService(SERVICE_ID);
     }
 
 }
