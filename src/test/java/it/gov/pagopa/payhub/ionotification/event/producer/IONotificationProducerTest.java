@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.cloud.stream.function.StreamBridge;
 
 import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.mapToSendMessageToQueue;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class IONotificationProducerTest {
@@ -32,6 +33,6 @@ class IONotificationProducerTest {
 
         ioNotificationProducer.sendNotification(notificationQueueDTO);
 
-        verify(streamBridge).send(Mockito.eq("notificationQueue-out-0"), Mockito.any(), Mockito.eq(notificationQueueDTO));
+        verify(streamBridge, times(1)).send(Mockito.eq("notificationQueue-out-0"), Mockito.any(), Mockito.eq(notificationQueueDTO));
     }
 }

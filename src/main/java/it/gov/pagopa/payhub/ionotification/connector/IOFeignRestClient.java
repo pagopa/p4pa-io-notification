@@ -32,7 +32,7 @@ public interface IOFeignRestClient {
             @RequestHeader("Ocp-Apim-Subscription-Key") String subscriptionKey);
 
     @PostMapping(
-            value = "/api/v1/profiles",
+            value = "/profiles",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
@@ -41,7 +41,7 @@ public interface IOFeignRestClient {
             @RequestHeader("Ocp-Apim-Subscription-Key") String subscriptionKey);
 
     @PostMapping(
-            value = "/api/v1/messages",
+            value = "/messages",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
@@ -57,5 +57,14 @@ public interface IOFeignRestClient {
     ServicesListDTO getAllServices(
             @RequestParam(required = false) Integer limit,
             @RequestParam(required = false) Integer offset,
+            @RequestHeader("Ocp-Apim-Subscription-Key") String subscriptionKey);
+
+    @DeleteMapping(
+            value = "/manage/services/{serviceId}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deleteService(
+            @PathVariable("serviceId") String serviceId,
             @RequestHeader("Ocp-Apim-Subscription-Key") String subscriptionKey);
 }

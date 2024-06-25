@@ -3,12 +3,11 @@ package it.gov.pagopa.payhub.ionotification.connector;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import it.gov.pagopa.payhub.ionotification.config.IORestConnectorConfig;
 import it.gov.pagopa.payhub.ionotification.dto.*;
-import it.gov.pagopa.payhub.ionotification.exception.custom.CreateServiceInvocationException;
-import it.gov.pagopa.payhub.ionotification.exception.custom.IOWrongPayloadException;
-import it.gov.pagopa.payhub.ionotification.exception.custom.RetrieveServicesInvocationException;
+import it.gov.pagopa.payhub.ionotification.exception.custom.*;
 import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,7 +52,6 @@ class IORestClientTest {
 
     @Autowired
     private IORestConnector ioRestConnector;
-
 
     @Test
     void givenCreateServiceThenSuccess() throws JsonProcessingException {
@@ -129,7 +127,7 @@ class IORestClientTest {
     @Test
     void givenFiscalCodeWhenGetUserProfileTokenThenSuccess() throws JsonProcessingException {
 
-        wireMockServer.stubFor(post(urlEqualTo("/api/v1/profiles"))
+        wireMockServer.stubFor(post(urlEqualTo("/profiles"))
                 .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(getUserProfileRequest())))
                 .willReturn(aResponse()
                         .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -174,7 +172,7 @@ class IORestClientTest {
     @Test
     void givenServiceWhenSendNotificationTokenThenSuccess() throws JsonProcessingException {
 
-        wireMockServer.stubFor(post(urlEqualTo("/api/v1/messages"))
+        wireMockServer.stubFor(post(urlEqualTo("/messages"))
                 .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(sendNotificationRequest())))
                 .willReturn(aResponse()
                         .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -187,6 +185,42 @@ class IORestClientTest {
 
         assertNotNull(notification);
     }
+
+    @Test
+    void givenDeleteServiceThenSuccess() {
+
+        stubDeleteService(SERVICE_ID, HttpStatus.NO_CONTENT.value());
+
+        ioRestConnector.deleteService(SERVICE_ID);
+        wireMockServer.verify(1,
+                WireMock.deleteRequestedFor(WireMock.urlEqualTo("/manage/services/" + SERVICE_ID)));
+    }
+
+    @Test
+    void givenDeleteServiceWhenServiceDoesNotExistsThenThrowServiceNotFoundException() {
+
+        stubDeleteService("service_not_found", HttpStatus.NOT_FOUND.value());
+
+        assertThrows(ServiceNotFoundException.class, () -> ioRestConnector.deleteService("service_not_found"));
+    }
+
+    @Test
+    void givenDeleteServiceWhenForbiddenThenThrowDeleteServiceInvocationException() {
+
+        stubDeleteService("service_forbidden", HttpStatus.FORBIDDEN.value());
+
+        assertThrows(DeleteServiceInvocationException.class, () -> ioRestConnector.deleteService("service_forbidden"));
+    }
+
+    private static void stubDeleteService(String serviceId, int httpStatusvalue) {
+        wireMockServer.stubFor(delete(urlEqualTo("/manage/services/"+ serviceId))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withStatus(httpStatusvalue)
+                )
+        );
+    }
+
 
     private static WireMockServer wireMockServer;
 
