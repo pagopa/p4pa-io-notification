@@ -13,12 +13,12 @@ public class IOServiceImpl implements IOService {
 
     private final IOServiceCreationService ioServiceCreationService;
     private final IONotificationService ioNotificationService;
-    private final IOManageService ioService;
+    private final IOManageService ioManageService;
 
-    public IOServiceImpl(IOServiceCreationService ioServiceCreationService, IONotificationService ioNotificationService, IOManageService ioService) {
+    public IOServiceImpl(IOServiceCreationService ioServiceCreationService, IONotificationService ioNotificationService, IOManageService ioManageService) {
         this.ioServiceCreationService = ioServiceCreationService;
         this.ioNotificationService = ioNotificationService;
-        this.ioService = ioService;
+        this.ioManageService = ioManageService;
     }
 
     @Override
@@ -29,11 +29,15 @@ public class IOServiceImpl implements IOService {
     @Override
     public void sendMessage(NotificationQueueDTO notificationQueueDTO) {
         ioNotificationService.sendMessage(notificationQueueDTO);
-
     }
 
     @Override
     public ServiceDTO getService(String enteId, String tipoDovutoId) {
-        return ioService.getService(enteId, tipoDovutoId);
+        return ioManageService.getService(enteId, tipoDovutoId);
+    }
+
+    @Override
+    public void deleteService(String serviceId) {
+        ioManageService.deleteService(serviceId);
     }
 }

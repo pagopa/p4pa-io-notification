@@ -43,18 +43,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IoNotificationErrorDTO'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IoNotificationErrorDTO'
-        '404':
-          description: TipoDovuto or Ente not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IoNotificationErrorDTO'
         '429':
           description: Too many requests
           content:
@@ -148,14 +136,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IoNotificationErrorDTO'
-        '400':
-          description: Invalid Request
+        '404':
+          description: Service not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/IoNotificationErrorDTO'
-        '403':
-          description: Forbidden
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IoNotificationErrorDTO'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IoNotificationErrorDTO'
+  /service/{serviceId}:
+    put:
+      tags:
+        - ioNotification
+      operationId: deleteService
+      parameters:
+        - name: serviceId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Authentication failed
           content:
             application/json:
               schema:

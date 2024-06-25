@@ -1,5 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.service.ioservice;
 
+import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IOServiceMapper;
 import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceNotFoundException;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
@@ -13,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants.SERVICE_STATUS_DELETED;
 import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -27,10 +29,12 @@ public class IOManageServiceTest {
     IOServiceMapper serviceMapper;
     @Mock
     IOServiceRepository ioServiceRepository;
+    @Mock
+    IORestConnector ioRestConnector;
 
     @BeforeEach
     void setup(){
-        service = new IOManageServiceImpl(serviceMapper, ioServiceRepository);
+        service = new IOManageServiceImpl(serviceMapper, ioServiceRepository, ioRestConnector);
     }
 
     @Test
@@ -57,5 +61,31 @@ public class IOManageServiceTest {
                 service.getService(ENTE_ID, TIPO_DOVUTO_ID));
 
         assertEquals("The service for tipoDovutoId associated with enteId does not exist", exception.getMessage());
+    }
+
+    @Test
+    void givenDeleteServiceThenSuccess(){
+        IOService ioService = mapIoService(createServiceRequestDTO());
+        when(ioServiceRepository.findByServiceId(SERVICE_ID)).thenReturn(Optional.of(ioService));
+
+        doNothing().when(ioRestConnector).deleteService(SERVICE_ID);
+
+        when(ioServiceRepository.save(ioService)).thenReturn(ioService);
+
+        service.deleteService(SERVICE_ID);
+
+        assertEquals(SERVICE_STATUS_DELETED, ioService.getStatus());
+        verify(ioServiceRepository, times(1)).findByServiceId(SERVICE_ID);
+        verify(ioServiceRepository, times(1)).save(ioService);
+    }
+
+    @Test
+    void givenDeleteServiceWhenServiceNotFoundThenThrowServiceNotFoundException(){
+        when(ioServiceRepository.findByServiceId(SERVICE_ID)).thenReturn(Optional.empty());
+
+        assertThrows(ServiceNotFoundException.class, () ->
+                service.deleteService(SERVICE_ID));
+
+        verify(ioServiceRepository, times(1)).findByServiceId(SERVICE_ID);
     }
 }

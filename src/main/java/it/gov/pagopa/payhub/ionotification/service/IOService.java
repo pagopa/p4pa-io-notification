@@ -12,4 +12,6 @@ public interface IOService {
 
     ServiceDTO getService(String enteId, String tipoDovutoId);
 
+    void deleteService(String serviceId);
+
 }
