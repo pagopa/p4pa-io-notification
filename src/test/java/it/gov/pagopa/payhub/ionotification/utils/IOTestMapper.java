@@ -13,8 +13,8 @@ import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConsta
 
 public class IOTestMapper {
 
-    public static final String TIPO_DOVUTO_ID = "TIPO_DOVUTO_ID";
-    public static final String ENTE_ID = "ENTE_ID";
+    public static final Long TIPO_DOVUTO_ID = 456L;
+    public static final Long ENTE_ID = 123L;
     public static final String SERVICE_NAME = "SERVICE_NAME";
     public static final String SERVICE_ID = "SERVICE_ID";
     public static final String DATE = "DATE";

@@ -29,7 +29,7 @@ public class IOManageServiceImpl implements IOManageService {
     }
 
     @Override
-    public ServiceDTO getService(String enteId, String tipoDovutoId) {
+    public ServiceDTO getService(Long enteId, Long tipoDovutoId) {
         Optional<IOService> service = ioServiceRepository.findByEnteIdAndTipoDovutoId(enteId, tipoDovutoId);
         if (service.isEmpty()){
             log.error("Service for {} associated with {} was not found", tipoDovutoId, enteId);

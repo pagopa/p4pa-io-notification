@@ -23,8 +23,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class IOManageServiceTest {
 
-    public static final String ENTE_ID = "enteId";
-    public static final String TIPO_DOVUTO_ID = "tipoDovutoId";
+    public static final Long TIPO_DOVUTO_ID = 456L;
+    public static final Long ENTE_ID = 123L;
     private IOManageService service;
     @Mock
     IOServiceMapper serviceMapper;
@@ -61,7 +61,7 @@ public class IOManageServiceTest {
         ServiceNotFoundException exception =assertThrows(ServiceNotFoundException.class, () ->
                 service.getService(ENTE_ID, TIPO_DOVUTO_ID));
 
-        assertEquals("The service for tipoDovutoId associated with enteId does not exist", exception.getMessage());
+        assertEquals("The service for 456 associated with 123 does not exist", exception.getMessage());
     }
 
     @Test

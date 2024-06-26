@@ -4,5 +4,5 @@ import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 
 public interface IOServiceCreationService {
 
-    void createService(String enteId, String tipoDovutoId, ServiceRequestDTO serviceRequestDTO);
+    void createService(Long enteId, Long tipoDovutoId, ServiceRequestDTO serviceRequestDTO);
 }

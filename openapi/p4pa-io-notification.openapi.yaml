@@ -4,7 +4,7 @@ info:
   description: Api and Models
   version: 0.0.1
 servers:
-  - url: "http://localhost:8080/notification"
+  - url: "http://localhost:8080/ionotification"
 paths:
   /create/service/{enteId}/{tipoDovutoId}:
     post:
@@ -16,12 +16,14 @@ paths:
           in: path
           required: true
           schema:
-            type: string
+            type: integer
+            format: int64
         - name: tipoDovutoId
           in: path
           required: true
           schema:
-            type: string
+            type: integer
+            format: int64
       requestBody:
         required: true
         content:
@@ -117,12 +119,14 @@ paths:
           in: path
           required: true
           schema:
-            type: string
+            type: integer
+            format: int64
         - name: tipoDovutoId
           in: path
           required: true
           schema:
-            type: string
+            type: integer
+            format: int64
       responses:
         '200':
           description: OK
@@ -332,9 +336,11 @@ components:
         fiscalCode:
           type: string
         enteId:
-          type: string
+          type: integer
+          format: int64
         tipoDovutoId:
-          type: string
+          type: integer
+          format: int64
         operationType:
           type: string
     IoNotificationErrorDTO:

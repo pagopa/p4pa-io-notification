@@ -22,8 +22,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class IOServiceCreationServiceTest {
 
-    public static final String ENTE_ID = "enteId";
-    public static final String TIPO_DOVUTO_ID = "tipoDovutoId";
+    public static final Long ENTE_ID = 123L;
+    public static final Long TIPO_DOVUTO_ID = 456L;
     public static final String SERVICE_ID = "SERVICE_ID";
     private IOServiceCreationServiceImpl service;
     @Mock
