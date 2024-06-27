@@ -18,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ContextConfiguration(classes = IOServiceMapper.class)
 class IOServiceMapperTest {
 
+    public static final long ENTE_ID = 123L;
+    public static final long TIPO_DOVUTO_ID = 456L;
     @Autowired
     IOServiceMapper ioServiceMapper;
 
@@ -25,7 +27,7 @@ class IOServiceMapperTest {
     void whenApplyMapperThenSuccess(){
         ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
 
-        IOService actual = ioServiceMapper.apply("ENTE_ID", "TIPO_DOVUTO_ID", serviceRequestDTO);
+        IOService actual = ioServiceMapper.apply(ENTE_ID, TIPO_DOVUTO_ID, serviceRequestDTO);
 
         assertNotNull(actual);
     }

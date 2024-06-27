@@ -17,8 +17,8 @@ public class IOService {
     @Id
     private String id;
     private String serviceId;
-    private String enteId;
-    private String tipoDovutoId;
+    private Long enteId;
+    private Long tipoDovutoId;
     private String status;
     private String serviceName;
     private String serviceDescription;

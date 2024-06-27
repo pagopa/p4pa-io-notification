@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class IOServiceMapper {
 
-    public IOService apply(String enteId, String tipoDovutoId, ServiceRequestDTO serviceRequestDTO) {
+    public IOService apply(Long enteId, Long tipoDovutoId, ServiceRequestDTO serviceRequestDTO) {
         return IOService.builder()
                 .enteId(enteId)
                 .tipoDovutoId(tipoDovutoId)

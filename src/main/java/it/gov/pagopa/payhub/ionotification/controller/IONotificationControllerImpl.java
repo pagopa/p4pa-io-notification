@@ -19,7 +19,7 @@ public class IONotificationControllerImpl implements IoNotificationApi {
     }
 
     @Override
-    public ResponseEntity<Void> createService(String enteId, String tipoDovutoId, ServiceRequestDTO serviceRequestDTO) {
+    public ResponseEntity<Void> createService(Long enteId, Long tipoDovutoId, ServiceRequestDTO serviceRequestDTO) {
         ioService.createService(enteId, tipoDovutoId, serviceRequestDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -31,7 +31,7 @@ public class IONotificationControllerImpl implements IoNotificationApi {
     }
 
     @Override
-    public ResponseEntity<ServiceDTO> getService(String enteId, String tipoDovutoId) {
+    public ResponseEntity<ServiceDTO> getService(Long enteId, Long tipoDovutoId) {
         ServiceDTO serviceDTO = ioService.getService(enteId, tipoDovutoId);
         return new ResponseEntity<>(serviceDTO, HttpStatus.OK);
     }

@@ -23,6 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(IONotificationControllerImpl.class)
 class IONotificationControllerImplTest {
 
+    public static final Long TIPO_DOVUTO_ID = 456L;
+    public static final Long ENTE_ID = 123L;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -36,10 +39,10 @@ class IONotificationControllerImplTest {
     void givenCreateServiceThenSuccess() throws Exception {
         ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
         doNothing().when(ioService)
-                .createService("enteId", "tipoDovutoId", serviceRequestDTO);
+                .createService(ENTE_ID, TIPO_DOVUTO_ID, serviceRequestDTO);
 
         mockMvc.perform(
-                post("/notification/create/service/enteId/tipoDovutoId")
+                post("/ionotification/create/service/"+ENTE_ID+"/"+TIPO_DOVUTO_ID)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(serviceRequestDTO)))
@@ -54,7 +57,7 @@ class IONotificationControllerImplTest {
                 .sendMessage(notificationQueueDTO);
 
         mockMvc.perform(
-                        post("/notification/send/message")
+                        post("/ionotification/send/message")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                                 .content(objectMapper.writeValueAsString(notificationQueueDTO)))
@@ -65,10 +68,10 @@ class IONotificationControllerImplTest {
     @Test
     void givenGetServiceThenSuccess() throws Exception {
         ServiceDTO serviceDTO = getServiceResponse();
-        when(ioService.getService("enteId", "tipoDovutoId")).thenReturn(serviceDTO);
+        when(ioService.getService(ENTE_ID, TIPO_DOVUTO_ID)).thenReturn(serviceDTO);
 
         MvcResult result = mockMvc.perform(
-                        get("/notification/service/enteId/tipoDovutoId")
+                        get("/ionotification/service/"+ENTE_ID+"/"+TIPO_DOVUTO_ID)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
@@ -83,7 +86,7 @@ class IONotificationControllerImplTest {
         doNothing().when(ioService)
                 .deleteService("serviceId");
 
-        mockMvc.perform(put("/notification/service/serviceId")
+        mockMvc.perform(put("/ionotification/service/serviceId")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is2xxSuccessful())

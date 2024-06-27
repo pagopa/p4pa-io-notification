@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface IOServiceRepository extends MongoRepository<IOService, String>, IOServiceRepositoryExt {
 
-    Optional<IOService> findByEnteIdAndTipoDovutoId(String enteId, String tipoDovutoId);
+    Optional<IOService> findByEnteIdAndTipoDovutoId(Long enteId, Long tipoDovutoId);
     Optional<IOService> findByServiceId(String serviceId);
 }

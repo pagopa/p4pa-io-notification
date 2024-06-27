@@ -29,7 +29,7 @@ public class IOServiceCreationServiceImpl implements IOServiceCreationService {
     }
 
     @Override
-    public void createService(String enteId, String tipoDovutoId, ServiceRequestDTO serviceRequestDTO) {
+    public void createService(Long enteId, Long tipoDovutoId, ServiceRequestDTO serviceRequestDTO) {
         log.info("Save request of Service creation for {} and {}",
                 serviceRequestDTO.getName(), serviceRequestDTO.getOrganization().getName());
         IOService service = ioServiceMapper.apply(enteId, tipoDovutoId, serviceRequestDTO);

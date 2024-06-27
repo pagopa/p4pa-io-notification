@@ -6,11 +6,11 @@ import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
 
 public interface IOService {
 
-    void createService(String enteId, String tipoDovutoId, ServiceRequestDTO serviceRequestDTO);
+    void createService(Long enteId, Long tipoDovutoId, ServiceRequestDTO serviceRequestDTO);
 
     void sendMessage(NotificationQueueDTO notificationQueueDTO);
 
-    ServiceDTO getService(String enteId, String tipoDovutoId);
+    ServiceDTO getService(Long enteId, Long tipoDovutoId);
 
     void deleteService(String serviceId);
 

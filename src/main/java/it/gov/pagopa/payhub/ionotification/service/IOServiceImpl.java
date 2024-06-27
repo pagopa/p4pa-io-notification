@@ -22,7 +22,7 @@ public class IOServiceImpl implements IOService {
     }
 
     @Override
-    public void createService(String enteId, String tipoDovutoId, ServiceRequestDTO serviceRequestDTO) {
+    public void createService(Long enteId, Long tipoDovutoId, ServiceRequestDTO serviceRequestDTO) {
         ioServiceCreationService.createService(enteId, tipoDovutoId, serviceRequestDTO);
     }
 
@@ -32,7 +32,7 @@ public class IOServiceImpl implements IOService {
     }
 
     @Override
-    public ServiceDTO getService(String enteId, String tipoDovutoId) {
+    public ServiceDTO getService(Long enteId, Long tipoDovutoId) {
         return ioManageService.getService(enteId, tipoDovutoId);
     }
 
