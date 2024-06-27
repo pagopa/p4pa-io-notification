@@ -26,6 +26,7 @@ public class IOServiceMapper {
     }
 
     public ServiceDTO mapService(IOService service){
+        String creationServiceDate = service.getCreationServiceDate() != null ? service.getCreationServiceDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null;
         return ServiceDTO.builder()
                 .serviceId(service.getServiceId())
                 .serviceName(service.getServiceName())
@@ -35,7 +36,7 @@ public class IOServiceMapper {
                 .organizationDepartmentName(service.getOrganizationDepartmentName())
                 .organizationFiscalCode(service.getOrganizationFiscalCode())
                 .creationRequestDate(service.getCreationRequestDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-                .creationServiceDate(service.getCreationServiceDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .creationServiceDate(creationServiceDate)
                 .build();
     }
 }
