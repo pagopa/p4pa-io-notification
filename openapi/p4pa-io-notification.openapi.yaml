@@ -6,7 +6,7 @@ info:
 servers:
   - url: "http://localhost:8080/ionotification"
 paths:
-  /create/service/{enteId}/{tipoDovutoId}:
+  /service/{enteId}/{tipoDovutoId}:
     post:
       tags:
         - ioNotification
@@ -57,7 +57,54 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IoNotificationErrorDTO'
-
+    get:
+      tags:
+        - ioNotification
+      operationId: getService
+      parameters:
+        - name: enteId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: tipoDovutoId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceDTO'
+        '401':
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IoNotificationErrorDTO'
+        '404':
+          description: Service not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IoNotificationErrorDTO'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IoNotificationErrorDTO'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IoNotificationErrorDTO'
   /send/message:
     post:
       tags:
@@ -86,56 +133,6 @@ paths:
                 $ref: '#/components/schemas/IoNotificationErrorDTO'
         '403':
           description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IoNotificationErrorDTO'
-        '404':
-          description: Service not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IoNotificationErrorDTO'
-        '429':
-          description: Too many requests
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IoNotificationErrorDTO'
-        '500':
-          description: Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IoNotificationErrorDTO'
-
-  /service/{enteId}/{tipoDovutoId}:
-    get:
-      tags:
-        - ioNotification
-      operationId: getService
-      parameters:
-        - name: enteId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: tipoDovutoId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ServiceDTO'
-        '401':
-          description: Authentication failed
           content:
             application/json:
               schema:

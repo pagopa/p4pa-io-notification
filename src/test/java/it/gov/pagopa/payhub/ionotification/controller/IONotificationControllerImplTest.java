@@ -42,7 +42,7 @@ class IONotificationControllerImplTest {
                 .createService(ENTE_ID, TIPO_DOVUTO_ID, serviceRequestDTO);
 
         mockMvc.perform(
-                post("/ionotification/create/service/"+ENTE_ID+"/"+TIPO_DOVUTO_ID)
+                post("/ionotification/service/"+ENTE_ID+"/"+TIPO_DOVUTO_ID)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(serviceRequestDTO)))
