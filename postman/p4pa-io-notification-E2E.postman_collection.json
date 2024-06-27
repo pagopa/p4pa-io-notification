@@ -701,10 +701,58 @@
 			]
 		},
 		{
-			"name": "GetService Unhappy Case Copy",
+			"name": "DeleteService Unhappy Case",
 			"item": [
 				{
-					"name": "DeleteService Copy",
+					"name": "DeleteService Already Deleted",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"IONotification - DeleteService - Unhappy case: Delete Service From IO - Responses with 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Service Already Deleted\", function () {\r",
+									"        pm.expect(response.message).to.eql(\"The service with serviceId 01J1CZAT1HH98GB1VW8R25HZB0 is already deleted\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/service/{{serviceId}}",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"service",
+								"{{serviceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteService NotFound",
 					"event": [
 						{
 							"listen": "test",
