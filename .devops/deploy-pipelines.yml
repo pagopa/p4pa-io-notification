@@ -43,6 +43,7 @@ variables:
     kubernetesServiceConnection: '$(UAT_KUBERNETES_SERVICE_CONN)'
     containerRegistry: '$(UAT_CONTAINER_REGISTRY_NAME)'
     selfHostedAgentPool: $(UAT_AGENT_POOL)
+    postmanEnvFile: p4pa_UAT.postman_environment.json
 
   ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
     environment: 'PROD'
@@ -59,6 +60,7 @@ variables:
     kubernetesServiceConnection: '$(DEV_KUBERNETES_SERVICE_CONN)'
     containerRegistry: '$(DEV_CONTAINER_REGISTRY_NAME)'
     selfHostedAgentPool: $(DEV_AGENT_POOL)
+    postmanEnvFile: p4pa_DEV.postman_environment.json
 
 stages:
   - stage: 'stage_build'
