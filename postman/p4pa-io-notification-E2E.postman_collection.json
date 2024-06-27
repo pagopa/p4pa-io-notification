@@ -1,0 +1,911 @@
+{
+	"info": {
+		"_postman_id": "c2f697a0-42b2-4f70-85cf-c5ff20a31f11",
+		"name": "IONotification E2E",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21721488",
+		"_collection_link": "https://universal-meadow-88424.postman.co/workspace/PAP4~e3834aae-c5da-4699-87c8-55cd8293d10e/collection/21721488-c2f697a0-42b2-4f70-85cf-c5ff20a31f11?action=share&source=collection_link&creator=21721488"
+	},
+	"item": [
+		{
+			"name": "Create Service Happy Case",
+			"item": [
+				{
+					"name": "CreateService",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"IONotification - createService - First Try - Responses with 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function generateRandomNumber() {\r",
+									"    let randomNumber = '';\r",
+									"    for (let i = 0; i < 10; i++) {\r",
+									"        randomNumber += Math.floor(Math.random() * 10).toString();\r",
+									"    }\r",
+									"    return randomNumber;\r",
+									"}\r",
+									"\r",
+									"let randomNumber = generateRandomNumber();\r",
+									"\r",
+									"pm.collectionVariables.set(\"randomNumber\", randomNumber);\r",
+									"pm.collectionVariables.set(\"name\", `test_service_${randomNumber}`);\r",
+									"pm.collectionVariables.set(\"organization_name\", `test_ente_${randomNumber}`);\r",
+									"pm.collectionVariables.set(\"department_name\", `test_department_ente_${randomNumber}`);\r",
+									"\r",
+									"pm.collectionVariables.set(\"enteId\", `${randomNumber}`);\r",
+									"pm.collectionVariables.set(\"tipoDovutoId\", `${randomNumber}`);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"metadata\": {\r\n    \"web_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"app_ios\": \"appio\",\r\n    \"app_android\": \"appand\",\r\n    \"tos_url\": \"web\",\r\n    \"privacy_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"address\": \"via del test\",\r\n    \"phone\": \"PHONE\",\r\n    \"email\": \"EMAIL\",\r\n    \"pec\": \"PEC\",\r\n    \"cta\": \"CTA\",\r\n    \"token_name\": \"TOKEN\",\r\n    \"support_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"scope\": \"LOCAL\",\r\n    \"topic_id\": 0\r\n  },\r\n  \"name\": \"{{name}}\",\r\n  \"description\": \"app\",\r\n  \"organization\": {\r\n    \"name\": \"{{organization_name}}\",\r\n    \"fiscal_code\": {{fiscalCode}},\r\n    \"department_name\": \"{{department_name}}\"\r\n  },\r\n  \"require_secure_channel\": false,\r\n  \"authorized_recipients\": [],\r\n  \"authorized_cidrs\": [],\r\n  \"max_allowed_payment_amount\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"service",
+								"{{enteId}}",
+								"{{tipoDovutoId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetService IONotification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"pm.test(\"IONotification - getService - Happy case - Responses with 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status should be CREATED\", function () {\r",
+									"        pm.expect(response.status).to.eql(\"CREATED\");\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.set(\"serviceId\", response.serviceId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"service",
+								"{{enteId}}",
+								"{{tipoDovutoId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteService",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"IONotification - DeleteService - Happy case: Delete Service From IO - Responses with 204\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/service/{{serviceId}}",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"service",
+								"{{serviceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetService IONotification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"pm.test(\"IONotification - getService - Happy case - Responses with 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status should be DELETED\", function () {\r",
+									"        pm.expect(response.status).to.eql(\"DELETED\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"service",
+								"{{enteId}}",
+								"{{tipoDovutoId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"function generateRandomNumber() {\r",
+							"    let randomNumber = '';\r",
+							"    for (let i = 0; i < 10; i++) {\r",
+							"        randomNumber += Math.floor(Math.random() * 10).toString();\r",
+							"    }\r",
+							"    return randomNumber;\r",
+							"}\r",
+							"\r",
+							"if (!pm.collectionVariables.get(\"randomNumber\")) {\r",
+							"    let randomNumber = generateRandomNumber();\r",
+							"    pm.collectionVariables.set(\"randomNumber\", randomNumber);\r",
+							"    pm.collectionVariables.set(\"name\", `test_service_${randomNumber}`);\r",
+							"    pm.collectionVariables.set(\"organization_name\", `test_ente_${randomNumber}`);\r",
+							"    pm.collectionVariables.set(\"department_name\", `test_department_ente_${randomNumber}`);\r",
+							"    pm.collectionVariables.set(\"enteId\", `${randomNumber}`);\r",
+							"    pm.collectionVariables.set(\"tipoDovutoId\", `${randomNumber}`);\r",
+							"}"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Create Service Retry NotFound IO",
+			"item": [
+				{
+					"name": "CreateService Wrong Payload 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"IONotification - createService - Unhappy case: Wrong Payload - Responses with 403\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"IONotification - Unhappy case: Wrong Payload\", function () {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.code).to.eql(\"IO_NOTIFICATION_WRONG_PAYLOAD\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"function generateRandomNumber() {\r",
+									"    let randomNumber = '';\r",
+									"    for (let i = 0; i < 10; i++) {\r",
+									"        randomNumber += Math.floor(Math.random() * 10).toString();\r",
+									"    }\r",
+									"    return randomNumber;\r",
+									"}\r",
+									"\r",
+									"let randomNumber = generateRandomNumber();\r",
+									"\r",
+									"pm.collectionVariables.set(\"randomNumber\", randomNumber);\r",
+									"pm.collectionVariables.set(\"name\", `test_service_${randomNumber}`);\r",
+									"pm.collectionVariables.set(\"organization_name\", `test_ente_${randomNumber}`);\r",
+									"pm.collectionVariables.set(\"department_name\", `test_department_ente_${randomNumber}`);\r",
+									"\r",
+									"pm.collectionVariables.set(\"enteId\", `${randomNumber}`);\r",
+									"pm.collectionVariables.set(\"tipoDovutoId\", `${randomNumber}`);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"metadata\": {\r\n  },\r\n  \"name\": \"{{name}}\",\r\n  \"description\": \"app\",\r\n  \"organization\": {\r\n    \"name\": \"{{organization_name}}\",\r\n    \"fiscal_code\": {{fiscalCode}},\r\n    \"department_name\": \"{{department_name}}\"\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"service",
+								"{{enteId}}",
+								"{{tipoDovutoId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetService IONotification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"pm.test(\"IONotification - getService - Happy case - Responses with 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status should be REQUESTED\", function () {\r",
+									"        pm.expect(response.status).to.eql(\"REQUESTED\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"service",
+								"{{enteId}}",
+								"{{tipoDovutoId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateService NotFoundIO",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"IONotification - createService - Second Try Corrected Payload- Responses with 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"metadata\": {\r\n    \"web_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"app_ios\": \"appio\",\r\n    \"app_android\": \"appand\",\r\n    \"tos_url\": \"web\",\r\n    \"privacy_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"address\": \"via del test\",\r\n    \"phone\": \"PHONE\",\r\n    \"email\": \"EMAIL\",\r\n    \"pec\": \"PEC\",\r\n    \"cta\": \"CTA\",\r\n    \"token_name\": \"TOKEN\",\r\n    \"support_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"scope\": \"LOCAL\",\r\n    \"topic_id\": 0\r\n  },\r\n  \"name\": \"{{name}}\",\r\n  \"description\": \"app\",\r\n  \"organization\": {\r\n    \"name\": \"{{organization_name}}\",\r\n    \"fiscal_code\": {{fiscalCode}},\r\n    \"department_name\": \"{{department_name}}\"\r\n  },\r\n  \"require_secure_channel\": false,\r\n  \"authorized_recipients\": [],\r\n  \"authorized_cidrs\": [],\r\n  \"max_allowed_payment_amount\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"service",
+								"{{enteId}}",
+								"{{tipoDovutoId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetService IONotification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"pm.test(\"IONotification - getService - Happy case - Responses with 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status should be CREATED\", function () {\r",
+									"        pm.expect(response.status).to.eql(\"CREATED\");\r",
+									"});\r",
+									"\r",
+									"pm.collectionVariables.set(\"serviceId\", response.serviceId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"service",
+								"{{enteId}}",
+								"{{tipoDovutoId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteService",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"IONotification - DeleteService - Happy case: Delete Service From IO - Responses with 204\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/service/{{serviceId}}",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"service",
+								"{{serviceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetService IONotification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"pm.test(\"IONotification - getService - Happy case - Responses with 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status should be DELETED\", function () {\r",
+									"        pm.expect(response.status).to.eql(\"DELETED\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"service",
+								"{{enteId}}",
+								"{{tipoDovutoId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "GetService Unhappy Case",
+			"item": [
+				{
+					"name": "GetService IONotification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"pm.test(\"IONotification - getService - Unhappy case - Responses with 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Service not found\", function () {\r",
+									"        pm.expect(response.message).to.eql(\"The service for 0 associated with 0 does not exist\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/service/{{ente_test_ko}}/{{tipoDovuto_test_ko}}",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"service",
+								"{{ente_test_ko}}",
+								"{{tipoDovuto_test_ko}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"function generateRandomNumber() {\r",
+							"    let randomNumber = '';\r",
+							"    for (let i = 0; i < 10; i++) {\r",
+							"        randomNumber += Math.floor(Math.random() * 10).toString();\r",
+							"    }\r",
+							"    return randomNumber;\r",
+							"}\r",
+							"\r",
+							"let randomNumber = generateRandomNumber();\r",
+							"\r",
+							"pm.collectionVariables.set(\"randomNumber\", randomNumber);\r",
+							"pm.collectionVariables.set(\"name\", `test_service_${randomNumber}`);\r",
+							"pm.collectionVariables.set(\"organization_name\", `test_ente_${randomNumber}`);\r",
+							"pm.collectionVariables.set(\"department_name\", `test_department_ente_${randomNumber}`);"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "DeleteService Unhappy Case",
+			"item": [
+				{
+					"name": "DeleteService Already Deleted",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"IONotification - DeleteService - Unhappy case: Delete Service From IO - Responses with 403\", function () {\r",
+									"    pm.response.to.have.status(403);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Service Already Deleted\", function () {\r",
+									"        pm.expect(response.message).to.eql(\"The service with serviceId 01J1CZAT1HH98GB1VW8R25HZB0 is already deleted\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/service/{{serviceId}}",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"service",
+								"{{serviceId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteService NotFound",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"IONotification - DeleteService - Unhappy case: Delete Service From IO - Responses with 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Service not found\", function () {\r",
+									"        pm.expect(response.message).to.eql(\"The service with serviceId SERVICEIDFAKE123 does not exist\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/service/{{serviceId_fake}}",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"service",
+								"{{serviceId_fake}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"function generateRandomNumber() {\r",
+							"    let randomNumber = '';\r",
+							"    for (let i = 0; i < 10; i++) {\r",
+							"        randomNumber += Math.floor(Math.random() * 10).toString();\r",
+							"    }\r",
+							"    return randomNumber;\r",
+							"}\r",
+							"\r",
+							"let randomNumber = generateRandomNumber();\r",
+							"\r",
+							"pm.collectionVariables.set(\"randomNumber\", randomNumber);\r",
+							"pm.collectionVariables.set(\"name\", `test_service_${randomNumber}`);\r",
+							"pm.collectionVariables.set(\"organization_name\", `test_ente_${randomNumber}`);\r",
+							"pm.collectionVariables.set(\"department_name\", `test_department_ente_${randomNumber}`);"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "ente_test_ko",
+			"value": "0",
+			"type": "string"
+		},
+		{
+			"key": "tipoDovuto_test_ko",
+			"value": "0",
+			"type": "string"
+		},
+		{
+			"key": "fiscalCode",
+			"value": "12345678910",
+			"type": "string"
+		},
+		{
+			"key": "serviceId_fake",
+			"value": "SERVICEIDFAKE123"
+		},
+		{
+			"key": "randomNumber",
+			"value": ""
+		},
+		{
+			"key": "name",
+			"value": ""
+		},
+		{
+			"key": "organization_name",
+			"value": ""
+		},
+		{
+			"key": "department_name",
+			"value": ""
+		},
+		{
+			"key": "enteId",
+			"value": ""
+		},
+		{
+			"key": "tipoDovutoId",
+			"value": ""
+		},
+		{
+			"key": "serviceId",
+			"value": ""
+		}
+	]
+}
