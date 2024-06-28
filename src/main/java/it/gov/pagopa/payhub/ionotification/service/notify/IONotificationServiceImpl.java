@@ -5,6 +5,7 @@ import it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants;
 import it.gov.pagopa.payhub.ionotification.dto.*;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IONotificationMapper;
 import it.gov.pagopa.payhub.ionotification.event.producer.IONotificationProducer;
+import it.gov.pagopa.payhub.ionotification.exception.custom.SenderNotAllowedException;
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
@@ -54,7 +55,6 @@ public class IONotificationServiceImpl implements IONotificationService {
 
     @Override
     public void sendNotification(NotificationQueueDTO notificationQueueDTO) {
-
         Optional<String> token = retrieveTokenIO(notificationQueueDTO);
         if (token.isPresent() && isSenderAllowed(notificationQueueDTO, token.get())) {
             sendNotification(notificationQueueDTO, token.get());
@@ -66,28 +66,41 @@ public class IONotificationServiceImpl implements IONotificationService {
                 findByEnteIdAndTipoDovutoId(notificationQueueDTO.getEnteId(), notificationQueueDTO.getTipoDovutoId());
 
         if (ioService.isEmpty()) {
-            saveNotification(notificationQueueDTO, null, IONotificationConstants.NOTIFICATION_STATUS_KO);
+            saveNotification(notificationQueueDTO, null, IONotificationConstants.NOTIFICATION_STATUS_KO_SERVICE_NOT_FOUND);
             log.error("There is no service for organizationId {} and tipoDovutoId {}", notificationQueueDTO.getEnteId(), notificationQueueDTO.getTipoDovutoId());
             return Optional.empty();
         }
+
+        log.info("Retrieve token from IO");
         KeysDTO keys = connector.getServiceKeys(ioService.get().getServiceId());
         return Optional.of(keys.getPrimaryKey());
     }
 
     private boolean isSenderAllowed(NotificationQueueDTO notificationQueueDTO, String token) {
         FiscalCodeDTO fiscalCode = ioNotificationMapper.mapToGetProfile(notificationQueueDTO);
-        ProfileResource profileResource = connector.getProfile(fiscalCode, token);
-        if (!profileResource.isSenderAllowed()) {
-            saveNotification(notificationQueueDTO, null, IONotificationConstants.NOTIFICATION_STATUS_KO_SENDER_NOT_ALLOWED);
-            return false;
+        try{
+            log.info("Verify if is user is allowed to receive notification");
+            ProfileResource profileResource = connector.getProfile(fiscalCode, token);
+            if (!profileResource.isSenderAllowed()) {
+                return handleSenderNotAllowed(notificationQueueDTO);
+            }
+        } catch (SenderNotAllowedException e) {
+            return handleSenderNotAllowed(notificationQueueDTO);
         }
         return true;
+    }
+
+    private boolean handleSenderNotAllowed(NotificationQueueDTO notificationQueueDTO) {
+        log.error("The user is not enabled to receive notifications");
+        saveNotification(notificationQueueDTO, null, IONotificationConstants.NOTIFICATION_STATUS_KO_SENDER_NOT_ALLOWED);
+        return false;
     }
 
     private void sendNotification(NotificationQueueDTO notificationQueueDTO, String token) {
         NotificationDTO notificationDTO = ioNotificationMapper
                 .mapToQueue(notificationQueueDTO.getFiscalCode(), timeToLive, subject, markdown);
 
+        log.info("Sending notification to IO");
         NotificationResource notificationResource = connector.sendNotification(notificationDTO, token);
         saveNotification(notificationQueueDTO, notificationResource.getId(), IONotificationConstants.NOTIFICATION_STATUS_OK);
     }

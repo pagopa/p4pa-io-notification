@@ -37,17 +37,38 @@ public class IORestConnectorImpl implements IORestConnector {
 
     @Override
     public KeysDTO getServiceKeys(String serviceId) {
-        return ioFeignRestClient.getServiceKeys(serviceId, subscriptionKey);
+        try {
+            return ioFeignRestClient.getServiceKeys(serviceId, subscriptionKey);
+        } catch (FeignException e) {
+            log.error("An error occurred while retrieving the token: {}", e.getMessage());
+            throw new RetrieveServicesInvocationException("It was not possible to retrieve the token from IO");
+        }
     }
 
     @Override
     public ProfileResource getProfile(FiscalCodeDTO fiscalCode, String primaryKey) {
-        return ioFeignRestClient.getProfile(fiscalCode, primaryKey);
+        try {
+            return ioFeignRestClient.getProfile(fiscalCode, primaryKey);
+        } catch (FeignException e) {
+            log.error("An error occurred while verifying if the user is allowed to receive notification: {}", e.getMessage());
+            if (e.status() == 403) {
+                throw new SenderNotAllowedException(String.format("The user is not enabled to receive notifications: %s", e.getMessage()));
+            }
+            throw new CreateServiceInvocationException("It was not possible to verify if the user is allowed to receive notification");
+        }
     }
 
     @Override
     public NotificationResource sendNotification(NotificationDTO notificationDTO, String primaryKey) {
-        return ioFeignRestClient.sendNotification(notificationDTO, primaryKey);
+        try {
+            return ioFeignRestClient.sendNotification(notificationDTO, primaryKey);
+        } catch (FeignException e) {
+            log.error("An error occurred while sending notification: {}", e.getMessage());
+            if (e.status() == 400) {
+                throw new IOWrongPayloadException(String.format("There is something wrong with the payload: %s", e.getMessage()));
+            }
+            throw new CreateServiceInvocationException("There was an error processing the request of notification");
+        }
     }
 
     @Override
