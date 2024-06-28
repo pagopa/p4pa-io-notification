@@ -1,5 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.model;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @FieldNameConstants
 @Document(collection = "io_notification")
+@Builder
 public class IONotification {
 
     @Id
@@ -17,8 +19,8 @@ public class IONotification {
     private String userId;
     private String notificationId;
     private String notificationStatus;
-    private String enteId;
-    private String tipoDovutoId;
+    private Long enteId;
+    private Long tipoDovutoId;
     private LocalDateTime notificationDate;
     private Integer retry;
     private LocalDateTime retryDate;

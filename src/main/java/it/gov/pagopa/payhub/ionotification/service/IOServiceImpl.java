@@ -40,4 +40,9 @@ public class IOServiceImpl implements IOService {
     public void deleteService(String serviceId) {
         ioManageService.deleteService(serviceId);
     }
+
+    @Override
+    public void sendNotification(NotificationQueueDTO notificationQueueDTO) {
+        ioNotificationService.sendNotification(notificationQueueDTO);
+    }
 }

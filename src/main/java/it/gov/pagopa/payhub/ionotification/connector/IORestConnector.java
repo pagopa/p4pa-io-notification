@@ -11,7 +11,7 @@ public interface IORestConnector {
 
     ProfileResource getProfile(FiscalCodeDTO fiscalCode, String primaryKey);
 
-    NotificationResource sendNotification(NotificationDTO notificationDTO, String primaryKey);
+    NotificationResource sendNotification(NotificationDTO notificationQueueDTO, String primaryKey);
 
     ServicesListDTO getAllServices(Integer limit, Integer offset);
 
