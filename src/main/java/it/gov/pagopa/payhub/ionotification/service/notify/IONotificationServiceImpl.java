@@ -49,8 +49,7 @@ public class IONotificationServiceImpl implements IONotificationService {
     @Override
     public void sendMessage(NotificationQueueDTO notificationQueueDTO) {
         log.info("Sending message to notify of type {}", notificationQueueDTO.getOperationType());
-//        ioNotificationProducer.sendNotification(notificationQueueDTO);
-        this.sendNotification(notificationQueueDTO);
+        ioNotificationProducer.sendNotification(notificationQueueDTO);
     }
 
     @Override
@@ -62,6 +61,7 @@ public class IONotificationServiceImpl implements IONotificationService {
     }
 
     private Optional<String> retrieveTokenIO(NotificationQueueDTO notificationQueueDTO) {
+        log.info("Search service for {} and {}", notificationQueueDTO.getEnteId(), notificationQueueDTO.getTipoDovutoId());
         Optional<IOService> ioService = ioServiceRepository.
                 findByEnteIdAndTipoDovutoId(notificationQueueDTO.getEnteId(), notificationQueueDTO.getTipoDovutoId());
 
@@ -71,7 +71,7 @@ public class IONotificationServiceImpl implements IONotificationService {
             return Optional.empty();
         }
 
-        log.info("Retrieve token from IO");
+        log.info("Retrieve token from IO for service {}", ioService.get().getServiceId() );
         KeysDTO keys = connector.getServiceKeys(ioService.get().getServiceId());
         return Optional.of(keys.getPrimaryKey());
     }
