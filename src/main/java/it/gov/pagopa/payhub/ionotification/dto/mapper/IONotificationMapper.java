@@ -32,10 +32,12 @@ public class IONotificationMapper {
     public IONotification mapToSaveNotification(NotificationQueueDTO notificationQueueDTO, String status){
         return IONotification.builder()
                 .notificationDate(LocalDateTime.now())
+                .userId(notificationQueueDTO.getFiscalCode())
+                .tipoDovutoName(notificationQueueDTO.getTipoDovutoName())
+                .enteName(notificationQueueDTO.getEnteName())
                 .notificationStatus(status)
                 .tipoDovutoId(notificationQueueDTO.getTipoDovutoId())
                 .enteId(notificationQueueDTO.getEnteId())
-                .retry(1)
                 .build();
     }
 }

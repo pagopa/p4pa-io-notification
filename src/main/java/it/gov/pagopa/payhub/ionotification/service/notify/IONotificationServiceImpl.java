@@ -97,8 +97,9 @@ public class IONotificationServiceImpl implements IONotificationService {
     }
 
     private void sendNotification(NotificationQueueDTO notificationQueueDTO, String token) {
+        String customSubject = subject.replace("%tipoDovutoName%", notificationQueueDTO.getTipoDovutoName());
         NotificationDTO notificationDTO = ioNotificationMapper
-                .mapToQueue(notificationQueueDTO.getFiscalCode(), timeToLive, subject, markdown);
+                .mapToQueue(notificationQueueDTO.getFiscalCode(), timeToLive, customSubject, markdown);
 
         log.info("Sending notification to IO");
         NotificationResource notificationResource = connector.sendNotification(notificationDTO, token);

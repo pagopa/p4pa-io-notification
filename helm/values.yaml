@@ -65,10 +65,6 @@ microservice-chart:
     KAFKA_NOTIFICATION_SASL_MECHANISM: "PLAIN"
     KAFKA_NOTIFICATION_SECURITY_PROTOCOL: "SASL_SSL"
 
-#  externalConfigMapValues:
-#    rest-client:
-#      IO_MANAGE_BACKEND_SERVICE_BASE_URL: io_manage_backend_base_url
-
 
   envSecret:
     MONGODB_URI: mongodb-connection-string
@@ -76,6 +72,7 @@ microservice-chart:
     APPLICATIONINSIGHTS_CONNECTION_STRING: appinsights-connection-string
     KAFKA_NOTIFICATION_OUT_SASL_JAAS_CONFIG: p4pa-payhub-notification-evh-producer-jaas-config
     KAFKA_NOTIFICATION_IN_SASL_JAAS_CONFIG: p4pa-payhub-notification-evh-consumer-jaas-config
+    KAFKA_BINDER_BROKER: p4pa-payhub-notification-kafka-broker
 
   # nodeSelector: {}
 

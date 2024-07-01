@@ -20,9 +20,10 @@ public class IONotification {
     private String notificationId;
     private String notificationStatus;
     private Long enteId;
+    private String enteName;
     private Long tipoDovutoId;
+    private String tipoDovutoName;
     private LocalDateTime notificationDate;
-    private Integer retry;
     private LocalDateTime retryDate;
 
 }
