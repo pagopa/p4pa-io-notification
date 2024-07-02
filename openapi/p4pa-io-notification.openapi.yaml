@@ -105,7 +105,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IoNotificationErrorDTO'
-  /send/message:
+  /message:
     post:
       tags:
         - ioNotification

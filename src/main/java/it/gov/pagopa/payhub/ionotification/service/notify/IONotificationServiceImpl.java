@@ -71,8 +71,10 @@ public class IONotificationServiceImpl implements IONotificationService {
                 .findByEnteIdAndTipoDovutoId(notificationQueueDTO.getEnteId(), notificationQueueDTO.getTipoDovutoId());
 
         if (ioService.isEmpty()) {
+            log.error("There is no service for organizationId {} and tipoDovutoId {}",
+                    notificationQueueDTO.getEnteId(), notificationQueueDTO.getTipoDovutoId());
+
             saveNotification(notificationQueueDTO, null, null, NOTIFICATION_STATUS_KO_SERVICE_NOT_FOUND);
-            log.error("There is no service for organizationId {} and tipoDovutoId {}", notificationQueueDTO.getEnteId(), notificationQueueDTO.getTipoDovutoId());
         }
         return ioService;
     }
@@ -98,7 +100,7 @@ public class IONotificationServiceImpl implements IONotificationService {
     }
 
     private boolean handleSenderNotAllowed(NotificationQueueDTO notificationQueueDTO, IOService ioService) {
-        log.error("The user is not enabled to receive notifications");
+        log.info("The user is not enabled to receive notifications");
         saveNotification(notificationQueueDTO, ioService, null, NOTIFICATION_STATUS_KO_SENDER_NOT_ALLOWED);
         return false;
     }
@@ -115,13 +117,16 @@ public class IONotificationServiceImpl implements IONotificationService {
     private void saveNotification(NotificationQueueDTO notificationQueueDTO, IOService ioService, String notificationId, String status) {
         IONotification ioNotification = ioNotificationMapper.mapToSaveNotification(notificationQueueDTO, status);
 
-        Optional.ofNullable(notificationId).ifPresent(ioNotification::setNotificationId);
+        if (notificationId != null) {
+            ioNotification.setNotificationId(notificationId);
+        }
 
-        Optional.ofNullable(ioService).ifPresent(service -> {
-            ioNotification.setEnteName(service.getOrganizationName());
-            ioNotification.setTipoDovutoName(service.getServiceName());
-        });
+        if (ioService != null) {
+            ioNotification.setEnteName(ioService.getOrganizationName());
+            ioNotification.setTipoDovutoName(ioService.getServiceName());
+        }
 
+        log.info("Saving notification with status {}", status);
         ioNotificationRepository.save(ioNotification);
     }
 }

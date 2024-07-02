@@ -61,9 +61,13 @@ microservice-chart:
     APPLICATIONINSIGHTS_PREVIEW_PROFILER_ENABLED: "false"
     ENABLE_AUDIT_APPENDER: "TRUE"
     IO_MANAGE_BACKEND_SERVICE_BASE_URL: "https://api.io.pagopa.it/api/v1"
-    KAFKA_TOPIC_NOTIFICATION: "p4pa-payhub-notification-evh"
-    KAFKA_NOTIFICATION_SASL_MECHANISM: "PLAIN"
-    KAFKA_NOTIFICATION_SECURITY_PROTOCOL: "SASL_SSL"
+
+
+  externalConfigMapValues:
+    eventhub-config:
+      KAFKA_TOPIC_NOTIFICATION: p4pa-payhub-notification-topic
+      KAFKA_NOTIFICATION_SASL_MECHANISM: p4pa-payhub-notification-sasl-mechanism
+      KAFKA_NOTIFICATION_SECURITY_PROTOCOL: p4pa-payhub-notification-security-protocol
 
 
   envSecret:
