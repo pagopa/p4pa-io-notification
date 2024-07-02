@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants.NOTIFICATION_STATUS_OK;
+import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants.NotificationStatus.NOTIFICATION_STATUS_OK;
 import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.mapToSendMessageToQueue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -38,7 +38,7 @@ class IONotificationMapperTest {
     @Test
     void whenMapToSaveNotificationThenSuccess(){
         IONotification ioNotification = ioNotificationMapper
-                .mapToSaveNotification(mapToSendMessageToQueue(), NOTIFICATION_STATUS_OK);
+                .mapToSaveNotification(mapToSendMessageToQueue(), NOTIFICATION_STATUS_OK.getValue());
         assertNotNull(ioNotification);
     }
 }

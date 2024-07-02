@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants.SERVICE_STATUS_CREATED;
+import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants.ServiceStatus.SERVICE_STATUS_CREATED;
 
 public class IOTestMapper {
 
@@ -49,7 +49,7 @@ public class IOTestMapper {
                 .organizationFiscalCode(serviceRequestDTO.getOrganization().getFiscalCode())
                 .creationRequestDate(LocalDateTime.now())
                 .creationServiceDate(LocalDateTime.now())
-                .status(SERVICE_STATUS_CREATED)
+                .status(SERVICE_STATUS_CREATED.getValue())
                 .build();
     }
 
@@ -195,7 +195,7 @@ public class IOTestMapper {
     public static ServiceDTO getServiceResponse(){
         return ServiceDTO.builder()
                 .serviceId(SERVICE_ID)
-                .status(SERVICE_STATUS_CREATED)
+                .status(SERVICE_STATUS_CREATED.getValue())
                 .serviceName(SERVICE_NAME)
                 .organizationName(ORGANIZATION_NAME)
                 .build();

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants.*;
+import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants.NotificationStatus.*;
 
 @Service
 @Slf4j
@@ -58,9 +58,9 @@ public class IONotificationServiceImpl implements IONotificationService {
     public void sendNotification(NotificationQueueDTO notificationQueueDTO) {
         Optional<IOService> ioService = retrieveIOService(notificationQueueDTO);
         if (ioService.isPresent()) {
-            Optional<String> token = retrieveTokenIO(ioService.get());
-            if (token.isPresent() && isSenderAllowed(notificationQueueDTO, ioService.get(), token.get())) {
-                sendNotification(notificationQueueDTO, ioService.get(), token.get());
+            String token = retrieveTokenIO(ioService.get());
+            if (isSenderAllowed(notificationQueueDTO, ioService.get(), token)) {
+                sendNotification(notificationQueueDTO, ioService.get(), token);
             }
         }
     }
@@ -74,15 +74,15 @@ public class IONotificationServiceImpl implements IONotificationService {
             log.error("There is no service for organizationId {} and tipoDovutoId {}",
                     notificationQueueDTO.getEnteId(), notificationQueueDTO.getTipoDovutoId());
 
-            saveNotification(notificationQueueDTO, null, null, NOTIFICATION_STATUS_KO_SERVICE_NOT_FOUND);
+            saveNotification(notificationQueueDTO, null, null, NOTIFICATION_STATUS_KO_SERVICE_NOT_FOUND.getValue());
         }
         return ioService;
     }
 
-    private Optional<String> retrieveTokenIO(IOService ioService) {
+    private String retrieveTokenIO(IOService ioService) {
         log.info("Retrieve token from IO for service {}", ioService.getServiceId());
         KeysDTO keys = connector.getServiceKeys(ioService.getServiceId());
-        return Optional.of(keys.getPrimaryKey());
+        return keys.getPrimaryKey();
     }
 
     private boolean isSenderAllowed(NotificationQueueDTO notificationQueueDTO, IOService ioService, String token) {
@@ -101,7 +101,7 @@ public class IONotificationServiceImpl implements IONotificationService {
 
     private boolean handleSenderNotAllowed(NotificationQueueDTO notificationQueueDTO, IOService ioService) {
         log.info("The user is not enabled to receive notifications");
-        saveNotification(notificationQueueDTO, ioService, null, NOTIFICATION_STATUS_KO_SENDER_NOT_ALLOWED);
+        saveNotification(notificationQueueDTO, ioService, null, NOTIFICATION_STATUS_KO_SENDER_NOT_ALLOWED.getValue());
         return false;
     }
 
@@ -112,7 +112,7 @@ public class IONotificationServiceImpl implements IONotificationService {
 
         log.info("Sending notification to IO");
         NotificationResource notificationResource = connector.sendNotification(notificationDTO, token);
-        saveNotification(notificationQueueDTO, ioService, notificationResource.getId(), NOTIFICATION_STATUS_OK);
+        saveNotification(notificationQueueDTO, ioService, notificationResource.getId(), NOTIFICATION_STATUS_OK.getValue());
     }
     private void saveNotification(NotificationQueueDTO notificationQueueDTO, IOService ioService, String notificationId, String status) {
         IONotification ioNotification = ioNotificationMapper.mapToSaveNotification(notificationQueueDTO, status);
