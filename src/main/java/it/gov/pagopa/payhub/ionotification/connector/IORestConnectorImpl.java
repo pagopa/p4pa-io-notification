@@ -54,7 +54,7 @@ public class IORestConnectorImpl implements IORestConnector {
             if (e.status() == 403) {
                 throw new SenderNotAllowedException(String.format("The user is not enabled to receive notifications: %s", e.getMessage()));
             }
-            throw new CreateServiceInvocationException("It was not possible to verify if the user is allowed to receive notification");
+            throw new RetrieveSenderProfileInvocationException("It was not possible to verify if the user is allowed to receive notification");
         }
     }
 
@@ -67,7 +67,7 @@ public class IORestConnectorImpl implements IORestConnector {
             if (e.status() == 400) {
                 throw new IOWrongPayloadException(String.format("There is something wrong with the payload: %s", e.getMessage()));
             }
-            throw new CreateServiceInvocationException("There was an error processing the request of notification");
+            throw new SendNotificationInvocationException("There was an error processing the request of notification");
         }
     }
 

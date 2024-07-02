@@ -33,8 +33,6 @@ public class IONotificationMapper {
         return IONotification.builder()
                 .notificationDate(LocalDateTime.now())
                 .userId(notificationQueueDTO.getFiscalCode())
-                .tipoDovutoName(notificationQueueDTO.getTipoDovutoName())
-                .enteName(notificationQueueDTO.getEnteName())
                 .notificationStatus(status)
                 .tipoDovutoId(notificationQueueDTO.getTipoDovutoId())
                 .enteId(notificationQueueDTO.getEnteId())

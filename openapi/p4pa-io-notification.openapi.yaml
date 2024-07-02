@@ -335,13 +335,9 @@ components:
         enteId:
           type: integer
           format: int64
-        enteName:
-          type: string
         tipoDovutoId:
           type: integer
           format: int64
-        tipoDovutoName:
-          type: string
         operationType:
           type: string
     IoNotificationErrorDTO:

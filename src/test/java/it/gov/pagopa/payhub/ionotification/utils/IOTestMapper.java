@@ -1,6 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.utils;
 
 import it.gov.pagopa.payhub.ionotification.dto.*;
+import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.model.generated.*;
 
@@ -21,8 +22,8 @@ public class IOTestMapper {
     public static final String VALUE = "VALUE";
     public static final String REASON = "REASON";
     public static final String FISCAL_CODE = "FISCAL_CODE";
-    public static final String MARKDOWN = "MARKDOWN";
-    public static final String SUBJECT = "SUBJECT";
+    public static final String MARKDOWN = "This is a markdow";
+    public static final String SUBJECT = "Test Subject %tipoDovutoName%";
     public static final String SECONDARY_KEY = "SECONDARY_KEY";
     public static final String PRIMARY_KEY = "PRIMARY_KEY";
     public static final String DESCRIPTION = "DESCRIPTION";
@@ -35,6 +36,7 @@ public class IOTestMapper {
     public static final String PRODUCT_DEPARTMENT_NAME = "PRODUCT_DEPARTMENT_NAME";
     public static final String ORGANIZATION_NAME = "ORGANIZATION_NAME";
     public static final String ORGANIZATION_VAT = "ORGANIZATION_VAT";
+    public static final String USER_ID = "USER_ID";
 
     public static IOService mapIoService(ServiceRequestDTO serviceRequestDTO) {
         return IOService.builder()
@@ -137,7 +139,7 @@ public class IOTestMapper {
                 .build();
         return NotificationDTO.builder()
                 .content(messageContent)
-                .timeToLive(10L)
+                .timeToLive(3600L)
                 .fiscalCode(FISCAL_CODE)
                 .build();
     }
@@ -196,6 +198,15 @@ public class IOTestMapper {
                 .status(SERVICE_STATUS_CREATED)
                 .serviceName(SERVICE_NAME)
                 .organizationName(ORGANIZATION_NAME)
+                .build();
+    }
+
+    public static IONotification mapIONotification(){
+        return IONotification.builder()
+                .userId(USER_ID)
+                .tipoDovutoId(TIPO_DOVUTO_ID)
+                .enteId(ENTE_ID)
+                .notificationStatus("OK")
                 .build();
     }
 }

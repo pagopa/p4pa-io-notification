@@ -5,7 +5,6 @@ public class IONotificationConstants {
     public static final String SERVICE_STATUS_REQUESTED = "REQUESTED";
     public static final String SERVICE_STATUS_DELETED = "DELETED";
     public static final String NOTIFICATION_STATUS_OK = "OK";
-    public static final String NOTIFICATION_STATUS_KO = "KO";
     public static final String NOTIFICATION_STATUS_KO_SERVICE_NOT_FOUND = "KO_SERVICE_NOT_FOUND";
     public static final String NOTIFICATION_STATUS_KO_SENDER_NOT_ALLOWED = "KO_SENDER_NOT_ALLOWED";
 

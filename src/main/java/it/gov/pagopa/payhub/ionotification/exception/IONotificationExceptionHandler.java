@@ -24,7 +24,12 @@ public class IONotificationExceptionHandler {
 
     private static final Pattern RETRY_AFTER_MS_PATTERN = Pattern.compile("RetryAfterMs=(\\d+)");
 
-    @ExceptionHandler({RetrieveServicesInvocationException.class, CreateServiceInvocationException.class, DeleteServiceInvocationException.class,})
+    @ExceptionHandler({
+            RetrieveServicesInvocationException.class,
+            CreateServiceInvocationException.class,
+            DeleteServiceInvocationException.class,
+            SendNotificationInvocationException.class,
+            RetrieveSenderProfileInvocationException.class})
     public ResponseEntity<IoNotificationErrorDTO> handleFeignClientException(RuntimeException ex, HttpServletRequest request) {
         return handleIONotificationErrorException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, IoNotificationErrorDTO.CodeEnum.GENERIC_ERROR);
     }
