@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants.SERVICE_STATUS_DELETED;
+import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants.ServiceStatus.SERVICE_STATUS_DELETED;
 
 @Service
 @Slf4j
@@ -48,7 +48,7 @@ public class IOManageServiceImpl implements IOManageService {
                     return new ServiceNotFoundException(String.format("The service with serviceId %s does not exist", serviceId));
                 });
 
-        if (service.getStatus().equals(SERVICE_STATUS_DELETED)){
+        if (service.getStatus().equals(SERVICE_STATUS_DELETED.getValue())){
             throw new ServiceAlreadyDeletedException(
                     String.format("The service with serviceId %s is already deleted", serviceId));
         }
@@ -67,7 +67,7 @@ public class IOManageServiceImpl implements IOManageService {
     }
 
     private void updateDeletedService(IOService service) {
-        String status = SERVICE_STATUS_DELETED;
+        String status = SERVICE_STATUS_DELETED.getValue();
         service.setStatus(status);
         log.info("Update service {} with status {}", service.getServiceName(), status);
         ioServiceRepository.save(service);

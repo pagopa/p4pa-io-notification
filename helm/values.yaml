@@ -62,15 +62,21 @@ microservice-chart:
     ENABLE_AUDIT_APPENDER: "TRUE"
     IO_MANAGE_BACKEND_SERVICE_BASE_URL: "https://api.io.pagopa.it/api/v1"
 
-#  externalConfigMapValues:
-#    rest-client:
-#      IO_MANAGE_BACKEND_SERVICE_BASE_URL: io_manage_backend_base_url
+
+  externalConfigMapValues:
+    eventhub-config:
+      KAFKA_TOPIC_NOTIFICATION: p4pa-payhub-notification-topic
+      KAFKA_NOTIFICATION_SASL_MECHANISM: p4pa-payhub-notification-sasl-mechanism
+      KAFKA_NOTIFICATION_SECURITY_PROTOCOL: p4pa-payhub-notification-security-protocol
 
 
   envSecret:
     MONGODB_URI: mongodb-connection-string
     IO_BACKEND_SERVICE_SUBSCRIPTION_API_KEY: io-backend-manage-api-key
     APPLICATIONINSIGHTS_CONNECTION_STRING: appinsights-connection-string
+    KAFKA_NOTIFICATION_OUT_SASL_JAAS_CONFIG: p4pa-payhub-notification-evh-producer-jaas-config
+    KAFKA_NOTIFICATION_IN_SASL_JAAS_CONFIG: p4pa-payhub-notification-evh-consumer-jaas-config
+    KAFKA_BINDER_BROKER: p4pa-payhub-notification-kafka-broker
 
   # nodeSelector: {}
 

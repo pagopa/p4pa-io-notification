@@ -57,7 +57,7 @@ class IONotificationControllerImplTest {
                 .sendMessage(notificationQueueDTO);
 
         mockMvc.perform(
-                        post("/ionotification/send/message")
+                        post("/ionotification/message")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
                                 .content(objectMapper.writeValueAsString(notificationQueueDTO)))

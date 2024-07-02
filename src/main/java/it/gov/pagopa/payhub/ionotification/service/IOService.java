@@ -14,4 +14,6 @@ public interface IOService {
 
     void deleteService(String serviceId);
 
+    void sendNotification(NotificationQueueDTO notificationQueueDTO);
+
 }

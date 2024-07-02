@@ -84,4 +84,17 @@ class IOServiceTest {
         verify(ioManageService, times(1)).deleteService(SERVICE_ID);
     }
 
+    @Test
+    void givenSendNotificationThenSuccess(){
+        NotificationQueueDTO notificationQueueDTO = mapToSendMessageToQueue();
+
+        doNothing().when(ioNotificationService)
+                .sendNotification(notificationQueueDTO);
+
+        service.sendNotification(notificationQueueDTO);
+
+        verify(ioNotificationService, times(1)).sendNotification(notificationQueueDTO);
+
+    }
+
 }

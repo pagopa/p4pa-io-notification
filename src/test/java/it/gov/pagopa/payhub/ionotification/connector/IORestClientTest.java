@@ -91,7 +91,7 @@ class IORestClientTest {
     }
 
     @Test
-    void givenCreateServiceWhenPayloadIsWrongThrowCreateServiceInvocationException() throws JsonProcessingException {
+    void givenCreateServiceWhenPayloadIsWrongThenThrowCreateServiceInvocationException() throws JsonProcessingException {
 
         ServiceRequestDTO serviceRequestDTO = createServiceRequestDTO();
 
@@ -125,6 +125,21 @@ class IORestClientTest {
     }
 
     @Test
+    void givenServiceKeysWhenErrorFromIOThenThrowRetrieveServicesInvocationException() throws JsonProcessingException {
+
+        wireMockServer.stubFor(get(urlEqualTo("/manage/services/SERVICE_ID/keys"))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(new ObjectMapper().writeValueAsString(getTokenIOResponse()))
+                        .withStatus(HttpStatus.FORBIDDEN.value())
+                )
+        );
+
+        assertThrows(RetrieveServicesInvocationException.class, () ->
+                ioRestConnector.getServiceKeys("SERVICE_ID"));
+    }
+
+    @Test
     void givenFiscalCodeWhenGetUserProfileTokenThenSuccess() throws JsonProcessingException {
 
         wireMockServer.stubFor(post(urlEqualTo("/profiles"))
@@ -139,6 +154,40 @@ class IORestClientTest {
         ProfileResource profile = ioRestConnector.getProfile(getUserProfileRequest(), "TOKEN");
 
         assertNotNull(profile);
+    }
+
+    @Test
+    void givenGetUserProfileWhenSenderNotAllowedTokenThenThrowSenderNotAllowedException() throws JsonProcessingException {
+
+        FiscalCodeDTO fiscalCodeDTO = getUserProfileRequest();
+        wireMockServer.stubFor(post(urlEqualTo("/profiles"))
+                .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(fiscalCodeDTO)))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(new ObjectMapper().writeValueAsString(getUserProfileResponse()))
+                        .withStatus(HttpStatus.FORBIDDEN.value())
+                )
+        );
+
+        assertThrows(SenderNotAllowedException.class, () ->
+                ioRestConnector.getProfile(fiscalCodeDTO, "TOKEN"));
+    }
+
+    @Test
+    void givenGetUserProfileWhenErrorFromIOThenThrowRetrieveSenderProfileInvocationException() throws JsonProcessingException {
+
+        FiscalCodeDTO fiscalCodeDTO = getUserProfileRequest();
+        wireMockServer.stubFor(post(urlEqualTo("/profiles"))
+                .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(fiscalCodeDTO)))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(new ObjectMapper().writeValueAsString(getUserProfileResponse()))
+                        .withStatus(HttpStatus.BAD_REQUEST.value())
+                )
+        );
+
+        assertThrows(RetrieveSenderProfileInvocationException.class, () ->
+                ioRestConnector.getProfile(fiscalCodeDTO, "TOKEN"));
     }
 
     @Test
@@ -170,7 +219,7 @@ class IORestClientTest {
     }
 
     @Test
-    void givenServiceWhenSendNotificationTokenThenSuccess() throws JsonProcessingException {
+    void givenServiceWhenSendNotificationThenSuccess() throws JsonProcessingException {
 
         wireMockServer.stubFor(post(urlEqualTo("/messages"))
                 .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(sendNotificationRequest())))
@@ -184,6 +233,40 @@ class IORestClientTest {
         NotificationResource notification = ioRestConnector.sendNotification(sendNotificationRequest(), "TOKEN");
 
         assertNotNull(notification);
+    }
+
+    @Test
+    void givenSendNotificationWhenWrongPayloadThenThrowIOWrongPayloadException() throws JsonProcessingException {
+
+        NotificationDTO notificationQueueDTO = sendNotificationRequest();
+        wireMockServer.stubFor(post(urlEqualTo("/messages"))
+                .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(notificationQueueDTO)))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(new ObjectMapper().writeValueAsString(new NotificationResource("ID")))
+                        .withStatus(HttpStatus.BAD_REQUEST.value())
+                )
+        );
+
+        assertThrows(IOWrongPayloadException.class, () ->
+                ioRestConnector.sendNotification(notificationQueueDTO, "TOKEN"));
+    }
+
+    @Test
+    void givenSendNotificationWhenErrorFromIOThenThrowSendNotificationInvocationException() throws JsonProcessingException {
+
+        NotificationDTO notificationQueueDTO = sendNotificationRequest();
+        wireMockServer.stubFor(post(urlEqualTo("/messages"))
+                .withRequestBody(equalToJson(new ObjectMapper().writeValueAsString(notificationQueueDTO)))
+                .willReturn(aResponse()
+                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .withBody(new ObjectMapper().writeValueAsString(new NotificationResource("ID")))
+                        .withStatus(HttpStatus.FORBIDDEN.value())
+                )
+        );
+
+        assertThrows(SendNotificationInvocationException.class, () ->
+                ioRestConnector.sendNotification(notificationQueueDTO, "TOKEN"));
     }
 
     @Test
