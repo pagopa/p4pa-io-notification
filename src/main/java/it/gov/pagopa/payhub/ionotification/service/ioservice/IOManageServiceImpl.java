@@ -1,6 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.service.ioservice;
 
 import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
+import it.gov.pagopa.payhub.ionotification.enums.ServiceStatus;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IOServiceMapper;
 import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceAlreadyDeletedException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceNotFoundException;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants.ServiceStatus.SERVICE_STATUS_DELETED;
+import static it.gov.pagopa.payhub.ionotification.enums.ServiceStatus.DELETED;
 
 @Service
 @Slf4j
@@ -48,7 +49,7 @@ public class IOManageServiceImpl implements IOManageService {
                     return new ServiceNotFoundException(String.format("The service with serviceId %s does not exist", serviceId));
                 });
 
-        if (service.getStatus().equals(SERVICE_STATUS_DELETED.getValue())){
+        if (service.getStatus().equals(DELETED)){
             throw new ServiceAlreadyDeletedException(
                     String.format("The service with serviceId %s is already deleted", serviceId));
         }
@@ -67,7 +68,7 @@ public class IOManageServiceImpl implements IOManageService {
     }
 
     private void updateDeletedService(IOService service) {
-        String status = SERVICE_STATUS_DELETED.getValue();
+        ServiceStatus status = DELETED;
         service.setStatus(status);
         log.info("Update service {} with status {}", service.getServiceName(), status);
         ioServiceRepository.save(service);

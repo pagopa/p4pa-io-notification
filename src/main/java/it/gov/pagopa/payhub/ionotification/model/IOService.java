@@ -1,5 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.model;
 
+import it.gov.pagopa.payhub.ionotification.enums.ServiceStatus;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
@@ -19,7 +20,7 @@ public class IOService {
     private String serviceId;
     private Long enteId;
     private Long tipoDovutoId;
-    private String status;
+    private ServiceStatus status;
     private String serviceName;
     private String serviceDescription;
     private String organizationName;

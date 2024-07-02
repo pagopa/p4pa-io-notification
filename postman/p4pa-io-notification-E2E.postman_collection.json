@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "c2f697a0-42b2-4f70-85cf-c5ff20a31f11",
+		"_postman_id": "e1636fb6-6037-450c-8091-ac3ff71e0c5c",
 		"name": "IONotification E2E",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21721488",
-		"_collection_link": "https://universal-meadow-88424.postman.co/workspace/PAP4~e3834aae-c5da-4699-87c8-55cd8293d10e/collection/21721488-c2f697a0-42b2-4f70-85cf-c5ff20a31f11?action=share&source=collection_link&creator=21721488"
+		"_collection_link": "https://universal-meadow-88424.postman.co/workspace/PAP4~e3834aae-c5da-4699-87c8-55cd8293d10e/collection/21721488-e1636fb6-6037-450c-8091-ac3ff71e0c5c?action=share&source=collection_link&creator=21721488"
 	},
 	"item": [
 		{
@@ -711,13 +711,14 @@
 							"script": {
 								"exec": [
 									"let response = pm.response.json();\r",
+									"let serviceId = pm.collectionVariables.get(\"serviceId\");\r",
 									"\r",
 									"pm.test(\"IONotification - DeleteService - Unhappy case: Delete Service From IO - Responses with 403\", function () {\r",
 									"    pm.response.to.have.status(403);\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Service Already Deleted\", function () {\r",
-									"        pm.expect(response.message).to.eql(\"The service with serviceId 01J1CZAT1HH98GB1VW8R25HZB0 is already deleted\");\r",
+									"        pm.expect(response.message).to.eql(\"The service with serviceId \"+serviceId+ \" is already deleted\");\r",
 									"});"
 								],
 								"type": "text/javascript",

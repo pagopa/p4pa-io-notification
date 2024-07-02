@@ -30,7 +30,7 @@ public class IOServiceMapper {
         return ServiceDTO.builder()
                 .serviceId(service.getServiceId())
                 .serviceName(service.getServiceName())
-                .status(service.getStatus())
+                .status(service.getStatus().name())
                 .serviceDescription(service.getServiceDescription())
                 .organizationName(service.getOrganizationName())
                 .organizationDepartmentName(service.getOrganizationDepartmentName())

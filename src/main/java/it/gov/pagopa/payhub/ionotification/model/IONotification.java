@@ -1,5 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.model;
 
+import it.gov.pagopa.payhub.ionotification.enums.NotificationStatus;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
@@ -18,7 +19,7 @@ public class IONotification {
     private String id;
     private String userId;
     private String notificationId;
-    private String notificationStatus;
+    private NotificationStatus notificationStatus;
     private Long enteId;
     private String enteName;
     private Long tipoDovutoId;

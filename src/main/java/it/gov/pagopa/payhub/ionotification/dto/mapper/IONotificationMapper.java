@@ -1,5 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.dto.mapper;
 
+import it.gov.pagopa.payhub.ionotification.enums.NotificationStatus;
 import it.gov.pagopa.payhub.ionotification.dto.FiscalCodeDTO;
 import it.gov.pagopa.payhub.ionotification.dto.MessageContent;
 import it.gov.pagopa.payhub.ionotification.dto.NotificationDTO;
@@ -29,7 +30,7 @@ public class IONotificationMapper {
                 .build();
     }
 
-    public IONotification mapToSaveNotification(NotificationQueueDTO notificationQueueDTO, String status){
+    public IONotification mapToSaveNotification(NotificationQueueDTO notificationQueueDTO, NotificationStatus status){
         return IONotification.builder()
                 .notificationDate(LocalDateTime.now())
                 .userId(notificationQueueDTO.getFiscalCode())
