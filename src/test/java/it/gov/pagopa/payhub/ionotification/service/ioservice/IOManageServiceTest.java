@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants.ServiceStatus.SERVICE_STATUS_DELETED;
+import static it.gov.pagopa.payhub.ionotification.enums.ServiceStatus.DELETED;
 import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -75,7 +75,7 @@ public class IOManageServiceTest {
 
         service.deleteService(SERVICE_ID);
 
-        assertEquals(SERVICE_STATUS_DELETED.getValue(), ioService.getStatus());
+        assertEquals(DELETED, ioService.getStatus());
         verify(ioServiceRepository, times(1)).findByServiceId(SERVICE_ID);
         verify(ioServiceRepository, times(1)).save(ioService);
     }
@@ -93,7 +93,7 @@ public class IOManageServiceTest {
     @Test
     void givenDeleteServiceWhenServiceAlreadyDeletedThenThrowServiceAlreadyDeletedException(){
         IOService ioService = mapIoService(createServiceRequestDTO());
-        ioService.setStatus(SERVICE_STATUS_DELETED.getValue());
+        ioService.setStatus(DELETED);
 
         when(ioServiceRepository.findByServiceId(SERVICE_ID)).thenReturn(Optional.of(ioService));
 
@@ -115,7 +115,7 @@ public class IOManageServiceTest {
 
         service.deleteService(SERVICE_ID);
 
-        assertEquals(SERVICE_STATUS_DELETED.getValue(), ioService.getStatus());
+        assertEquals(DELETED, ioService.getStatus());
         verify(ioServiceRepository, times(1)).findByServiceId(SERVICE_ID);
         verify(ioServiceRepository, times(1)).save(ioService);
     }

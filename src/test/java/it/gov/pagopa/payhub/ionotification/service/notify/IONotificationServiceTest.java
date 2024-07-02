@@ -1,6 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.service.notify;
 
 import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
+import it.gov.pagopa.payhub.ionotification.enums.NotificationStatus;
 import it.gov.pagopa.payhub.ionotification.dto.FiscalCodeDTO;
 import it.gov.pagopa.payhub.ionotification.dto.KeysDTO;
 import it.gov.pagopa.payhub.ionotification.dto.NotificationResource;
@@ -22,7 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants.NotificationStatus.*;
+import static it.gov.pagopa.payhub.ionotification.enums.NotificationStatus.*;
 import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -82,7 +83,7 @@ class IONotificationServiceTest {
         when(connector.sendNotification(sendNotificationRequest(), keysDTO.getPrimaryKey()))
                 .thenReturn(new NotificationResource("ID"));
 
-        sendNotification(NOTIFICATION_STATUS_OK.getValue());
+        sendNotification(OK);
 
         assertEquals("ID", ioNotification.getNotificationId());
         assertEquals(ORGANIZATION_NAME, ioNotification.getEnteName());
@@ -95,7 +96,7 @@ class IONotificationServiceTest {
 
         when(ioServiceRepository.findByEnteIdAndTipoDovutoId(ENTE_ID, TIPO_DOVUTO_ID)).thenReturn(Optional.empty());
 
-        sendNotification(NOTIFICATION_STATUS_KO_SERVICE_NOT_FOUND.getValue());
+        sendNotification(KO_SERVICE_NOT_FOUND);
 
         assertNull(ioNotification.getNotificationId());
         assertNull(ioNotification.getEnteName());
@@ -110,7 +111,7 @@ class IONotificationServiceTest {
         when(connector.getProfile(fiscalCodeDTO, keysDTO.getPrimaryKey()))
                 .thenReturn(new ProfileResource(false, new ArrayList<>()));
 
-        sendNotification(NOTIFICATION_STATUS_KO_SENDER_NOT_ALLOWED.getValue());
+        sendNotification(KO_SENDER_NOT_ALLOWED);
 
         assertNull(ioNotification.getNotificationId());
 
@@ -122,13 +123,13 @@ class IONotificationServiceTest {
 
         doThrow(new SenderNotAllowedException("Error")).when(connector).getProfile(fiscalCodeDTO, keysDTO.getPrimaryKey());
 
-        sendNotification(NOTIFICATION_STATUS_KO_SENDER_NOT_ALLOWED.getValue());
+        sendNotification(KO_SENDER_NOT_ALLOWED);
 
         assertNull(ioNotification.getNotificationId());
 
     }
 
-    private void sendNotification(String status) {
+    private void sendNotification(NotificationStatus status) {
         when(ioNotificationMapper.mapToSaveNotification(notificationQueueDTO, status))
                 .thenReturn(ioNotification);
 
@@ -136,7 +137,7 @@ class IONotificationServiceTest {
 
         verify(ioNotificationRepository, times(1)).save(ioNotification);
 
-        if (!status.equals(NOTIFICATION_STATUS_KO_SERVICE_NOT_FOUND.getValue())) {
+        if (!status.equals(KO_SERVICE_NOT_FOUND)) {
             assertEquals(ORGANIZATION_NAME, ioNotification.getEnteName());
             assertEquals(SERVICE_NAME, ioNotification.getTipoDovutoName());
         }

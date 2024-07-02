@@ -1,6 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.service.notify;
 
 import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
+import it.gov.pagopa.payhub.ionotification.enums.NotificationStatus;
 import it.gov.pagopa.payhub.ionotification.dto.*;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IONotificationMapper;
 import it.gov.pagopa.payhub.ionotification.event.producer.IONotificationProducer;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static it.gov.pagopa.payhub.ionotification.constants.IONotificationConstants.NotificationStatus.*;
+import static it.gov.pagopa.payhub.ionotification.enums.NotificationStatus.*;
 
 @Service
 @Slf4j
@@ -74,7 +75,7 @@ public class IONotificationServiceImpl implements IONotificationService {
             log.error("There is no service for organizationId {} and tipoDovutoId {}",
                     notificationQueueDTO.getEnteId(), notificationQueueDTO.getTipoDovutoId());
 
-            saveNotification(notificationQueueDTO, null, null, NOTIFICATION_STATUS_KO_SERVICE_NOT_FOUND.getValue());
+            saveNotification(notificationQueueDTO, null, null, KO_SERVICE_NOT_FOUND);
         }
         return ioService;
     }
@@ -101,7 +102,7 @@ public class IONotificationServiceImpl implements IONotificationService {
 
     private boolean handleSenderNotAllowed(NotificationQueueDTO notificationQueueDTO, IOService ioService) {
         log.info("The user is not enabled to receive notifications");
-        saveNotification(notificationQueueDTO, ioService, null, NOTIFICATION_STATUS_KO_SENDER_NOT_ALLOWED.getValue());
+        saveNotification(notificationQueueDTO, ioService, null, KO_SENDER_NOT_ALLOWED);
         return false;
     }
 
@@ -112,9 +113,9 @@ public class IONotificationServiceImpl implements IONotificationService {
 
         log.info("Sending notification to IO");
         NotificationResource notificationResource = connector.sendNotification(notificationDTO, token);
-        saveNotification(notificationQueueDTO, ioService, notificationResource.getId(), NOTIFICATION_STATUS_OK.getValue());
+        saveNotification(notificationQueueDTO, ioService, notificationResource.getId(), OK);
     }
-    private void saveNotification(NotificationQueueDTO notificationQueueDTO, IOService ioService, String notificationId, String status) {
+    private void saveNotification(NotificationQueueDTO notificationQueueDTO, IOService ioService, String notificationId, NotificationStatus status) {
         IONotification ioNotification = ioNotificationMapper.mapToSaveNotification(notificationQueueDTO, status);
 
         if (notificationId != null) {
