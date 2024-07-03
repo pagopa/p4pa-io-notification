@@ -226,6 +226,7 @@ components:
           x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)"
     ServiceRequestDTO:
       type: object
+      x-class-extra-annotation: "@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)"
       required:
         - name
         - description
@@ -258,6 +259,7 @@ components:
           $ref: '#/components/schemas/ServiceRequestMetadataDTO'
     OrganizationRequestDTO:
       type: object
+      x-class-extra-annotation: "@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)"
       required:
         - name
         - fiscal_code
@@ -274,6 +276,7 @@ components:
             @JsonProperty("department_name")
     ServiceRequestMetadataDTO:
       type: object
+      x-class-extra-annotation: "@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL)"
       required:
         - scope
         - topic_id
