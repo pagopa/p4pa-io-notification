@@ -86,7 +86,7 @@ class IONotificationControllerImplTest {
         doNothing().when(ioService)
                 .deleteService("serviceId");
 
-        mockMvc.perform(put("/ionotification/service/serviceId")
+        mockMvc.perform(delete("/ionotification/service/serviceId")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is2xxSuccessful())
