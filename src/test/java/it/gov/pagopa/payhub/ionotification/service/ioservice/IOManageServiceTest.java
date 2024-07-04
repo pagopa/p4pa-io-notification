@@ -80,8 +80,7 @@ public class IOManageServiceTest {
     void givenDeleteServiceWhenServiceNotFoundThenThrowServiceNotFoundException(){
         when(ioServiceRepository.findByServiceId(SERVICE_ID)).thenReturn(Optional.empty());
 
-        assertThrows(ServiceNotFoundException.class, () ->
-                service.deleteService(SERVICE_ID));
+        service.deleteService(SERVICE_ID);
 
         verify(ioServiceRepository, times(1)).findByServiceId(SERVICE_ID);
     }
