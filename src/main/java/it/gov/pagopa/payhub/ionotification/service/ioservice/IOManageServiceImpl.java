@@ -40,18 +40,17 @@ public class IOManageServiceImpl implements IOManageService {
 
     @Override
     public void deleteService(String serviceId) {
-        IOService service = ioServiceRepository.findByServiceId(serviceId)
-                .orElseThrow(() -> {
-                    log.error("Service with serviceId {} was not found or is already deleted", serviceId);
-                    return new ServiceNotFoundException(String.format("The service with serviceId %s does not exist or is already deleted", serviceId));
-                });
-
-        try{
-            ioRestConnector.deleteService(serviceId);
-        } catch (ServiceNotFoundException | ServiceAlreadyDeletedException e) {
-            log.info("Service with serviceId {} does not exists or was already deleted from IO", serviceId);
-        } finally {
-            ioServiceRepository.delete(service);
+        Optional<IOService> service = ioServiceRepository.findByServiceId(serviceId);
+        if (service.isPresent()) {
+            try {
+                ioRestConnector.deleteService(serviceId);
+            } catch (ServiceNotFoundException | ServiceAlreadyDeletedException e) {
+                log.info("Service with serviceId {} does not exists or was already deleted from IO", serviceId);
+            } finally {
+                ioServiceRepository.delete(service.get());
+            }
+        }else {
+            log.info("Service with serviceId {} was not found or is already deleted", serviceId);
         }
     }
 }
