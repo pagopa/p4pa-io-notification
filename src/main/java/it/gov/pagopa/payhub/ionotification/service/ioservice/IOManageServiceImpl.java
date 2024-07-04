@@ -1,7 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.service.ioservice;
 
 import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
-import it.gov.pagopa.payhub.ionotification.enums.ServiceStatus;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IOServiceMapper;
 import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceAlreadyDeletedException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceNotFoundException;
@@ -12,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-
-import static it.gov.pagopa.payhub.ionotification.enums.ServiceStatus.DELETED;
 
 @Service
 @Slf4j
@@ -43,34 +40,17 @@ public class IOManageServiceImpl implements IOManageService {
 
     @Override
     public void deleteService(String serviceId) {
-        IOService service = ioServiceRepository.findByServiceId(serviceId)
-                .orElseThrow(() -> {
-                    log.error("Service with serviceId {} was not found", serviceId);
-                    return new ServiceNotFoundException(String.format("The service with serviceId %s does not exist", serviceId));
-                });
-
-        if (service.getStatus().equals(DELETED)){
-            throw new ServiceAlreadyDeletedException(
-                    String.format("The service with serviceId %s is already deleted", serviceId));
+        Optional<IOService> service = ioServiceRepository.findByServiceId(serviceId);
+        if (service.isPresent()) {
+            try {
+                ioRestConnector.deleteService(serviceId);
+            } catch (ServiceNotFoundException | ServiceAlreadyDeletedException e) {
+                log.info("Service with serviceId {} does not exists or was already deleted from IO", serviceId);
+            } finally {
+                ioServiceRepository.delete(service.get());
+            }
+        }else {
+            log.info("Service with serviceId {} was not found or is already deleted", serviceId);
         }
-
-        deleteServiceFromIO(serviceId, service);
-    }
-
-    private void deleteServiceFromIO(String serviceId, IOService service) {
-        log.info("Delete service {} associated with {} from IO", service.getServiceName(), service.getOrganizationName());
-        try{
-            ioRestConnector.deleteService(serviceId);
-            updateDeletedService(service);
-        }catch (ServiceAlreadyDeletedException e){
-            updateDeletedService(service);
-        }
-    }
-
-    private void updateDeletedService(IOService service) {
-        ServiceStatus status = DELETED;
-        service.setStatus(status);
-        log.info("Update service {} with status {}", service.getServiceName(), status);
-        ioServiceRepository.save(service);
     }
 }

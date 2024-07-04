@@ -4,5 +4,4 @@ public enum ServiceStatus {
 
     CREATED,
     REQUESTED,
-    DELETED
 }

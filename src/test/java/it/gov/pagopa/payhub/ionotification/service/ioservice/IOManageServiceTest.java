@@ -15,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static it.gov.pagopa.payhub.ionotification.enums.ServiceStatus.DELETED;
 import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -71,52 +70,32 @@ public class IOManageServiceTest {
 
         doNothing().when(ioRestConnector).deleteService(SERVICE_ID);
 
-        when(ioServiceRepository.save(ioService)).thenReturn(ioService);
-
         service.deleteService(SERVICE_ID);
 
-        assertEquals(DELETED, ioService.getStatus());
         verify(ioServiceRepository, times(1)).findByServiceId(SERVICE_ID);
-        verify(ioServiceRepository, times(1)).save(ioService);
+        verify(ioServiceRepository, times(1)).delete(ioService);
     }
 
     @Test
     void givenDeleteServiceWhenServiceNotFoundThenThrowServiceNotFoundException(){
         when(ioServiceRepository.findByServiceId(SERVICE_ID)).thenReturn(Optional.empty());
 
-        assertThrows(ServiceNotFoundException.class, () ->
-                service.deleteService(SERVICE_ID));
+        service.deleteService(SERVICE_ID);
 
         verify(ioServiceRepository, times(1)).findByServiceId(SERVICE_ID);
     }
 
     @Test
-    void givenDeleteServiceWhenServiceAlreadyDeletedThenThrowServiceAlreadyDeletedException(){
-        IOService ioService = mapIoService(createServiceRequestDTO());
-        ioService.setStatus(DELETED);
-
-        when(ioServiceRepository.findByServiceId(SERVICE_ID)).thenReturn(Optional.of(ioService));
-
-        assertThrows(ServiceAlreadyDeletedException.class, () ->
-                service.deleteService(SERVICE_ID));
-
-        verify(ioServiceRepository, times(1)).findByServiceId(SERVICE_ID);
-    }
-
-    @Test
-    void givenDeleteServiceWhenServiceAlreadyDeletedFromIOThenUpdateServiceStatus(){
+    void givenDeleteServiceWhenServiceAlreadyDeletedFromIOThenDeleteService(){
         IOService ioService = mapIoService(createServiceRequestDTO());
 
         when(ioServiceRepository.findByServiceId(SERVICE_ID)).thenReturn(Optional.of(ioService));
 
         doThrow(ServiceAlreadyDeletedException.class).when(ioRestConnector).deleteService(SERVICE_ID);
 
-        when(ioServiceRepository.save(ioService)).thenReturn(ioService);
-
         service.deleteService(SERVICE_ID);
 
-        assertEquals(DELETED, ioService.getStatus());
         verify(ioServiceRepository, times(1)).findByServiceId(SERVICE_ID);
-        verify(ioServiceRepository, times(1)).save(ioService);
+        verify(ioServiceRepository, times(1)).delete(ioService);
     }
 }
