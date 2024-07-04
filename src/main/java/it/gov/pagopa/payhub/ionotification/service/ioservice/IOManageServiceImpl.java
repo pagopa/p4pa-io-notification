@@ -2,6 +2,7 @@ package it.gov.pagopa.payhub.ionotification.service.ioservice;
 
 import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IOServiceMapper;
+import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceAlreadyDeletedException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceNotFoundException;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IOServiceRepository;
@@ -45,7 +46,12 @@ public class IOManageServiceImpl implements IOManageService {
                     return new ServiceNotFoundException(String.format("The service with serviceId %s does not exist or is already deleted", serviceId));
                 });
 
-        ioRestConnector.deleteService(serviceId);
-        ioServiceRepository.delete(service);
+        try{
+            ioRestConnector.deleteService(serviceId);
+        } catch (ServiceNotFoundException | ServiceAlreadyDeletedException e) {
+            log.info("Service with serviceId {} does not exists or was already deleted from IO", serviceId);
+        } finally {
+            ioServiceRepository.delete(service);
+        }
     }
 }

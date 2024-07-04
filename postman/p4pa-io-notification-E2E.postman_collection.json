@@ -45,7 +45,8 @@
 									"pm.collectionVariables.set(\"department_name\", `test_department_ente_${randomNumber}`);\r",
 									"\r",
 									"pm.collectionVariables.set(\"enteId\", `${randomNumber}`);\r",
-									"pm.collectionVariables.set(\"tipoDovutoId\", `${randomNumber}`);"
+									"pm.collectionVariables.set(\"tipoDovutoId\", `${randomNumber}`);\r",
+									"pm.collectionVariables.set(\"fiscalCode\", `AAAAAA69A45A602A`);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -57,7 +58,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"metadata\": {\r\n    \"web_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"app_ios\": \"appio\",\r\n    \"app_android\": \"appand\",\r\n    \"tos_url\": \"web\",\r\n    \"privacy_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"address\": \"via del test\",\r\n    \"phone\": \"PHONE\",\r\n    \"email\": \"EMAIL\",\r\n    \"pec\": \"PEC\",\r\n    \"cta\": \"CTA\",\r\n    \"token_name\": \"TOKEN\",\r\n    \"support_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"scope\": \"LOCAL\",\r\n    \"topic_id\": 0\r\n  },\r\n  \"name\": \"{{name}}\",\r\n  \"description\": \"app\",\r\n  \"organization\": {\r\n    \"name\": \"{{organization_name}}\",\r\n    \"fiscal_code\": {{fiscalCode_ente}},\r\n    \"department_name\": \"{{department_name}}\"\r\n  },\r\n  \"require_secure_channel\": false,\r\n  \"authorized_recipients\": [\r\n    \"{{fiscalCodeR}}\"\r\n  ],\r\n  \"authorized_cidrs\": [],\r\n  \"max_allowed_payment_amount\": 0\r\n}",
+							"raw": "{\r\n  \"metadata\": {\r\n    \"web_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"app_ios\": \"appio\",\r\n    \"app_android\": \"appand\",\r\n    \"tos_url\": \"web\",\r\n    \"privacy_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"address\": \"via del test\",\r\n    \"phone\": \"PHONE\",\r\n    \"email\": \"EMAIL\",\r\n    \"pec\": \"PEC\",\r\n    \"cta\": \"CTA\",\r\n    \"token_name\": \"TOKEN\",\r\n    \"support_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"scope\": \"LOCAL\",\r\n    \"topic_id\": 0\r\n  },\r\n  \"name\": \"{{name}}\",\r\n  \"description\": \"app\",\r\n  \"organization\": {\r\n    \"name\": \"{{organization_name}}\",\r\n    \"fiscal_code\": {{fiscalCode_ente}},\r\n    \"department_name\": \"{{department_name}}\"\r\n  },\r\n  \"require_secure_channel\": false,\r\n  \"authorized_recipients\": [\r\n    \"{{fiscalCode}}\"\r\n  ],\r\n  \"authorized_cidrs\": [],\r\n  \"max_allowed_payment_amount\": 0\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -133,13 +134,23 @@
 					"response": []
 				},
 				{
-					"name": "DeleteService",
+					"name": "SendMessage",
 					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"fiscalCode\", `AAAAAA69A45A602A`);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"IONotification - DeleteService - Happy case: Delete Service From IO - Responses with 204\", function () {\r",
+									"pm.test(\"IONotification - sendMessage Sender Not Allowed- Responses with 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
 								],
@@ -149,7 +160,48 @@
 						}
 					],
 					"request": {
-						"method": "PUT",
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fiscalCode\": \"{{fiscalCode}}\",\r\n  \"enteId\": {{enteId}},\r\n  \"tipoDovutoId\": {{tipoDovutoId}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/message",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"message"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteService",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"IONotification - DeleteService - Happy case: Delete Service From IO - Responses with 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -175,21 +227,23 @@
 					"response": []
 				},
 				{
-					"name": "GetService IONotification",
+					"name": "GetService NotFound",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
 									"let response = pm.response.json();\r",
-									"pm.test(\"IONotification - getService - Happy case - Responses with 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
+									"let enteId = pm.collectionVariables.get(\"enteId\");\r",
+									"let tipoDovutoId = pm.collectionVariables.get(\"tipoDovutoId\");\r",
+									"\r",
+									"pm.test(\"IONotification - getService - Unhappy case - Responses with 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Status should be DELETED\", function () {\r",
-									"        pm.expect(response.status).to.eql(\"DELETED\");\r",
-									"});\r",
-									""
+									"pm.test(\"Service not found\", function () {\r",
+									"        pm.expect(response.message).to.eql(\"The service for \"+tipoDovutoId+\" associated with \"+enteId+\" does not exist\");\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -497,7 +551,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"IONotification - DeleteService - Happy case: Delete Service From IO - Responses with 204\", function () {\r",
+									"pm.test(\"IONotification - DeleteService - Happy case: Delete Service From IO - Responses with 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
 								],
@@ -507,7 +561,7 @@
 						}
 					],
 					"request": {
-						"method": "PUT",
+						"method": "DELETE",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -540,14 +594,16 @@
 							"script": {
 								"exec": [
 									"let response = pm.response.json();\r",
-									"pm.test(\"IONotification - getService - Happy case - Responses with 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
+									"let enteId = pm.collectionVariables.get(\"enteId\");\r",
+									"let tipoDovutoId = pm.collectionVariables.get(\"tipoDovutoId\");\r",
+									"\r",
+									"pm.test(\"IONotification - getService - Unhappy case - Responses with 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Status should be DELETED\", function () {\r",
-									"        pm.expect(response.status).to.eql(\"DELETED\");\r",
-									"});\r",
-									""
+									"pm.test(\"Service not found\", function () {\r",
+									"        pm.expect(response.message).to.eql(\"The service for \"+tipoDovutoId+\" associated with \"+enteId+\" does not exist\");\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -609,149 +665,8 @@
 			]
 		},
 		{
-			"name": "GetService Unhappy Case",
-			"item": [
-				{
-					"name": "GetService IONotification",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"let response = pm.response.json();\r",
-									"pm.test(\"IONotification - getService - Unhappy case - Responses with 404\", function () {\r",
-									"    pm.response.to.have.status(404);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Service not found\", function () {\r",
-									"        pm.expect(response.message).to.eql(\"The service for 0 associated with 0 does not exist\");\r",
-									"});\r",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{ente_test_ko}}/{{tipoDovuto_test_ko}}",
-							"host": [
-								"{{baseUrlNotification}}"
-							],
-							"path": [
-								"ionotification",
-								"service",
-								"{{ente_test_ko}}",
-								"{{tipoDovuto_test_ko}}"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"type": "text/javascript",
-						"packages": {},
-						"exec": [
-							"function generateRandomNumber() {\r",
-							"    let randomNumber = '';\r",
-							"    for (let i = 0; i < 10; i++) {\r",
-							"        randomNumber += Math.floor(Math.random() * 10).toString();\r",
-							"    }\r",
-							"    return randomNumber;\r",
-							"}\r",
-							"\r",
-							"let randomNumber = generateRandomNumber();\r",
-							"\r",
-							"pm.collectionVariables.set(\"randomNumber\", randomNumber);\r",
-							"pm.collectionVariables.set(\"name\", `test_service_${randomNumber}`);\r",
-							"pm.collectionVariables.set(\"organization_name\", `test_ente_${randomNumber}`);\r",
-							"pm.collectionVariables.set(\"department_name\", `test_department_ente_${randomNumber}`);"
-						]
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"type": "text/javascript",
-						"packages": {},
-						"exec": [
-							""
-						]
-					}
-				}
-			]
-		},
-		{
 			"name": "DeleteService Unhappy Case",
 			"item": [
-				{
-					"name": "DeleteService Already Deleted",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"let response = pm.response.json();\r",
-									"let serviceId = pm.collectionVariables.get(\"serviceId\");\r",
-									"\r",
-									"pm.test(\"IONotification - DeleteService - Unhappy case: Delete Service From IO - Responses with 403\", function () {\r",
-									"    pm.response.to.have.status(403);\r",
-									"});\r",
-									"\r",
-									"pm.test(\"Service Already Deleted\", function () {\r",
-									"        pm.expect(response.message).to.eql(\"The service with serviceId \"+serviceId+ \" is already deleted\");\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{serviceId}}",
-							"host": [
-								"{{baseUrlNotification}}"
-							],
-							"path": [
-								"ionotification",
-								"service",
-								"{{serviceId}}"
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "DeleteService NotFound",
 					"event": [
@@ -766,7 +681,7 @@
 									"});\r",
 									"\r",
 									"pm.test(\"Service not found\", function () {\r",
-									"        pm.expect(response.message).to.eql(\"The service with serviceId SERVICEIDFAKE123 does not exist\");\r",
+									"        pm.expect(response.message).to.eql(\"The service with serviceId SERVICEIDFAKE123 does not exist or is already deleted\");\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -775,7 +690,7 @@
 						}
 					],
 					"request": {
-						"method": "PUT",
+						"method": "DELETE",
 						"header": [],
 						"body": {
 							"mode": "raw",
@@ -834,166 +749,6 @@
 							""
 						]
 					}
-				}
-			]
-		},
-		{
-			"name": "SendNotification",
-			"item": [
-				{
-					"name": "SendNotification",
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									"pm.collectionVariables.set(\"enteId\", 57);\r",
-									"pm.collectionVariables.set(\"tipoDovutoId\", 570);"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"IONotification - sendMessage - Responses with 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"fiscalCode\": \"{{fiscalCodeR}}\",\r\n  \"enteId\": {{enteId}},\r\n  \"tipoDovutoId\": {{tipoDovutoId}}\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/message",
-							"host": [
-								"{{baseUrlNotification}}"
-							],
-							"path": [
-								"ionotification",
-								"message"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "SendNotification SenderNotAllowed",
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									"pm.collectionVariables.set(\"fiscalCode_not_allowed\", `AAAAAA69A45A602A`);"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"IONotification - sendMessage Sender Not Allowed- Responses with 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"fiscalCode\": \"{{fiscalCode_not_allowed}}\",\r\n  \"enteId\": {{enteId}},\r\n  \"tipoDovutoId\": {{tipoDovutoId}}\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/message",
-							"host": [
-								"{{baseUrlNotification}}"
-							],
-							"path": [
-								"ionotification",
-								"message"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "SendNotification ServiceNotFound",
-					"event": [
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									"pm.collectionVariables.set(\"enteId\", 0000);\r",
-									"pm.collectionVariables.set(\"tipoDovutoId\", 0000);"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"IONotification - sendMessage Service Not Found- Responses with 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"fiscalCode\": \"{{fiscalCodeL}}\",\r\n  \"enteId\": {{enteId}},\r\n  \"tipoDovutoId\": {{tipoDovutoId}}\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/message",
-							"host": [
-								"{{baseUrlNotification}}"
-							],
-							"path": [
-								"ionotification",
-								"message"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		}
@@ -1069,7 +824,7 @@
 			"type": "string"
 		},
 		{
-			"key": "fiscalCode_not_allowed",
+			"key": "fiscalCode",
 			"value": ""
 		}
 	]
