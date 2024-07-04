@@ -17,7 +17,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"IONotification - createService - First Try - Responses with 201\", function () {\r",
+									"pm.test(\"IONotification - createService - Responses with 201\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
 									"});"
 								],
@@ -57,7 +57,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"metadata\": {\r\n    \"web_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"app_ios\": \"appio\",\r\n    \"app_android\": \"appand\",\r\n    \"tos_url\": \"web\",\r\n    \"privacy_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"address\": \"via del test\",\r\n    \"phone\": \"PHONE\",\r\n    \"email\": \"EMAIL\",\r\n    \"pec\": \"PEC\",\r\n    \"cta\": \"CTA\",\r\n    \"token_name\": \"TOKEN\",\r\n    \"support_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"scope\": \"LOCAL\",\r\n    \"topic_id\": 0\r\n  },\r\n  \"name\": \"{{name}}\",\r\n  \"description\": \"app\",\r\n  \"organization\": {\r\n    \"name\": \"{{organization_name}}\",\r\n    \"fiscal_code\": {{fiscalCode}},\r\n    \"department_name\": \"{{department_name}}\"\r\n  },\r\n  \"require_secure_channel\": false,\r\n  \"authorized_recipients\": [],\r\n  \"authorized_cidrs\": [],\r\n  \"max_allowed_payment_amount\": 0\r\n}",
+							"raw": "{\r\n  \"metadata\": {\r\n    \"web_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"app_ios\": \"appio\",\r\n    \"app_android\": \"appand\",\r\n    \"tos_url\": \"web\",\r\n    \"privacy_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"address\": \"via del test\",\r\n    \"phone\": \"PHONE\",\r\n    \"email\": \"EMAIL\",\r\n    \"pec\": \"PEC\",\r\n    \"cta\": \"CTA\",\r\n    \"token_name\": \"TOKEN\",\r\n    \"support_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"scope\": \"LOCAL\",\r\n    \"topic_id\": 0\r\n  },\r\n  \"name\": \"{{name}}\",\r\n  \"description\": \"app\",\r\n  \"organization\": {\r\n    \"name\": \"{{organization_name}}\",\r\n    \"fiscal_code\": {{fiscalCode_ente}},\r\n    \"department_name\": \"{{department_name}}\"\r\n  },\r\n  \"require_secure_channel\": false,\r\n  \"authorized_recipients\": [\r\n    \"{{fiscalCodeR}}\"\r\n  ],\r\n  \"authorized_cidrs\": [],\r\n  \"max_allowed_payment_amount\": 0\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -321,7 +321,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"metadata\": {\r\n  },\r\n  \"name\": \"{{name}}\",\r\n  \"description\": \"app\",\r\n  \"organization\": {\r\n    \"name\": \"{{organization_name}}\",\r\n    \"fiscal_code\": {{fiscalCode}},\r\n    \"department_name\": \"{{department_name}}\"\r\n  }\r\n}",
+							"raw": "{\r\n  \"metadata\": {\r\n  },\r\n  \"name\": \"{{name}}\",\r\n  \"description\": \"app\",\r\n  \"organization\": {\r\n    \"name\": \"{{organization_name}}\",\r\n    \"fiscal_code\": {{fiscalCode_ente}},\r\n    \"department_name\": \"{{department_name}}\"\r\n  }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -415,7 +415,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"metadata\": {\r\n    \"web_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"app_ios\": \"appio\",\r\n    \"app_android\": \"appand\",\r\n    \"tos_url\": \"web\",\r\n    \"privacy_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"address\": \"via del test\",\r\n    \"phone\": \"PHONE\",\r\n    \"email\": \"EMAIL\",\r\n    \"pec\": \"PEC\",\r\n    \"cta\": \"CTA\",\r\n    \"token_name\": \"TOKEN\",\r\n    \"support_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"scope\": \"LOCAL\",\r\n    \"topic_id\": 0\r\n  },\r\n  \"name\": \"{{name}}\",\r\n  \"description\": \"app\",\r\n  \"organization\": {\r\n    \"name\": \"{{organization_name}}\",\r\n    \"fiscal_code\": {{fiscalCode}},\r\n    \"department_name\": \"{{department_name}}\"\r\n  },\r\n  \"require_secure_channel\": false,\r\n  \"authorized_recipients\": [],\r\n  \"authorized_cidrs\": [],\r\n  \"max_allowed_payment_amount\": 0\r\n}",
+							"raw": "{\r\n  \"metadata\": {\r\n    \"web_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"app_ios\": \"appio\",\r\n    \"app_android\": \"appand\",\r\n    \"tos_url\": \"web\",\r\n    \"privacy_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"address\": \"via del test\",\r\n    \"phone\": \"PHONE\",\r\n    \"email\": \"EMAIL\",\r\n    \"pec\": \"PEC\",\r\n    \"cta\": \"CTA\",\r\n    \"token_name\": \"TOKEN\",\r\n    \"support_url\": \"https://www.google.com.br/webhp?hl=pt&gl=br\",\r\n    \"scope\": \"LOCAL\",\r\n    \"topic_id\": 0\r\n  },\r\n  \"name\": \"{{name}}\",\r\n  \"description\": \"app\",\r\n  \"organization\": {\r\n    \"name\": \"{{organization_name}}\",\r\n    \"fiscal_code\": {{fiscalCode_ente}},\r\n    \"department_name\": \"{{department_name}}\"\r\n  },\r\n  \"require_secure_channel\": false,\r\n  \"authorized_recipients\": [],\r\n  \"authorized_cidrs\": [],\r\n  \"max_allowed_payment_amount\": 0\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -836,6 +836,166 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "SendNotification",
+			"item": [
+				{
+					"name": "SendNotification",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"enteId\", 57);\r",
+									"pm.collectionVariables.set(\"tipoDovutoId\", 570);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"IONotification - sendMessage - Responses with 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fiscalCode\": \"{{fiscalCodeR}}\",\r\n  \"enteId\": {{enteId}},\r\n  \"tipoDovutoId\": {{tipoDovutoId}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/message",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"message"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SendNotification SenderNotAllowed",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"fiscalCode_not_allowed\", `AAAAAA69A45A602A`);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"IONotification - sendMessage Sender Not Allowed- Responses with 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fiscalCode\": \"{{fiscalCode_not_allowed}}\",\r\n  \"enteId\": {{enteId}},\r\n  \"tipoDovutoId\": {{tipoDovutoId}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/message",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"message"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SendNotification ServiceNotFound",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"enteId\", 0000);\r",
+									"pm.collectionVariables.set(\"tipoDovutoId\", 0000);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"IONotification - sendMessage Service Not Found- Responses with 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"fiscalCode\": \"{{fiscalCodeL}}\",\r\n  \"enteId\": {{enteId}},\r\n  \"tipoDovutoId\": {{tipoDovutoId}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/message",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"message"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -872,11 +1032,6 @@
 			"type": "string"
 		},
 		{
-			"key": "fiscalCode",
-			"value": "12345678910",
-			"type": "string"
-		},
-		{
 			"key": "serviceId_fake",
 			"value": "SERVICEIDFAKE123"
 		},
@@ -906,6 +1061,15 @@
 		},
 		{
 			"key": "serviceId",
+			"value": ""
+		},
+		{
+			"key": "fiscalCode_ente",
+			"value": "99999999982",
+			"type": "string"
+		},
+		{
+			"key": "fiscalCode_not_allowed",
 			"value": ""
 		}
 	]
