@@ -96,7 +96,8 @@
 									"        pm.expect(response.status).to.eql(\"CREATED\");\r",
 									"});\r",
 									"\r",
-									"pm.collectionVariables.set(\"serviceId\", response.serviceId);"
+									"pm.collectionVariables.set(\"serviceId\", response.serviceId);\r",
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -140,7 +141,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"setTimeout(10000);"
+									"setTimeout(() =>{}, 10000);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -243,7 +244,8 @@
 									"\r",
 									"pm.test(\"Service not found\", function () {\r",
 									"        pm.expect(response.message).to.eql(\"The service for \"+tipoDovutoId+\" associated with \"+enteId+\" does not exist\");\r",
-									"});"
+									"});\r",
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -287,6 +289,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"\r",
 									"pm.test(\"IONotification - DeleteNotification - Happy case: Delete Service From IO - Responses with 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
@@ -299,7 +302,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"setTimeout(10000);"
+									"setTimeout(() =>{}, 10000);"
 								],
 								"type": "text/javascript",
 								"packages": {}
