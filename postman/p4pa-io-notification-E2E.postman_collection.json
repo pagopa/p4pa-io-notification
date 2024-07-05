@@ -140,7 +140,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"pm.collectionVariables.set(\"fiscalCode\", `AAAAAA69A45A602A`);"
+									"setTimeout(10000);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -150,7 +150,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"IONotification - sendMessage Sender Not Allowed- Responses with 200\", function () {\r",
+									"pm.test(\"IONotification - sendMessage - Responses with 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});"
 								],
@@ -273,6 +273,60 @@
 							"path": [
 								"ionotification",
 								"service",
+								"{{enteId}}",
+								"{{tipoDovutoId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteNotifica",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"IONotification - DeleteNotification - Happy case: Delete Service From IO - Responses with 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"setTimeout(10000);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrlNotification}}/ionotification/message/{{fiscalCode}}/{{enteId}}/{{tipoDovutoId}}",
+							"host": [
+								"{{baseUrlNotification}}"
+							],
+							"path": [
+								"ionotification",
+								"message",
+								"{{fiscalCode}}",
 								"{{enteId}}",
 								"{{tipoDovutoId}}"
 							]
@@ -719,6 +773,11 @@
 			"value": ""
 		},
 		{
+			"key": "fiscalCode_ente",
+			"value": "99999999982",
+			"type": "string"
+		},
+		{
 			"key": "enteId",
 			"value": ""
 		},
@@ -727,16 +786,11 @@
 			"value": ""
 		},
 		{
-			"key": "serviceId",
+			"key": "fiscalCode",
 			"value": ""
 		},
 		{
-			"key": "fiscalCode_ente",
-			"value": "99999999982",
-			"type": "string"
-		},
-		{
-			"key": "fiscalCode",
+			"key": "serviceId",
 			"value": ""
 		}
 	]
