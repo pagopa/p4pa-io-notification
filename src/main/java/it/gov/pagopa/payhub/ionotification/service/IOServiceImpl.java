@@ -45,4 +45,9 @@ public class IOServiceImpl implements IOService {
     public void sendNotification(NotificationQueueDTO notificationQueueDTO) {
         ioNotificationService.sendNotification(notificationQueueDTO);
     }
+
+    @Override
+    public void deleteNotification(String userId, Long enteId, Long tipoDovutoId) {
+        ioNotificationService.deleteNotification(userId, enteId, tipoDovutoId);
+    }
 }

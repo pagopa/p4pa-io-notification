@@ -25,6 +25,5 @@ public class IONotification {
     private Long tipoDovutoId;
     private String tipoDovutoName;
     private LocalDateTime notificationDate;
-    private LocalDateTime retryDate;
 
 }
