@@ -43,10 +43,12 @@ public class IOManageServiceImpl implements IOManageService {
         Optional<IOService> service = ioServiceRepository.findByServiceId(serviceId);
         if (service.isPresent()) {
             try {
+                log.info("Deleting service {} from IO", serviceId);
                 ioRestConnector.deleteService(serviceId);
             } catch (ServiceNotFoundException | ServiceAlreadyDeletedException e) {
                 log.info("Service with serviceId {} does not exists or was already deleted from IO", serviceId);
             } finally {
+                log.info("Deleting service {}", serviceId);
                 ioServiceRepository.delete(service.get());
             }
         }else {
