@@ -129,6 +129,22 @@ class IONotificationServiceTest {
 
     }
 
+    @Test
+    void givenDeleteNotificationThenSuccess(){
+        when(ioNotificationRepository.findByUserIdAndEnteIdAndTipoDovutoId(USER_ID, ENTE_ID, TIPO_DOVUTO_ID))
+                .thenReturn(Optional.of(ioNotification));
+        service.deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+        verify(ioNotificationRepository, times(1)).delete(ioNotification);
+    }
+
+    @Test
+    void givenDeleteNotificationWhenNotificationDoesNotExistThenDoNothing(){
+        when(ioNotificationRepository.findByUserIdAndEnteIdAndTipoDovutoId(USER_ID, ENTE_ID, TIPO_DOVUTO_ID))
+                .thenReturn(Optional.empty());
+        service.deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+        verify(ioNotificationRepository, times(1)).findByUserIdAndEnteIdAndTipoDovutoId(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+    }
+
     private void sendNotification(NotificationStatus status) {
         when(ioNotificationMapper.mapToSaveNotification(notificationQueueDTO, status))
                 .thenReturn(ioNotification);

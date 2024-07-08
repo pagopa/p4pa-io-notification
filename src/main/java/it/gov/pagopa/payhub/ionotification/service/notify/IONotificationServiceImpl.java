@@ -66,6 +66,17 @@ public class IONotificationServiceImpl implements IONotificationService {
         }
     }
 
+    @Override
+    public void deleteNotification(String userId, Long enteId, Long tipoDovutoId) {
+        Optional<IONotification> ioNotification = ioNotificationRepository.findByUserIdAndEnteIdAndTipoDovutoId(userId, enteId, tipoDovutoId);
+
+        if (ioNotification.isPresent()) {
+            log.info("Deleting notification {}", ioNotification.get().getNotificationId());
+            ioNotificationRepository.delete(ioNotification.get());
+        }
+
+    }
+
     private Optional<IOService> retrieveIOService(NotificationQueueDTO notificationQueueDTO) {
         log.info("Search service for {} and {}", notificationQueueDTO.getEnteId(), notificationQueueDTO.getTipoDovutoId());
         Optional<IOService> ioService = ioServiceRepository

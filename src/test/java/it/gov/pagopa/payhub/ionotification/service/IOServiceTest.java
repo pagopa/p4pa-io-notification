@@ -97,4 +97,13 @@ class IOServiceTest {
 
     }
 
+    @Test
+    void givenDeleteNotificationThenSuccess(){
+        doNothing().when(ioNotificationService).deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+
+        service.deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+
+        verify(ioNotificationService, times(1)).deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+    }
+
 }

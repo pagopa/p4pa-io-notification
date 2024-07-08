@@ -92,4 +92,16 @@ class IONotificationControllerImplTest {
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
     }
+
+    @Test
+    void givenDeleteNotificationThenSuccess() throws Exception {
+        doNothing().when(ioService)
+                .deleteNotification("userId", ENTE_ID, TIPO_DOVUTO_ID);
+
+        mockMvc.perform(delete("/ionotification/message/userId/"+ENTE_ID+"/"+TIPO_DOVUTO_ID)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+    }
 }

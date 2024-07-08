@@ -125,18 +125,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IoNotificationErrorDTO'
-        '404':
-          description: Service not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IoNotificationErrorDTO'
-        '403':
-          description: Service already deleted
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IoNotificationErrorDTO'
         '429':
           description: Too many requests
           content:
@@ -183,6 +171,56 @@ paths:
                 $ref: '#/components/schemas/IoNotificationErrorDTO'
         '404':
           description: Service not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IoNotificationErrorDTO'
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IoNotificationErrorDTO'
+        '500':
+          description: Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IoNotificationErrorDTO'
+  /message/{userId}/{enteId}/{tipoDovutoId}:
+    delete:
+      tags:
+        - ioNotification
+      operationId: deleteNotification
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: enteId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: tipoDovutoId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IoNotificationErrorDTO'
+        '400':
+          description: Invalid Request
           content:
             application/json:
               schema:

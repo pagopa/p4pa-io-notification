@@ -6,4 +6,5 @@ public interface IONotificationService {
 
     void sendMessage(NotificationQueueDTO notificationQueueDTO);
     void sendNotification(NotificationQueueDTO notificationQueueDTO);
+    void deleteNotification(String userId, Long enteId, Long tipoDovutoId);
 }
