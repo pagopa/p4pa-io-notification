@@ -364,7 +364,6 @@ components:
         - fiscalCode
         - enteId
         - tipoDovutoId
-        - operationType
       properties:
         fiscalCode:
           type: string
@@ -375,6 +374,14 @@ components:
           type: integer
           format: int64
         operationType:
+          type: string
+        paymentDate:
+          type: string
+        amount:
+          type: string
+        iuv:
+          type: string
+        paymentReason:
           type: string
     IoNotificationErrorDTO:
       type: object
