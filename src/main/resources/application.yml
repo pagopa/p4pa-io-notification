@@ -93,11 +93,11 @@ rest-client:
       subject: \${IO_BACKEND_NOTIFICATION_SUBJECT:Test P4PA. Nuova Posizione debitoria %tipoDovutoName%}
       markdown: |
         \${IO_BACKEND_NOTIFICATION_MARKDOWN:La informiamo che è stata generata una nuova posizione debitoria a suo carico.  
-        \nLa invitiamo a effettuare il pagamento entro la data di scadenza per evitare eventuali sanzioni o interessi di mora.  
-        \n**Totale da pagare:** %amount%  
-        \n**Data di scadenza:** %paymentDate%  
-        \n**IUV:** %iuv%  
-        \n**Causale:** %paymentReason%}
+        La invitiamo a effettuare il pagamento entro la data di scadenza per evitare eventuali sanzioni o interessi di mora.  
+        **Totale da pagare:** %amount%  
+        **Data di scadenza:** %paymentDate%  
+        **IUV:** %iuv%  
+        **Causale:** %paymentReason%}
 
 
 management:
