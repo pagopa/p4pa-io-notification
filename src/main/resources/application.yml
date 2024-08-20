@@ -92,7 +92,7 @@ rest-client:
       ttl: \${IO_BACKEND_NOTIFICATION_TTL:3600}
       subject: \${IO_BACKEND_NOTIFICATION_SUBJECT:Test P4PA. Nuova Posizione debitoria %tipoDovutoName%}
       markdown: |-
-        ${IO_BACKEND_NOTIFICATION_MARKDOWN:La informiamo che è stata generata una nuova posizione debitoria a suo carico.\n\nLa invitiamo a effettuare il pagamento entro la data di scadenza per evitare eventuali sanzioni o interessi di mora.\n\n**Totale da pagare:** %amount%\n\n**Data di scadenza:** %paymentDate%\n\n**IUV:** %iuv%\n\n**Causale:** %paymentReason%}
+        \${IO_BACKEND_NOTIFICATION_MARKDOWN:La informiamo che è stata generata una nuova posizione debitoria a suo carico.\n\nLa invitiamo a effettuare il pagamento entro la data di scadenza per evitare eventuali sanzioni o interessi di mora.\n\n**Totale da pagare:** %amount%\n\n**Data di scadenza:** %paymentDate%\n\n**IUV:** %iuv%\n\n**Causale:** %paymentReason%}
 
 management:
   endpoint:
