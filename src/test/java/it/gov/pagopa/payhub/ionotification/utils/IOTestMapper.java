@@ -190,6 +190,10 @@ public class IOTestMapper {
                 .enteId(ENTE_ID)
                 .tipoDovutoId(TIPO_DOVUTO_ID)
                 .fiscalCode(FISCAL_CODE)
+                .amount("AMOUNT")
+                .iuv("IUV")
+                .paymentDate("DATE")
+                .paymentReason("REASON")
                 .build();
     }
 

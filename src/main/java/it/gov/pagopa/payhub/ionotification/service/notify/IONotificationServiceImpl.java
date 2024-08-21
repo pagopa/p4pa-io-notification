@@ -100,7 +100,7 @@ public class IONotificationServiceImpl implements IONotificationService {
     private boolean isSenderAllowed(NotificationQueueDTO notificationQueueDTO, IOService ioService, String token) {
         FiscalCodeDTO fiscalCode = ioNotificationMapper.mapToGetProfile(notificationQueueDTO);
         try{
-            log.info("Verify if is user is allowed to receive notification");
+            log.info("Verify if user is allowed to receive notification");
             ProfileResource profileResource = connector.getProfile(fiscalCode, token);
             if (!profileResource.isSenderAllowed()) {
                 return handleSenderNotAllowed(notificationQueueDTO, ioService);
@@ -119,8 +119,14 @@ public class IONotificationServiceImpl implements IONotificationService {
 
     private void sendNotification(NotificationQueueDTO notificationQueueDTO, IOService ioService, String token) {
         String customSubject = subject.replace("%tipoDovutoName%", ioService.getServiceName());
+        String customMarkdown = markdown
+                .replace("%amount%", notificationQueueDTO.getAmount())
+                .replace("%paymentDate%", notificationQueueDTO.getPaymentDate())
+                .replace("%iuv%", notificationQueueDTO.getIuv())
+                .replace("%paymentReason%", notificationQueueDTO.getPaymentReason());
+
         NotificationDTO notificationDTO = ioNotificationMapper
-                .mapToQueue(notificationQueueDTO.getFiscalCode(), timeToLive, customSubject, markdown);
+                .mapToQueue(notificationQueueDTO.getFiscalCode(), timeToLive, customSubject, customMarkdown);
 
         log.info("Sending notification to IO");
         NotificationResource notificationResource = connector.sendNotification(notificationDTO, token);
