@@ -100,7 +100,7 @@ public class IONotificationServiceImpl implements IONotificationService {
     private boolean isSenderAllowed(NotificationQueueDTO notificationQueueDTO, IOService ioService, String token) {
         FiscalCodeDTO fiscalCode = ioNotificationMapper.mapToGetProfile(notificationQueueDTO);
         try{
-            log.info("Verify if is user is allowed to receive notification");
+            log.info("Verify if user is allowed to receive notification");
             ProfileResource profileResource = connector.getProfile(fiscalCode, token);
             if (!profileResource.isSenderAllowed()) {
                 return handleSenderNotAllowed(notificationQueueDTO, ioService);
