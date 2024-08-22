@@ -1,0 +1,85 @@
+microservice-chart:
+  namespace: "payhub"
+  nameOverride: ""
+  fullnameOverride: ""
+
+  livenessProbe:
+    httpGet:
+      path: /actuator/health/liveness
+      port: 8080
+    initialDelaySeconds: 120
+    failureThreshold: 15
+    periodSeconds: 10
+
+  readinessProbe:
+    httpGet:
+      path: /actuator/health/readiness
+      port: 8080
+    initialDelaySeconds: 120
+    failureThreshold: 15
+    periodSeconds: 10
+
+  deployment:
+    create: true
+
+  service:
+    create: true
+    type: ClusterIP
+    port: 8080
+
+  ingress:
+    create: true
+    path: /p4paionotification/(.*)
+
+  serviceAccount:
+    create: false
+    annotations: {}
+    name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    runAsUser: 65534
+    runAsGroup: 65534
+
+  externalConfigMapFiles:
+    create: true
+    configMaps:
+      - name: appinsights-config
+        key: applicationinsights.json
+
+  envConfig:
+    APPLICATIONINSIGHTS_ROLE_NAME: "p4paionotification"
+    APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
+    APPLICATIONINSIGHTS_INSTRUMENTATION_MICROMETER_ENABLED: "false"
+    APPLICATIONINSIGHTS_PREVIEW_PROFILER_ENABLED: "false"
+    ENABLE_AUDIT_APPENDER: "TRUE"
+    IO_MANAGE_BACKEND_SERVICE_BASE_URL: "https://api.io.pagopa.it/api/v1"
+
+
+  externalConfigMapValues:
+    eventhub-config:
+      KAFKA_TOPIC_NOTIFICATION: p4pa-payhub-notification-topic
+      KAFKA_NOTIFICATION_SASL_MECHANISM: p4pa-payhub-notification-sasl-mechanism
+      KAFKA_NOTIFICATION_SECURITY_PROTOCOL: p4pa-payhub-notification-security-protocol
+
+
+  envSecret:
+    MONGODB_URI: mongodb-connection-string
+    IO_BACKEND_SERVICE_SUBSCRIPTION_API_KEY: io-backend-manage-api-key
+    APPLICATIONINSIGHTS_CONNECTION_STRING: appinsights-connection-string
+    KAFKA_NOTIFICATION_OUT_SASL_JAAS_CONFIG: p4pa-payhub-notification-evh-producer-jaas-config
+    KAFKA_NOTIFICATION_IN_SASL_JAAS_CONFIG: p4pa-payhub-notification-evh-consumer-jaas-config
+    KAFKA_BINDER_BROKER: p4pa-payhub-notification-kafka-broker
+
+  # nodeSelector: {}
+
+  # tolerations: []
+
+  # affinity: {}
