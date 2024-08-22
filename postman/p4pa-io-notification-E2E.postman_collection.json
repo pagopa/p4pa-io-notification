@@ -311,7 +311,23 @@
 					],
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "fiscalCode",
+								"value": "{{fiscalCode}}",
+								"type": "text"
+							},
+							{
+								"key": "enteId",
+								"value": "{{enteId}}",
+								"type": "text"
+							},
+							{
+								"key": "tipoDovutoId",
+								"value": "{{tipoDovutoId}}",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "",
@@ -322,16 +338,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/message/{{fiscalCode}}/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{baseUrlNotification}}/ionotification/message",
 							"host": [
 								"{{baseUrlNotification}}"
 							],
 							"path": [
 								"ionotification",
-								"message",
-								"{{fiscalCode}}",
-								"{{enteId}}",
-								"{{tipoDovutoId}}"
+								"message"
 							]
 						}
 					},
