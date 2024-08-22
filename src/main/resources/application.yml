@@ -112,3 +112,6 @@ management:
       exposure.include: "*"
     web:
       exposure.include: info, health
+
+data-cipher:
+  encrypt-psw: \${DATA_CIPHER_ENCRYPT_PASSWORD:PWD}

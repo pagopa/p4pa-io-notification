@@ -47,7 +47,7 @@ public class IOServiceImpl implements IOService {
     }
 
     @Override
-    public void deleteNotification(String userId, Long enteId, Long tipoDovutoId) {
-        ioNotificationService.deleteNotification(userId, enteId, tipoDovutoId);
+    public void deleteNotification(String fiscalCode, Long enteId, Long tipoDovutoId) {
+        ioNotificationService.deleteNotification(fiscalCode, enteId, tipoDovutoId);
     }
 }

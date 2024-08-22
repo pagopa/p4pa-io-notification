@@ -31,7 +31,6 @@ public class IONotificationProducer {
         }
     }
 
-
     public void sendNotification(NotificationQueueDTO notificationQueueDTO){
         streamBridge.send("notificationQueue-out-0", binder, notificationQueueDTO);
     }

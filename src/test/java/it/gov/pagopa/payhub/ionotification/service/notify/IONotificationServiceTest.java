@@ -13,6 +13,7 @@ import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
 import it.gov.pagopa.payhub.ionotification.repository.IOServiceRepository;
+import it.gov.pagopa.payhub.ionotification.service.DataCipherService;
 import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,9 @@ class IONotificationServiceTest {
     private IONotificationMapper ioNotificationMapper;
     @Mock
     private IOServiceRepository ioServiceRepository;
+    @Mock
+    private DataCipherService dataCipherService;
+
     private IOService ioService;
     private KeysDTO keysDTO;
     private NotificationQueueDTO notificationQueueDTO;
@@ -54,7 +58,7 @@ class IONotificationServiceTest {
     @BeforeEach
     void setup(){
         service = new IONotificationServiceImpl(ioNotificationRepository, connector, ioNotificationProducer, ioNotificationMapper,
-                ioServiceRepository, TIME_TO_LIVE, SUBJECT, MARKDOWN);
+                ioServiceRepository, dataCipherService, TIME_TO_LIVE, SUBJECT, MARKDOWN);
         ioService = mapIoService(createServiceRequestDTO());
         keysDTO = getTokenIOResponse();
         notificationQueueDTO = mapToSendMessageToQueue();
@@ -93,7 +97,7 @@ class IONotificationServiceTest {
 
     @Test
     void givenSendNotificationWhenServiceNotFoundThenSaveKO(){
-
+        mockEncryptFiscalCode();
         when(ioServiceRepository.findByEnteIdAndTipoDovutoId(ENTE_ID, TIPO_DOVUTO_ID)).thenReturn(Optional.empty());
 
         sendNotification(KO_SERVICE_NOT_FOUND);
@@ -131,22 +135,25 @@ class IONotificationServiceTest {
 
     @Test
     void givenDeleteNotificationThenSuccess(){
-        when(ioNotificationRepository.findByUserIdAndEnteIdAndTipoDovutoId(USER_ID, ENTE_ID, TIPO_DOVUTO_ID))
+        mockEncryptFiscalCode();
+        when(ioNotificationRepository.findByUserIdAndEnteIdAndTipoDovutoId(USER_ID.getBytes(), ENTE_ID, TIPO_DOVUTO_ID))
                 .thenReturn(Optional.of(ioNotification));
-        service.deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+        service.deleteNotification(FISCAL_CODE, ENTE_ID, TIPO_DOVUTO_ID);
         verify(ioNotificationRepository, times(1)).delete(ioNotification);
     }
 
     @Test
     void givenDeleteNotificationWhenNotificationDoesNotExistThenDoNothing(){
-        when(ioNotificationRepository.findByUserIdAndEnteIdAndTipoDovutoId(USER_ID, ENTE_ID, TIPO_DOVUTO_ID))
+        mockEncryptFiscalCode();
+        when(ioNotificationRepository.findByUserIdAndEnteIdAndTipoDovutoId(USER_ID.getBytes(), ENTE_ID, TIPO_DOVUTO_ID))
                 .thenReturn(Optional.empty());
-        service.deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
-        verify(ioNotificationRepository, times(1)).findByUserIdAndEnteIdAndTipoDovutoId(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+        service.deleteNotification(FISCAL_CODE, ENTE_ID, TIPO_DOVUTO_ID);
+        verify(ioNotificationRepository, times(1)).findByUserIdAndEnteIdAndTipoDovutoId(USER_ID.getBytes(), ENTE_ID, TIPO_DOVUTO_ID);
     }
 
     private void sendNotification(NotificationStatus status) {
-        when(ioNotificationMapper.mapToSaveNotification(notificationQueueDTO, status))
+        mockEncryptFiscalCode();
+        when(ioNotificationMapper.mapToSaveNotification(notificationQueueDTO, status, USER_ID.getBytes()))
                 .thenReturn(ioNotification);
 
         service.sendNotification(notificationQueueDTO);
@@ -167,5 +174,9 @@ class IONotificationServiceTest {
         when(connector.getServiceKeys(SERVICE_ID)).thenReturn(keysDTO);
 
         when(ioNotificationMapper.mapToGetProfile(notificationQueueDTO)).thenReturn(fiscalCodeDTO);
+    }
+
+    private void mockEncryptFiscalCode() {
+        when(dataCipherService.encrypt(FISCAL_CODE)).thenReturn(USER_ID.getBytes());
     }
 }

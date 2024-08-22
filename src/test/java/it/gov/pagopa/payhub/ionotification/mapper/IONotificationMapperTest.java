@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static it.gov.pagopa.payhub.ionotification.enums.NotificationStatus.OK;
+import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.USER_ID;
 import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.mapToSendMessageToQueue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -38,7 +39,7 @@ class IONotificationMapperTest {
     @Test
     void whenMapToSaveNotificationThenSuccess(){
         IONotification ioNotification = ioNotificationMapper
-                .mapToSaveNotification(mapToSendMessageToQueue(), OK);
+                .mapToSaveNotification(mapToSendMessageToQueue(), OK, USER_ID.getBytes());
         assertNotNull(ioNotification);
     }
 }

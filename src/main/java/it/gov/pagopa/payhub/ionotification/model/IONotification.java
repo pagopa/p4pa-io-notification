@@ -17,7 +17,7 @@ public class IONotification {
 
     @Id
     private String id;
-    private String userId;
+    private byte[] userId;
     private String notificationId;
     private NotificationStatus notificationStatus;
     private Long enteId;
