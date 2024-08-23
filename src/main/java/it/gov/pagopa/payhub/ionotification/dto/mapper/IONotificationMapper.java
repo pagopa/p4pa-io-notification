@@ -1,9 +1,9 @@
 package it.gov.pagopa.payhub.ionotification.dto.mapper;
 
-import it.gov.pagopa.payhub.ionotification.enums.NotificationStatus;
 import it.gov.pagopa.payhub.ionotification.dto.FiscalCodeDTO;
 import it.gov.pagopa.payhub.ionotification.dto.MessageContent;
 import it.gov.pagopa.payhub.ionotification.dto.NotificationDTO;
+import it.gov.pagopa.payhub.ionotification.enums.NotificationStatus;
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
 import org.springframework.stereotype.Service;
@@ -30,10 +30,10 @@ public class IONotificationMapper {
                 .build();
     }
 
-    public IONotification mapToSaveNotification(NotificationQueueDTO notificationQueueDTO, NotificationStatus status){
+    public IONotification mapToSaveNotification(NotificationQueueDTO notificationQueueDTO, NotificationStatus status, byte[] userId){
         return IONotification.builder()
                 .notificationDate(LocalDateTime.now())
-                .userId(notificationQueueDTO.getFiscalCode())
+                .userId(userId)
                 .notificationStatus(status)
                 .tipoDovutoId(notificationQueueDTO.getTipoDovutoId())
                 .enteId(notificationQueueDTO.getEnteId())
