@@ -77,7 +77,7 @@ microservice-chart:
     KAFKA_NOTIFICATION_OUT_SASL_JAAS_CONFIG: p4pa-payhub-notification-evh-producer-jaas-config
     KAFKA_NOTIFICATION_IN_SASL_JAAS_CONFIG: p4pa-payhub-notification-evh-consumer-jaas-config
     KAFKA_BINDER_BROKER: p4pa-payhub-notification-kafka-broker
-    DATA_CIPHER_ENCRYPT_PASSWORD: data-cipher-encrypt-password
+    DATA_CIPHER_ENCRYPT_PASSWORD: io-notification-data-cipher-encrypt-password
 
   # nodeSelector: {}
 
