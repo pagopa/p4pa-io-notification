@@ -11,23 +11,23 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Base64;
 
 @ExtendWith(MockitoExtension.class)
-class ExternalUserIdObfuscatorServiceTest {
+class UserIdObfuscatorServiceTest {
 
     @Mock
     private DataCipherService dataCipherService = new DataCipherService("PEPPER");
 
     @InjectMocks
-    private ExternalUserIdObfuscatorService service;
+    private UserIdObfuscatorService service;
 
     @Test
     void whenObfuscateThenOk(){
         //Given
-        String externalUserId = "EXTERNALUSERID";
+        String userId = "USERID";
         byte[] hashExpected = new byte[0];
 
         // When
-        Mockito.when(dataCipherService.encrypt(externalUserId)).thenReturn(hashExpected);
-        String result = service.obfuscate(externalUserId);
+        Mockito.when(dataCipherService.hash(userId)).thenReturn(hashExpected);
+        String result = service.obfuscate(userId);
 
         // Then
         Assertions.assertEquals(Base64.getEncoder().encodeToString(hashExpected), result);

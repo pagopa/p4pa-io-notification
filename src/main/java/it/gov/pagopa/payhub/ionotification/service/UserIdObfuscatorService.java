@@ -5,15 +5,15 @@ import org.springframework.stereotype.Service;
 import java.util.Base64;
 
 @Service
-public class ExternalUserIdObfuscatorService {
+public class UserIdObfuscatorService {
 
   private final DataCipherService dataCipherService;
 
-  public ExternalUserIdObfuscatorService(DataCipherService dataCipherService) {
+  public UserIdObfuscatorService(DataCipherService dataCipherService) {
     this.dataCipherService = dataCipherService;
   }
 
   public String obfuscate(String externalUserId) {
-    return Base64.getEncoder().encodeToString(dataCipherService.encrypt(externalUserId));
+    return Base64.getEncoder().encodeToString(dataCipherService.hash(externalUserId));
   }
 }

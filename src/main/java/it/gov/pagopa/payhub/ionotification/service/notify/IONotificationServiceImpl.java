@@ -10,7 +10,7 @@ import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
 import it.gov.pagopa.payhub.ionotification.repository.IOServiceRepository;
-import it.gov.pagopa.payhub.ionotification.service.ExternalUserIdObfuscatorService;
+import it.gov.pagopa.payhub.ionotification.service.UserIdObfuscatorService;
 import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +29,7 @@ public class IONotificationServiceImpl implements IONotificationService {
     private final IONotificationProducer ioNotificationProducer;
     private final IONotificationMapper ioNotificationMapper;
     private final IOServiceRepository ioServiceRepository;
-    private final ExternalUserIdObfuscatorService obfuscatorService;
+    private final UserIdObfuscatorService obfuscatorService;
     private final Long timeToLive;
     private final String subject;
     private final String markdown;
@@ -37,7 +37,7 @@ public class IONotificationServiceImpl implements IONotificationService {
                                      IORestConnector connector,
                                      IONotificationProducer ioNotificationProducer,
                                      IONotificationMapper ioNotificationMapper,
-                                     IOServiceRepository ioServiceRepository, ExternalUserIdObfuscatorService obfuscatorService,
+                                     IOServiceRepository ioServiceRepository, UserIdObfuscatorService obfuscatorService,
                                      @Value("${rest-client.backend-io-manage.notification.ttl}") Long timeToLive,
                                      @Value("${rest-client.backend-io-manage.notification.subject}") String subject,
                                      @Value("${rest-client.backend-io-manage.notification.markdown}") String markdown) {

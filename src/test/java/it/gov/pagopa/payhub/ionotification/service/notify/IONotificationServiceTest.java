@@ -13,7 +13,7 @@ import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
 import it.gov.pagopa.payhub.ionotification.repository.IOServiceRepository;
-import it.gov.pagopa.payhub.ionotification.service.ExternalUserIdObfuscatorService;
+import it.gov.pagopa.payhub.ionotification.service.UserIdObfuscatorService;
 import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +47,7 @@ class IONotificationServiceTest {
     @Mock
     private IOServiceRepository ioServiceRepository;
     @Mock
-    private ExternalUserIdObfuscatorService obfuscatorService;
+    private UserIdObfuscatorService obfuscatorService;
 
     private IOService ioService;
     private KeysDTO keysDTO;
