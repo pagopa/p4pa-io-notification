@@ -30,7 +30,7 @@ public class IONotificationMapper {
                 .build();
     }
 
-    public IONotification mapToSaveNotification(NotificationQueueDTO notificationQueueDTO, NotificationStatus status, byte[] userId){
+    public IONotification mapToSaveNotification(NotificationQueueDTO notificationQueueDTO, NotificationStatus status, String userId){
         return IONotification.builder()
                 .notificationDate(LocalDateTime.now())
                 .userId(userId)
