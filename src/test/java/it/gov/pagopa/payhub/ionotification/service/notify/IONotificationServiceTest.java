@@ -1,19 +1,19 @@
 package it.gov.pagopa.payhub.ionotification.service.notify;
 
 import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
-import it.gov.pagopa.payhub.ionotification.enums.NotificationStatus;
 import it.gov.pagopa.payhub.ionotification.dto.FiscalCodeDTO;
 import it.gov.pagopa.payhub.ionotification.dto.KeysDTO;
 import it.gov.pagopa.payhub.ionotification.dto.NotificationResource;
 import it.gov.pagopa.payhub.ionotification.dto.ProfileResource;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IONotificationMapper;
+import it.gov.pagopa.payhub.ionotification.enums.NotificationStatus;
 import it.gov.pagopa.payhub.ionotification.event.producer.IONotificationProducer;
 import it.gov.pagopa.payhub.ionotification.exception.custom.SenderNotAllowedException;
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
 import it.gov.pagopa.payhub.ionotification.repository.IOServiceRepository;
-import it.gov.pagopa.payhub.ionotification.service.DataCipherService;
+import it.gov.pagopa.payhub.ionotification.service.UserIdObfuscatorService;
 import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +47,7 @@ class IONotificationServiceTest {
     @Mock
     private IOServiceRepository ioServiceRepository;
     @Mock
-    private DataCipherService dataCipherService;
+    private UserIdObfuscatorService obfuscatorService;
 
     private IOService ioService;
     private KeysDTO keysDTO;
@@ -58,7 +58,7 @@ class IONotificationServiceTest {
     @BeforeEach
     void setup(){
         service = new IONotificationServiceImpl(ioNotificationRepository, connector, ioNotificationProducer, ioNotificationMapper,
-                ioServiceRepository, dataCipherService, TIME_TO_LIVE, SUBJECT, MARKDOWN);
+                ioServiceRepository, obfuscatorService, TIME_TO_LIVE, SUBJECT, MARKDOWN);
         ioService = mapIoService(createServiceRequestDTO());
         keysDTO = getTokenIOResponse();
         notificationQueueDTO = mapToSendMessageToQueue();
@@ -135,25 +135,29 @@ class IONotificationServiceTest {
 
     @Test
     void givenDeleteNotificationThenSuccess(){
-        mockEncryptFiscalCode();
-        when(ioNotificationRepository.findByUserIdAndEnteIdAndTipoDovutoId(USER_ID.getBytes(), ENTE_ID, TIPO_DOVUTO_ID))
+        when(ioNotificationRepository.findByUserIdAndEnteIdAndTipoDovutoId(USER_ID, ENTE_ID, TIPO_DOVUTO_ID))
                 .thenReturn(Optional.of(ioNotification));
-        service.deleteNotification(FISCAL_CODE, ENTE_ID, TIPO_DOVUTO_ID);
+
+        service.deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+
+        verify(ioNotificationRepository, times(1)).delete(any(IONotification.class));
         verify(ioNotificationRepository, times(1)).delete(ioNotification);
     }
 
     @Test
     void givenDeleteNotificationWhenNotificationDoesNotExistThenDoNothing(){
-        mockEncryptFiscalCode();
-        when(ioNotificationRepository.findByUserIdAndEnteIdAndTipoDovutoId(USER_ID.getBytes(), ENTE_ID, TIPO_DOVUTO_ID))
+        when(ioNotificationRepository.findByUserIdAndEnteIdAndTipoDovutoId(USER_ID, ENTE_ID, TIPO_DOVUTO_ID))
                 .thenReturn(Optional.empty());
-        service.deleteNotification(FISCAL_CODE, ENTE_ID, TIPO_DOVUTO_ID);
-        verify(ioNotificationRepository, times(1)).findByUserIdAndEnteIdAndTipoDovutoId(USER_ID.getBytes(), ENTE_ID, TIPO_DOVUTO_ID);
+
+        service.deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+
+        verify(ioNotificationRepository, times(0)).delete(any(IONotification.class));
+        verify(ioNotificationRepository, times(1)).findByUserIdAndEnteIdAndTipoDovutoId(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
     }
 
     private void sendNotification(NotificationStatus status) {
         mockEncryptFiscalCode();
-        when(ioNotificationMapper.mapToSaveNotification(notificationQueueDTO, status, USER_ID.getBytes()))
+        when(ioNotificationMapper.mapToSaveNotification(notificationQueueDTO, status, USER_ID))
                 .thenReturn(ioNotification);
 
         service.sendNotification(notificationQueueDTO);
@@ -177,6 +181,6 @@ class IONotificationServiceTest {
     }
 
     private void mockEncryptFiscalCode() {
-        when(dataCipherService.encrypt(FISCAL_CODE)).thenReturn(USER_ID.getBytes());
+        when(obfuscatorService.obfuscate(FISCAL_CODE)).thenReturn(USER_ID);
     }
 }

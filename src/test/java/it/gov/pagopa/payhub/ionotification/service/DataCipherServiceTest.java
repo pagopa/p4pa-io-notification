@@ -3,20 +3,21 @@ package it.gov.pagopa.payhub.ionotification.service;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Base64;
+
 class DataCipherServiceTest {
 
-    private final DataCipherService service = new DataCipherService("PSW");
+    private final DataCipherService service = new DataCipherService("PEPPER");
 
     @Test
-    void testEncrypt() {
+    void givenTextWhenHashThenOk() {
         // Given
         String plain = "PLAINTEXT";
 
         // When
-        byte[] cipher = service.encrypt(plain);
-        String result = service.decrypt(cipher);
+        byte[] hash = service.hash(plain);
 
         // Then
-        Assertions.assertEquals(plain, result);
+        Assertions.assertEquals("s+QUCtO7vYNzHCDrH03EVRGPZTyfIXwBKTRrgYWqwc4=", Base64.getEncoder().encodeToString(hash));
     }
 }
