@@ -14,6 +14,6 @@ public class UserIdObfuscatorService {
   }
 
   public String obfuscate(String externalUserId) {
-    return Base64.getEncoder().encodeToString(dataCipherService.hash(externalUserId));
+    return Base64.getUrlEncoder().encodeToString(dataCipherService.hash(externalUserId));
   }
 }
