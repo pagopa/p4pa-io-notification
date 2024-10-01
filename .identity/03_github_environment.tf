@@ -24,7 +24,7 @@ resource "github_repository_environment" "github_repository_environment" {
 # Secrets of the Repository #
 #############################
 resource "github_actions_secret" "repo_secrets" {
-  for_each        =  var.env_short == "p" ? local.repo_secrets : {}
+  for_each = var.env_short == "p" ? local.repo_secrets : {}
 
   repository      = local.github.repository
   secret_name     = each.key

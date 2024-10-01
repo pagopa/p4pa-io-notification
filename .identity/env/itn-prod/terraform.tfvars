@@ -1,6 +1,6 @@
-prefix    = "p4pa"
-env = "prod"
-env_short = "p"
+prefix         = "p4pa"
+env            = "prod"
+env_short      = "p"
 location_short = "itn"
 
 tags = {
