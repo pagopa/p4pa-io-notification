@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"__v3__","Source":"git::https://github.com/pagopa/terraform-azurerm-v3.git?ref=ab2cf6a43414f2cc80a9e51332182c26ad970f72","Dir":".terraform/modules/__v3__"},{"Key":"secrets","Source":"./.terraform/modules/__v3__/key_vault_secrets_query","Dir":".terraform/modules/__v3__/key_vault_secrets_query"}]}
