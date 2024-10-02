@@ -39,7 +39,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": " `CRITICAL` : *${{ inputs.CVE_CRITICAL }}*\n\n`HIGH` : *${{ inputs.CVE_HIGH }}*\n\n`MEDIUM` : *${{ inputs.CVE_MEDIUM }}*\n\n<https://github.com/${{ github.repository }}/security/code-scanning${{ github.event.pull_request.number != '' && format('?query=pr:%s', github.event.pull_request.number) || '' }} | See details on GitHub>"
+                    "text": " `CRITICAL` : *${{ inputs.CVE_CRITICAL }}*\n\n`HIGH` : *${{ inputs.CVE_HIGH }}*\n\n`MEDIUM` : *${{ inputs.CVE_MEDIUM }}*\n\n<https://github.com/${{ github.repository }}/security/code-scanning${{ github.event.pull_request.number != '' && '?query=pr:' + github.event.pull_request.number || '' }} | See details on GitHub>"
                   }
                 }
               ]
