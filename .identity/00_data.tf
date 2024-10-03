@@ -8,7 +8,7 @@ data "azurerm_key_vault_secret" "slack_webhook" {
   count = var.env_short == "p" ? 1 : 0
 
   key_vault_id = data.azurerm_key_vault.key_vault.id
-  name         = data.azurerm_key_vault.key_vault.name
+  name         = "slack-webhook-url"
 }
 
 # Github
