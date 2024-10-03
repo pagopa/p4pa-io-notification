@@ -1,3 +1,6 @@
+#################################
+# Repository Environment        #
+#################################
 resource "github_repository_environment" "github_repository_environment" {
   environment = var.env
   repository  = local.github.repository
@@ -19,6 +22,15 @@ resource "github_repository_environment" "github_repository_environment" {
   }
 }
 
+#################################
+# Environment Deployment Policy #
+#################################
+
+resource "github_repository_environment_deployment_policy" "this" {
+  repository     = local.github.repository
+  environment    = var.env
+  branch_pattern = local.map_repo[var.env]
+}
 
 #############################
 # Secrets of the Repository #
