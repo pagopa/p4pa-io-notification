@@ -208,7 +208,7 @@ public class IOTestMapper {
 
     public static IONotification mapIONotification(){
         return IONotification.builder()
-                .userId(USER_ID.getBytes())
+                .userId(USER_ID)
                 .tipoDovutoId(TIPO_DOVUTO_ID)
                 .enteId(ENTE_ID)
                 .notificationStatus(OK)

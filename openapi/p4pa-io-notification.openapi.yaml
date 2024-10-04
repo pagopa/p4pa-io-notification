@@ -187,24 +187,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IoNotificationErrorDTO'
+  /message/{userId}/{enteId}/{tipoDovutoId}:
     delete:
       tags:
         - ioNotification
       operationId: deleteNotification
       parameters:
-        - name: fiscalCode
-          in: header
+        - name: userId
+          in: path
           required: true
           schema:
             type: string
         - name: enteId
-          in: header
+          in: path
           required: true
           schema:
             type: integer
             format: int64
         - name: tipoDovutoId
-          in: header
+          in: path
           required: true
           schema:
             type: integer

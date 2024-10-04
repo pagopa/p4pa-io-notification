@@ -39,7 +39,7 @@ class IONotificationMapperTest {
     @Test
     void whenMapToSaveNotificationThenSuccess(){
         IONotification ioNotification = ioNotificationMapper
-                .mapToSaveNotification(mapToSendMessageToQueue(), OK, USER_ID.getBytes());
+                .mapToSaveNotification(mapToSendMessageToQueue(), OK, USER_ID);
         assertNotNull(ioNotification);
     }
 }

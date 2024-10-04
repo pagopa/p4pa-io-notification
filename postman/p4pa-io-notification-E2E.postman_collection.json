@@ -302,7 +302,9 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"setTimeout(() =>{}, 10000);"
+									"setTimeout(() =>{}, 10000);\r",
+									"\r",
+									"pm.collectionVariables.set(\"userId\", `IBNlZcXUQlEvAx3i3tgEKS5NaEhpz3GKJ7b6EM61a6Q=`);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -311,23 +313,7 @@
 					],
 					"request": {
 						"method": "DELETE",
-						"header": [
-							{
-								"key": "fiscalCode",
-								"value": "{{fiscalCode}}",
-								"type": "text"
-							},
-							{
-								"key": "enteId",
-								"value": "{{enteId}}",
-								"type": "text"
-							},
-							{
-								"key": "tipoDovutoId",
-								"value": "{{tipoDovutoId}}",
-								"type": "text"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": "",
@@ -338,13 +324,16 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/message",
+							"raw": "{{baseUrlNotification}}/ionotification/message/{{userId}}/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
 								"{{baseUrlNotification}}"
 							],
 							"path": [
 								"ionotification",
-								"message"
+								"message",
+								"{{userId}}",
+								"{{enteId}}",
+								"{{tipoDovutoId}}"
 							]
 						}
 					},
@@ -807,6 +796,10 @@
 		},
 		{
 			"key": "serviceId",
+			"value": ""
+		},
+		{
+			"key": "userId",
 			"value": ""
 		}
 	]

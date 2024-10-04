@@ -1,16 +1,16 @@
 package it.gov.pagopa.payhub.ionotification.service.notify;
 
 import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
-import it.gov.pagopa.payhub.ionotification.enums.NotificationStatus;
 import it.gov.pagopa.payhub.ionotification.dto.*;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IONotificationMapper;
+import it.gov.pagopa.payhub.ionotification.enums.NotificationStatus;
 import it.gov.pagopa.payhub.ionotification.event.producer.IONotificationProducer;
 import it.gov.pagopa.payhub.ionotification.exception.custom.SenderNotAllowedException;
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
 import it.gov.pagopa.payhub.ionotification.repository.IOServiceRepository;
-import it.gov.pagopa.payhub.ionotification.service.DataCipherService;
+import it.gov.pagopa.payhub.ionotification.service.UserIdObfuscatorService;
 import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,7 +29,7 @@ public class IONotificationServiceImpl implements IONotificationService {
     private final IONotificationProducer ioNotificationProducer;
     private final IONotificationMapper ioNotificationMapper;
     private final IOServiceRepository ioServiceRepository;
-    private final DataCipherService dataCipherService;
+    private final UserIdObfuscatorService obfuscatorService;
     private final Long timeToLive;
     private final String subject;
     private final String markdown;
@@ -37,7 +37,7 @@ public class IONotificationServiceImpl implements IONotificationService {
                                      IORestConnector connector,
                                      IONotificationProducer ioNotificationProducer,
                                      IONotificationMapper ioNotificationMapper,
-                                     IOServiceRepository ioServiceRepository, DataCipherService dataCipherService,
+                                     IOServiceRepository ioServiceRepository, UserIdObfuscatorService obfuscatorService,
                                      @Value("${rest-client.backend-io-manage.notification.ttl}") Long timeToLive,
                                      @Value("${rest-client.backend-io-manage.notification.subject}") String subject,
                                      @Value("${rest-client.backend-io-manage.notification.markdown}") String markdown) {
@@ -46,7 +46,7 @@ public class IONotificationServiceImpl implements IONotificationService {
         this.ioNotificationProducer = ioNotificationProducer;
         this.ioNotificationMapper = ioNotificationMapper;
         this.ioServiceRepository = ioServiceRepository;
-        this.dataCipherService = dataCipherService;
+        this.obfuscatorService = obfuscatorService;
         this.timeToLive = timeToLive;
         this.subject = subject;
         this.markdown = markdown;
@@ -70,9 +70,9 @@ public class IONotificationServiceImpl implements IONotificationService {
     }
 
     @Override
-    public void deleteNotification(String fiscalCode, Long enteId, Long tipoDovutoId) {
+    public void deleteNotification(String userId, Long enteId, Long tipoDovutoId) {
         Optional<IONotification> ioNotification = ioNotificationRepository
-                .findByUserIdAndEnteIdAndTipoDovutoId(encryptFiscalCode(fiscalCode), enteId, tipoDovutoId);
+                .findByUserIdAndEnteIdAndTipoDovutoId(userId, enteId, tipoDovutoId);
 
         if (ioNotification.isPresent()) {
             log.info("Deleting notification {}", ioNotification.get().getNotificationId());
@@ -153,7 +153,7 @@ public class IONotificationServiceImpl implements IONotificationService {
         ioNotificationRepository.save(ioNotification);
     }
 
-    private byte[] encryptFiscalCode(String fiscalCode) {
-        return dataCipherService.encrypt(fiscalCode);
+    private String encryptFiscalCode(String fiscalCode) {
+        return obfuscatorService.obfuscate(fiscalCode);
     }
 }

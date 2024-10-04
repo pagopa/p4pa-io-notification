@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface IONotificationRepository extends MongoRepository<IONotification, String> {
 
-    Optional<IONotification> findByUserIdAndEnteIdAndTipoDovutoId(byte[] userId, Long enteId, Long tipoDovutoId);
+    Optional<IONotification> findByUserIdAndEnteIdAndTipoDovutoId(String userId, Long enteId, Long tipoDovutoId);
 }
