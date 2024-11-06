@@ -48,6 +48,23 @@ microservice-chart:
     runAsUser: 65534
     runAsGroup: 65534
 
+  tmpVolumeMount:
+    create: true
+    mounts:
+      - name: access-logs
+        mountPath: /tmp
+      - name: k8tz-1
+        mountPath: /etc/localtime
+        subPath: Europe/Rome
+        hostPath:
+          path: /usr/share/zoneinfo
+          type: ''
+      - name: k8tz
+        mountPath: /usr/share/zoneinfo
+        hostPath:
+          path: /usr/share/zoneinfo
+          type: ''
+
   externalConfigMapFiles:
     create: true
     configMaps:
@@ -64,6 +81,8 @@ microservice-chart:
 
 
   externalConfigMapValues:
+    p4pa-pu-timezone:
+      TZ: TZ
     eventhub-config:
       KAFKA_TOPIC_NOTIFICATION: p4pa-payhub-notification-topic
       KAFKA_NOTIFICATION_SASL_MECHANISM: p4pa-payhub-notification-sasl-mechanism
