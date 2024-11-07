@@ -36,8 +36,8 @@ variables:
   helmReleaseName : '$(HELM_RELEASE_NAME)'
   canDeploy: true
 
-  USERNAME_ACTIVITIES: $(USERNAME_ACTIVITIES)
-  TOKEN_ACTIVITIES: $(TOKEN_ACTIVITIES)
+  USERNAME_ACTIVITIES: '$(USERNAME_ACTIVITIES)'
+  TOKEN_ACTIVITIES: '$(TOKEN_ACTIVITIES)'
 
 
   ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/uat') }}:
