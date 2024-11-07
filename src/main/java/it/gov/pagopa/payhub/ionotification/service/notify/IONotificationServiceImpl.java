@@ -1,5 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.service.notify;
 
+import it.gov.pagopa.payhub.activities.activity.PositionDebt;
 import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
 import it.gov.pagopa.payhub.ionotification.dto.*;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IONotificationMapper;
@@ -60,6 +61,7 @@ public class IONotificationServiceImpl implements IONotificationService {
 
     @Override
     public void sendNotification(NotificationQueueDTO notificationQueueDTO) {
+        PositionDebt positionDebt = new PositionDebt();
         Optional<IOService> ioService = retrieveIOService(notificationQueueDTO);
         if (ioService.isPresent()) {
             String token = retrieveTokenIO(ioService.get());

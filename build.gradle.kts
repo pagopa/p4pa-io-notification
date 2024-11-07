@@ -22,10 +22,6 @@ configurations {
 }
 
 
-repositories {
-	mavenCentral()
-}
-
 
 dependencyManagement {
 	imports {
@@ -40,8 +36,21 @@ val wiremockVersion = "3.5.4"
 val snakeYamlVersion = "2.0"
 val hibernateValidatorVersion = "8.0.1.Final"
 
+repositories {
+	mavenCentral()
+	maven {
+		name = "GitHubPackages"
+		url = uri("https://maven.pkg.github.com/pagopa/p4pa-payhub-activities")
+		credentials {
+			username = System.getenv("USERNAME")
+			password = System.getenv("TOKEN")
+		}
+	}
+}
+
 
 dependencies {
+	implementation("it.gov.pagopa.payhub:p4pa-payhub-activities:0.0.1")
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -133,3 +142,4 @@ openApiGenerate {
 			"serializationLibrary" to "jackson"
 	))
 }
+
