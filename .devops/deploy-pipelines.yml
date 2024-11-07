@@ -36,9 +36,6 @@ variables:
   helmReleaseName : '$(HELM_RELEASE_NAME)'
   canDeploy: true
 
-    # Definizione delle variabili per il repository Maven
-  USERNAME: '$(USERNAME_ACTIVITIES)'
-  TOKEN: '$(TOKEN_ACTIVITIES)'
 
   ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/uat') }}:
     environment: 'UAT'
@@ -87,14 +84,6 @@ stages:
                 echo "Building $version version"
                 echo "##vso[task.setvariable variable=appVersion;isOutput=true]$version"
               failOnStderr: true
-
-          # Step per leggere USERNAME e TOKEN nel build.gradle
-          - task: Gradle@2
-            displayName: "Build with Gradle"
-            inputs:
-              gradleWrapperFile: '$(System.DefaultWorkingDirectory)/gradlew'
-              options: "-PUSERNAME=$(USERNAME_ACTIVITIES) -PTOKEN=$(TOKEN_ACTIVITIES)"
-              tasks: 'build'
 
           - task: Docker@2
             condition: and(succeeded(), ${{ parameters.executeBuild }})

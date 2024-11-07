@@ -1,3 +1,6 @@
+import org.yaml.snakeyaml.Yaml
+import java.io.FileInputStream
+
 plugins {
 	java
 	id("org.springframework.boot") version "3.2.5"
@@ -36,17 +39,35 @@ val wiremockVersion = "3.5.4"
 val snakeYamlVersion = "2.0"
 val hibernateValidatorVersion = "8.0.1.Final"
 
+
+fun loadCredentials(): Pair<String, String>? {
+	val yaml = Yaml()
+	val file = file("src/main/resources/application.yml")
+	if (!file.exists()) return null
+
+	FileInputStream(file).use { input ->
+		val data = yaml.load<Map<String, Any>>(input)
+		val username = data["USERNAME"] as? String
+		val token = data["TOKEN"] as? String
+		return if (username != null && token != null) Pair(username, token) else null
+	}
+}
+
+
 repositories {
 	mavenCentral()
 	maven {
 		name = "GitHubPackages"
 		url = uri("https://maven.pkg.github.com/pagopa/p4pa-payhub-activities")
+
+		val credentials = loadCredentials()
 		credentials {
-			username = System.getenv("USERNAME")
-			password = System.getenv("TOKEN")
+			username = credentials?.first ?: System.getenv("USERNAME")
+			password = credentials?.second ?: System.getenv("TOKEN")
 		}
 	}
 }
+
 
 
 dependencies {

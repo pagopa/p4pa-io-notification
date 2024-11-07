@@ -115,3 +115,7 @@ management:
 
 data-cipher:
   encrypt-psw: \${DATA_CIPHER_ENCRYPT_PASSWORD:PWD}
+
+activities:
+  username: \${USERNAME_ACTIVITIES}
+  token: \${TOKEN_ACTIVITIES}
