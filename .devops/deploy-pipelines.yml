@@ -96,9 +96,6 @@ stages:
                 latest
                 $(Build.SourceVersion)
                 $(getAppVersion.appVersion)
-              buildArguments: |
-                USERNAME_ACTIVITIES=$(USERNAME_ACTIVITIES)
-                TOKEN_ACTIVITIES=$(TOKEN_ACTIVITIES)
 
 
           - task: PublishPipelineArtifact@1
