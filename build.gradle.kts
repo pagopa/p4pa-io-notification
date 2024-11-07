@@ -40,35 +40,18 @@ val snakeYamlVersion = "2.0"
 val hibernateValidatorVersion = "8.0.1.Final"
 
 
-fun loadCredentials(): Pair<String, String>? {
-	val yaml = Yaml()
-	val file = file("src/main/resources/application.yml")
-	if (!file.exists()) return null
-
-	FileInputStream(file).use { input ->
-		val data = yaml.load<Map<String, Any>>(input)
-		val activities = data["activities"] as? Map<*, *>
-		val username = activities?.get("username") as? String
-		val token = activities?.get("token") as? String
-		return if (username != null && token != null) Pair(username, token) else null
-	}
-}
-
-
 repositories {
 	mavenCentral()
 	maven {
 		name = "GitHubPackages"
 		url = uri("https://maven.pkg.github.com/pagopa/p4pa-payhub-activities")
 
-		val credentials = loadCredentials()
 		credentials {
-			username = credentials?.first ?: System.getenv("USERNAME")
-			password = credentials?.second ?: System.getenv("TOKEN")
+			username = System.getenv("USERNAME_ACTIVITIES")
+			password = System.getenv("TOKEN_ACTIVITIES")
 		}
 	}
 }
-
 
 
 dependencies {

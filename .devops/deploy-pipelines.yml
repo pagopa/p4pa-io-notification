@@ -36,6 +36,9 @@ variables:
   helmReleaseName : '$(HELM_RELEASE_NAME)'
   canDeploy: true
 
+  USERNAME_ACTIVITIES: $(USERNAME_ACTIVITIES)
+  TOKEN_ACTIVITIES: $(TOKEN_ACTIVITIES)
+
 
   ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/uat') }}:
     environment: 'UAT'
@@ -96,6 +99,10 @@ stages:
                 latest
                 $(Build.SourceVersion)
                 $(getAppVersion.appVersion)
+              buildArguments: |
+                --build-arg USERNAME_ACTIVITIES=$(USERNAME_ACTIVITIES)
+                --build-arg TOKEN_ACTIVITIES=$(TOKEN_ACTIVITIES)
+
 
           - task: PublishPipelineArtifact@1
             displayName: 'Publish manifests into pipeline artifacts'

@@ -79,9 +79,6 @@ microservice-chart:
     KAFKA_BINDER_BROKER: p4pa-payhub-notification-kafka-broker
     DATA_CIPHER_ENCRYPT_PASSWORD: io-notification-data-cipher-encrypt-password
 
-    TOKEN_ACTIVITIES: token-activities
-    USERNAME_ACTIVITIES: username-activities
-
   # nodeSelector: {}
 
   # tolerations: []
