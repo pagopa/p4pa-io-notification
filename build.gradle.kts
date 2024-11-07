@@ -47,8 +47,9 @@ fun loadCredentials(): Pair<String, String>? {
 
 	FileInputStream(file).use { input ->
 		val data = yaml.load<Map<String, Any>>(input)
-		val username = data["USERNAME"] as? String
-		val token = data["TOKEN"] as? String
+		val activities = data["activities"] as? Map<*, *>
+		val username = activities?.get("username") as? String
+		val token = activities?.get("token") as? String
 		return if (username != null && token != null) Pair(username, token) else null
 	}
 }
