@@ -28,9 +28,6 @@ resources:
 
 variables:
 
-  GITHUB_USERNAME: '$(USERNAME_ACTIVITIES)'  # username GitHub
-  GITHUB_PAT_TOKEN: '$(TOKEN_ACTIVITIES)'
-
   #  vmImageNameDefault: 'ubuntu-latest'
   vmImageNameDefault: ubuntu-22.04
 
@@ -99,6 +96,11 @@ stages:
                 latest
                 $(Build.SourceVersion)
                 $(getAppVersion.appVersion)
+              Dockerfile: '**/Dockerfile'
+              buildContext: '.'
+              arguments: |
+                --build-arg GITHUB_USERNAME=$(GITHUB_USERNAME)
+                --build-arg GITHUB_PAT_TOKEN=$(GITHUB_PAT_TOKEN)
 
 
           - task: PublishPipelineArtifact@1
