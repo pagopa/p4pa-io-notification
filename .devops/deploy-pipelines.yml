@@ -87,21 +87,33 @@ stages:
 
           - task: Docker@2
             condition: and(succeeded(), ${{ parameters.executeBuild }})
-            displayName: 'Build and publish $(imageRepository) image'
+            displayName: 'Build $(imageRepository) image'
             inputs:
               containerRegistry: '$(dockerRegistryServiceConnection)'
               repository: '$(imageRepository)'
-              command: 'buildAndPush'
+              command: 'build'
+              Dockerfile: '**/Dockerfile'
+              buildContext: '.'
               tags: |
                 latest
                 $(Build.SourceVersion)
                 $(getAppVersion.appVersion)
-              Dockerfile: '**/Dockerfile'
-              buildContext: '.'
-              arguments: |
-                --build-arg GITHUB_USERNAME=$(GITHUB_USERNAME)
-                --build-arg GITHUB_PAT_TOKEN=$(GITHUB_PAT_TOKEN)
+              buildArguments: |
+                GITHUB_USERNAME=$(GITHUB_USERNAME)
+                GITHUB_PAT_TOKEN=$(GITHUB_PAT_TOKEN)
 
+          - task: Docker@2
+            condition: and(succeeded(), ${{ parameters.executeBuild }})
+            displayName: 'Push $(imageRepository) image'
+            inputs:
+              containerRegistry: '$(dockerRegistryServiceConnection)'
+              repository: '$(imageRepository)'
+              command: 'push'
+              tags: |
+                latest
+                $(Build.SourceVersion)
+                $(getAppVersion.appVersion)
+                    
 
           - task: PublishPipelineArtifact@1
             displayName: 'Publish manifests into pipeline artifacts'
