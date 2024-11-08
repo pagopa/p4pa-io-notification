@@ -36,8 +36,8 @@ variables:
   helmReleaseName : '$(HELM_RELEASE_NAME)'
   canDeploy: true
 
-  GITHUB_USERNAME: $(GITHUB_USERNAME)
-  GITHUB_PAT_TOKEN: $(GITHUB_PAT_TOKEN)
+  GITHUB_USERNAME: '$(GITHUB_USERNAME)'
+  GITHUB_PAT_TOKEN: '$(GITHUB_PAT_TOKEN)'
 
 
   ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/uat') }}:
