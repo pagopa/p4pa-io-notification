@@ -1,6 +1,3 @@
-import org.yaml.snakeyaml.Yaml
-import java.io.FileInputStream
-
 plugins {
 	java
 	id("org.springframework.boot") version "3.2.5"
@@ -47,8 +44,8 @@ repositories {
 		url = uri("https://maven.pkg.github.com/pagopa/p4pa-payhub-activities")
 
 		credentials {
-			username = System.getenv("USERNAME_ACTIVITIES")
-			password = System.getenv("TOKEN_ACTIVITIES")
+			username = System.getenv("GITHUB_USERNAME")
+			password = System.getenv("GITHUB_PAT_TOKEN")
 		}
 	}
 }
@@ -108,6 +105,7 @@ tasks {
 		}
 	}
 }
+
 
 configurations {
 	compileClasspath {

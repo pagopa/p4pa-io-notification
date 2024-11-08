@@ -28,6 +28,9 @@ resources:
 
 variables:
 
+  GITHUB_USERNAME: '$(USERNAME_ACTIVITIES)'  # username GitHub
+  GITHUB_PAT_TOKEN: '$(TOKEN_ACTIVITIES)'
+
   #  vmImageNameDefault: 'ubuntu-latest'
   vmImageNameDefault: ubuntu-22.04
 

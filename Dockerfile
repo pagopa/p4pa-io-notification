@@ -24,8 +24,4 @@ RUN chown -R nobody:nobody /app
 EXPOSE 8080
 USER 65534 # user nobody
 
-ENV USERNAME_ACTIVITIES=${USERNAME_ACTIVITIES}
-ENV TOKEN_ACTIVITIES=${TOKEN_ACTIVITIES}
-
-
 ENTRYPOINT ["java","-jar","/app/app.jar"]
