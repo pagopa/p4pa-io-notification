@@ -36,7 +36,6 @@ variables:
   helmReleaseName : '$(HELM_RELEASE_NAME)'
   canDeploy: true
 
-
   ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/uat') }}:
     environment: 'UAT'
     dockerRegistryName: '$(UAT_CONTAINER_REGISTRY_NAME)'
@@ -87,33 +86,15 @@ stages:
 
           - task: Docker@2
             condition: and(succeeded(), ${{ parameters.executeBuild }})
-            displayName: 'Build $(imageRepository) image'
+            displayName: 'Build and publish $(imageRepository) image'
             inputs:
               containerRegistry: '$(dockerRegistryServiceConnection)'
               repository: '$(imageRepository)'
-              command: 'build'
-              Dockerfile: '**/Dockerfile'
-              buildContext: '.'
+              command: 'buildAndPush'
               tags: |
                 latest
                 $(Build.SourceVersion)
                 $(getAppVersion.appVersion)
-              buildArguments: |
-                GITHUB_USERNAME=$(GITHUB_USERNAME)
-                GITHUB_PAT_TOKEN=$(GITHUB_PAT_TOKEN)
-
-          - task: Docker@2
-            condition: and(succeeded(), ${{ parameters.executeBuild }})
-            displayName: 'Push $(imageRepository) image'
-            inputs:
-              containerRegistry: '$(dockerRegistryServiceConnection)'
-              repository: '$(imageRepository)'
-              command: 'push'
-              tags: |
-                latest
-                $(Build.SourceVersion)
-                $(getAppVersion.appVersion)
-                    
 
           - task: PublishPipelineArtifact@1
             displayName: 'Publish manifests into pipeline artifacts'

@@ -3,18 +3,11 @@
 #
 FROM amazoncorretto:17-alpine3.19@sha256:2122cb140fa94053abce343fb854d24f4c62ba3c1ac701882dce12980396b477 AS buildtime
 
-ARG GITHUB_USERNAME
-ARG GITHUB_PAT_TOKEN
-
 WORKDIR /build
 COPY . .
 
 RUN chmod +x ./gradlew
-ENV GITHUB_USERNAME $GITHUB_USERNAME
-ENV GITHUB_PAT_TOKEN $GITHUB_PAT_TOKEN
-
 RUN ./gradlew bootJar
-
 
 #
 # Docker RUNTIME

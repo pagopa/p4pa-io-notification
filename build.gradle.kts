@@ -44,8 +44,8 @@ repositories {
 		url = uri("https://maven.pkg.github.com/pagopa/p4pa-payhub-activities")
 
 		credentials {
-			username = (project.findProperty("gpr.user") ?: System.getenv("GITHUB_USERNAME")).toString()
-			password = (project.findProperty("gpr.token") ?: System.getenv("GITHUB_PAT_TOKEN")).toString()
+			username = System.getenv("GITHUB_USERNAME")
+			password = System.getenv("GITHUB_PAT_TOKEN")
 		}
 	}
 }
