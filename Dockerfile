@@ -5,8 +5,8 @@
 #
 ARG CORRETTO_VERSION="17-alpine3.19"
 ARG CORRETTO_SHA="2122cb140fa94053abce343fb854d24f4c62ba3c1ac701882dce12980396b477"
-ARG GRADLE_VERSION="8.2"
-ARG GRADLE_DOWNLOAD_SHA256="38f66cd6eef217b4c35855bb11ea4e9fbc53594ccccb5fb82dfd317ef8c2c5a3"
+ARG GRADLE_VERSION="8.10.2"
+ARG GRADLE_DOWNLOAD_SHA256="31c55713e40233a8303827ceb42ca48a47267a0ad4bab9177123121e71524c26"
 ARG APPINSIGHTS_VERSION="3.5.2"
 
 # 🌍 Timezone Configuration
@@ -20,8 +20,8 @@ ARG GRADLE_OPTS="-Dorg.gradle.daemon=false \
     -Dorg.gradle.jvmargs=-Xmx2g"
 
 # 👤 App Configuration
-ARG APP_USER="gradle"
-ARG APP_GROUP="gradle"
+ARG APP_USER="appuser"
+ARG APP_GROUP="appgroup"
 ARG APP_HOME="/app"
 ARG GRADLE_HOME="/opt/gradle"
 
