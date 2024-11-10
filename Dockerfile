@@ -31,13 +31,20 @@ ARG GRADLE_HOME="/opt/gradle"
 FROM amazoncorretto:${CORRETTO_VERSION}@sha256:${CORRETTO_SHA} AS base
 ARG APP_USER
 ARG APP_GROUP
+ARG TZ
 
 # Install base packages
 RUN apk add --no-cache \
     wget \
     unzip \
     bash \
-    shadow
+    shadow \
+    tzdata && \
+    # Configure timezone
+    cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
+    echo "${TZ}" > /etc/timezone && \
+    # Cleanup
+    apk del tzdata
 
 # Create Gradle user
 RUN groupadd --system --gid 1000 ${APP_GROUP} && \
@@ -126,22 +133,23 @@ ARG TZ
 
 WORKDIR ${APP_HOME}
 
-# 🌍 Container Timezone Setup
-RUN apk add --no-cache tzdata && \
-    cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
-    echo ${TZ} > /etc/timezone && \
-    apk del tzdata
-
 # Set timezone environment variable
 ENV TZ=${TZ}
 
-# 🛡️ Security Setup
+# 🛡️ Security Setup and Timezone
 RUN apk upgrade --no-cache && \
     apk add --no-cache \
         tini \
-        curl && \
+        curl \
+        tzdata && \
+    # Configure timezone
+    cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
+    echo "${TZ}" > /etc/timezone && \
+    # Create user and group
     addgroup -S ${APP_GROUP} && \
-    adduser -S ${APP_USER} -G ${APP_GROUP}
+    adduser -S ${APP_USER} -G ${APP_GROUP} && \
+    # Cleanup
+    apk del tzdata
 
 # 📦 Copy Artifacts
 COPY --from=build /build/build/libs/*.jar ${APP_HOME}/app.jar
@@ -153,10 +161,6 @@ RUN chown -R ${APP_USER}:${APP_GROUP} ${APP_HOME}
 # 🔌 Container Configuration
 EXPOSE 8080
 USER ${APP_USER}
-
-# # 🏥 Health Check
-# HEALTHCHECK --interval=30s --timeout=3s \
-#     CMD curl -f http://localhost:8080/actuator/health || exit 1
 
 # 🎬 Startup Configuration
 ENTRYPOINT ["/sbin/tini", "--"]
