@@ -13,12 +13,13 @@
 # 📋 Standard start with interactive menu:
 #   ./start-container.sh
 #
-# 🖥️ Direct shell access (without menu):
+# 🖥️ Direct shell access (builds and starts container):
 #   ./start-container.sh -s
 #   ./start-container.sh --shell
 #
 # ⚡ Other available commands:
-#   ./start-container.sh --rebuild    # Rebuilds the image
+#   ./start-container.sh --rebuild    # Rebuilds the image from scratch (no cache)
+#   ./start-container.sh -b|--build   # Rebuilds the image using cache
 #   ./start-container.sh -r           # Restarts the container
 #
 # 3. 🛠️ USEFUL COMMANDS INSIDE CONTAINER
@@ -116,6 +117,14 @@ check_container() {
    esac
 }
 
+# 🏗️ Function to build and start container
+build_and_start() {
+    log "🔄 Building container with cache..."
+    docker-compose down
+    docker-compose build
+    start_container
+}
+
 # 🚀 Function to start the container
 start_container() {
    log "🚀 Starting container $CONTAINER_NAME..."
@@ -169,9 +178,8 @@ main() {
    case "${1:-}" in
        -s|--shell)
            DIRECT_SHELL=true
-           if ! check_container; then
-               start_container
-           fi
+           # Build e start prima di accedere alla shell
+           build_and_start
            enter_shell
            exit 0
            ;;
@@ -181,8 +189,11 @@ main() {
            fi
            start_container
            ;;
+       -b|--build)
+           build_and_start
+           ;;
        --rebuild)
-           log "🔄 Rebuilding container..."
+           log "🔄 Rebuilding container from scratch..."
            docker-compose down
            docker-compose build --no-cache
            start_container
@@ -192,9 +203,7 @@ main() {
            exit 0
            ;;
        "")
-           if ! check_container; then
-               start_container
-           fi
+           build_and_start
            ;;
        *)
            log "❌ Invalid option: $1" "$RED"
