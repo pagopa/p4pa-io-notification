@@ -31,20 +31,13 @@ ARG GRADLE_HOME="/opt/gradle"
 FROM amazoncorretto:${CORRETTO_VERSION}@sha256:${CORRETTO_SHA} AS base
 ARG APP_USER
 ARG APP_GROUP
-ARG TZ
 
 # Install base packages
 RUN apk add --no-cache \
     wget \
     unzip \
     bash \
-    shadow \
-    tzdata && \
-    # Configure timezone
-    cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
-    echo "${TZ}" > /etc/timezone && \
-    # Cleanup
-    apk del tzdata
+    shadow
 
 # Create Gradle user
 RUN groupadd --system --gid 1000 ${APP_GROUP} && \
@@ -141,15 +134,11 @@ RUN apk upgrade --no-cache && \
     apk add --no-cache \
         tini \
         curl \
+        # Configure timezone + ENV=TZ
         tzdata && \
-    # Configure timezone
-    cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
-    echo "${TZ}" > /etc/timezone && \
     # Create user and group
     addgroup -S ${APP_GROUP} && \
-    adduser -S ${APP_USER} -G ${APP_GROUP} && \
-    # Cleanup
-    apk del tzdata
+    adduser -S ${APP_USER} -G ${APP_GROUP}
 
 # 📦 Copy Artifacts
 COPY --from=build /build/build/libs/*.jar ${APP_HOME}/app.jar
