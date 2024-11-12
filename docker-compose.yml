@@ -1,0 +1,60 @@
+name: p4pa-io-notification
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: p4pa-io-notification
+    ports:
+      - "8080:8080"
+    environment:
+      # Application Insights
+      JAVA_TOOL_OPTIONS: "-javaagent:/app/applicationinsights-agent.jar"
+      APPLICATIONINSIGHTS_CONNECTION_STRING: "${APPLICATIONINSIGHTS_CONNECTION_STRING}"
+      # JVM configuration
+      JAVA_OPTS: >
+        -XX:MaxRAMPercentage=75.0
+        -XX:InitialRAMPercentage=50.0
+        -XX:+UseG1GC
+        -XX:+HeapDumpOnOutOfMemoryError
+        -XX:HeapDumpPath=/tmp
+      # Application specific
+      SPRING_PROFILES_ACTIVE: "local"
+      SERVER_PORT: "8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 7
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '1'
+          memory: 1G
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:uid=65534,gid=65534
+    networks:
+      - p4pa-io-notification-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  p4pa-io-notification-network:
+    driver: bridge
+    name: p4pa-io-notification-network
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
