@@ -1,0 +1,117 @@
+spring:
+  application:
+    name: ${artifactId}
+    version: ${version}
+  jmx.enabled: true
+  data:
+    mongodb:
+      uri: \${MONGODB_URI:mongodb://localhost:27017}
+      database: \${MONGODB_DBNAME:payhub}
+      # custom configured properties
+      config:
+        connectionPool:
+          maxSize: \${MONGODB_CONNECTIONPOOL_MAX_SIZE:100}
+          minSize: \${MONGODB_CONNECTIONPOOL_MIN_SIZE:0}
+          maxWaitTimeMS: \${MONGODB_CONNECTIONPOOL_MAX_WAIT_MS:120000}
+          maxConnectionLifeTimeMS: \${MONGODB_CONNECTIONPOOL_MAX_CONNECTION_LIFE_MS:0}
+          maxConnectionIdleTimeMS: \${MONGODB_CONNECTIONPOOL_MAX_CONNECTION_IDLE_MS:120000}
+          maxConnecting: \${MONGODB_CONNECTIONPOOL_MAX_CONNECTING:2}
+  cloud:
+    function:
+      definition: notificationQueue;notificationConsumer
+    stream:
+      binders:
+        kafka-notification-producer:
+          type: kafka
+          environment:
+            spring.cloud.stream.kafka.binder:
+              brokers: \${KAFKA_BINDER_BROKER:}
+              configuration:
+                sasl.jaas.config: \${KAFKA_NOTIFICATION_OUT_SASL_JAAS_CONFIG:}
+        kafka-notification-consumer:
+          type: kafka
+          environment:
+            spring.cloud.stream.kafka.binder:
+              brokers: \${KAFKA_BINDER_BROKER:}
+              configuration:
+                sasl.jaas.config: \${KAFKA_NOTIFICATION_IN_SASL_JAAS_CONFIG:}
+      bindings:
+        notificationQueue-out-0:
+          binder: kafka-notification-producer
+          content-type: \${KAFKA_CONTENT_TYPE:application/json}
+          destination: \${KAFKA_TOPIC_NOTIFICATION:}
+        notificationConsumer-in-0:
+          binder: kafka-notification-consumer
+          content-type: \${KAFKA_CONTENT_TYPE:application/json}
+          destination: \${KAFKA_TOPIC_NOTIFICATION:}
+          group: \${KAFKA_COMMANDS_GROUP_ID:p4pa-payhub-io-notification-consumer-group}
+      kafka:
+        binder:
+          auto-create-topics: false
+          configuration:
+            heartbeat.interval.ms: \${KAFKA_CONFIG_HEARTBEAT_INTERVAL_MS:3000}
+            session.timeout.ms: \${KAFKA_CONFIG_SESSION_TIMEOUT_MS:30000}
+            request.timeout.ms: \${KAFKA_CONFIG_REQUEST_TIMEOUT_MS:60000}
+            metadata.max.age.ms: \${KAFKA_CONFIG_METADATA_MAX_AGE:180000}
+            sasl.mechanism: \${KAFKA_NOTIFICATION_SASL_MECHANISM:}
+            security.protocol: \${KAFKA_NOTIFICATION_SECURITY_PROTOCOL:}
+            max.request.size: \${KAFKA_CONFIG_MAX_REQUEST_SIZE:1000000}
+        binders:
+          notificationQueue-out-0:
+            producer:
+              configuration:
+                client.id: io-notification
+                connections.max.idle.ms: \${KAFKA_IO_NOTIFICATION_CONNECTION_MAX_IDLE_TIME:180000}
+                retry.backoff.ms: \${KAFKA_IO_NOTIFICATION_RETRY_MS:\${KAFKA_RETRY_MS:10000}}
+                linger.ms: \${KAFKA_IO_NOTIFICATION_LINGER_MS:\${KAFKA_LINGER_MS:2}}
+                batch.size: \${KAFKA_IO_NOTIFICATION_BATCH_SIZE:\${KAFKA_BATCH_SIZE:16384}}
+          notificationConsumer-in-0:
+            consumer:
+              autoCommitOffset: \${KAFKA_COMMANDS_AUTO_COMMIT:${KAFKA_CONSUMER_CONFIG_AUTO_COMMIT:true}}
+              configuration:
+                connections.max.idle.ms: \${KAFKA_COMMANDS_REQUEST_CONNECTIONS_MAX_IDLE_MS:${KAFKA_CONSUMER_CONFIG_CONNECTIONS_MAX_IDLE_MS:180000}}
+                max.poll:
+                  interval.ms: \${KAFKA_COMMANDS_INTERVAL_TIMEOUT_MS:${KAFKA_CONFIG_MAX_POLL_INTERVAL_TIMEOUT_MS:300000}}
+                  records: \${KAFKA_COMMANDS_MAX_POLL_SIZE:${KAFKA_CONSUMER_CONFIG_MAX_POLL_SIZE:500}}
+                socket.connection.setup.timeout:
+                  max.ms: \${KAFKA_COMMANDS_REQUEST_CONNECTION_TIMEOUT_MAX_MS:${KAFKA_CONSUMER_CONFIG_CONNECTION_TIMEOUT_MAX_MS:200000}}
+                  ms: \${KAFKA_COMMANDS_REQUEST_CONNECTION_TIMEOUT_MS:${KAFKA_CONSUMER_CONFIG_CONNECTION_TIMEOUT_MS:100000}}
+              standardHeaders: \${KAFKA_COMMANDS_STANDARD_HEADERS:\${KAFKA_CONSUMER_CONFIG_STANDARD_HEADERS:both}}
+              startOffset: \${KAFKA_COMMANDS_REQUEST_START_OFFSET:\${KAFKA_CONSUMER_CONFIG_START_OFFSET:earliest}}
+
+
+
+rest-client:
+  backend-io-manage:
+    service:
+      base-url: \${IO_MANAGE_BACKEND_SERVICE_BASE_URL:}
+      subscriptionKey: \${IO_BACKEND_SERVICE_SUBSCRIPTION_API_KEY:}
+      offset: \${IO_BACKEND_SERVICE_OFFSET:0}
+      limit: \${IO_BACKEND_SERVICE_LIMIT:99}
+    notification:
+      ttl: \${IO_BACKEND_NOTIFICATION_TTL:3600}
+      subject: \${IO_BACKEND_NOTIFICATION_SUBJECT:Test P4PA. Nuova Posizione debitoria %tipoDovutoName%}
+      markdown: |
+        \${IO_BACKEND_NOTIFICATION_MARKDOWN:La informiamo che è stata generata una nuova posizione debitoria a suo carico.
+        La invitiamo a effettuare il pagamento entro la data di scadenza per evitare eventuali sanzioni o interessi di mora.
+        **Totale da pagare:** %amount%
+        **Data di scadenza:** %paymentDate%
+        **IUV:** %iuv%
+        **Causale:** %paymentReason%}
+
+
+management:
+  endpoint:
+    health:
+      probes.enabled: true
+      group:
+        readiness.include: "*"
+        liveness.include: livenessState,diskSpace,ping
+  endpoints:
+    jmx:
+      exposure.include: "*"
+    web:
+      exposure.include: info, health
+
+data-cipher:
+  encrypt-psw: \${DATA_CIPHER_ENCRYPT_PASSWORD:PWD}
