@@ -3,9 +3,9 @@ package it.gov.pagopa.payhub.ionotification.service;
 import it.gov.pagopa.payhub.ionotification.service.ioservice.IOManageService;
 import it.gov.pagopa.payhub.ionotification.service.ioservice.IOServiceCreationService;
 import it.gov.pagopa.payhub.ionotification.service.notify.IONotificationService;
-import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
-import it.gov.pagopa.payhub.model.generated.ServiceDTO;
-import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationQueueDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
 import org.springframework.stereotype.Service;
 
 @Service

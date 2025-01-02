@@ -2,8 +2,8 @@ package it.gov.pagopa.payhub.ionotification.mapper;
 
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IOServiceMapper;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
-import it.gov.pagopa.payhub.model.generated.ServiceDTO;
-import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,9 +2,9 @@ package it.gov.pagopa.payhub.ionotification.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.payhub.ionotification.service.IOService;
-import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
-import it.gov.pagopa.payhub.model.generated.ServiceDTO;
-import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationQueueDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

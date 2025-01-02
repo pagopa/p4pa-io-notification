@@ -5,7 +5,7 @@ import it.gov.pagopa.payhub.ionotification.dto.MessageContent;
 import it.gov.pagopa.payhub.ionotification.dto.NotificationDTO;
 import it.gov.pagopa.payhub.ionotification.enums.NotificationStatus;
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
-import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationQueueDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

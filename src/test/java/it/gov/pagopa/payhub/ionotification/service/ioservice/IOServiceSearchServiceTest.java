@@ -4,8 +4,7 @@ import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
 import it.gov.pagopa.payhub.ionotification.dto.PaginationDTO;
 import it.gov.pagopa.payhub.ionotification.dto.ServicesListDTO;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
-import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
-import org.jetbrains.annotations.NotNull;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -113,7 +112,6 @@ class IOServiceSearchServiceTest {
         getServiceEmpty(emptyPage, ioService, serviceRequestDTO);
     }
 
-    @NotNull
     private static ServicesListDTO getServicesListDTO() {
         return new ServicesListDTO(
                 new ArrayList<>(getAllServicesResponse().getServiceList().subList(0, 10)),
