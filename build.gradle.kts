@@ -39,6 +39,7 @@ val openApiToolsVersion = "0.2.6"
 val wiremockVersion = "3.10.0"
 val hibernateValidatorVersion = "8.0.2.Final"
 val micrometerVersion = "1.4.1"
+val commonsIoVersion = "2.18.0"
 
 
 dependencies {
@@ -54,6 +55,9 @@ dependencies {
 	implementation("org.hibernate.validator:hibernate-validator:$hibernateValidatorVersion")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka")
+
+	// Security Fixes
+	implementation("commons-io:commons-io:$commonsIoVersion")
 
 	//	Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
