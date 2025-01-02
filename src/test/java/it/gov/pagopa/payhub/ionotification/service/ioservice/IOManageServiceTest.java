@@ -6,7 +6,7 @@ import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceAlreadyDelete
 import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceNotFoundException;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IOServiceRepository;
-import it.gov.pagopa.payhub.model.generated.ServiceDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

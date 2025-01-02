@@ -1,7 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.event.consumer;
 
 import it.gov.pagopa.payhub.ionotification.service.IOService;
-import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationQueueDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

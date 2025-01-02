@@ -3,7 +3,7 @@ package it.gov.pagopa.payhub.ionotification.utils;
 import it.gov.pagopa.payhub.ionotification.dto.*;
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
-import it.gov.pagopa.payhub.model.generated.*;
+import it.gov.pagopa.payhub.ionotification.dto.generated.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

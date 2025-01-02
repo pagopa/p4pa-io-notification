@@ -1,7 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.exception;
 
 import it.gov.pagopa.payhub.ionotification.exception.custom.*;
-import it.gov.pagopa.payhub.model.generated.IoNotificationErrorDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.IoNotificationErrorDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
