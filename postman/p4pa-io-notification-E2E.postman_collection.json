@@ -1,12 +1,90 @@
 {
 	"info": {
-		"_postman_id": "e1636fb6-6037-450c-8091-ac3ff71e0c5c",
+		"_postman_id": "ebe4196a-8e19-48c0-964e-c8c728b6f816",
 		"name": "IONotification E2E",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21721488",
-		"_collection_link": "https://universal-meadow-88424.postman.co/workspace/PAP4~e3834aae-c5da-4699-87c8-55cd8293d10e/collection/21721488-e1636fb6-6037-450c-8091-ac3ff71e0c5c?action=share&source=collection_link&creator=21721488"
+		"_exporter_id": "15747968",
+		"_collection_link": "https://warped-astronaut-141685.postman.co/workspace/P4PA~9a8b7dd5-97b6-4dd0-b3f5-95f25fd0b455/collection/15747968-ebe4196a-8e19-48c0-964e-c8c728b6f816?action=share&source=collection_link&creator=15747968"
 	},
 	"item": [
+		{
+			"name": "00_login Copy",
+			"item": [
+				{
+					"name": "00_authtoken jwt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm=instrumentPmMethod(pm);\r",
+									"\r",
+									"pm.test(\"p4paAuth - 01_authtoken - Responses with 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"p4paAuth - 01_authtoken jwt - Verify response body\", function () {\r",
+									"    let jsonResponse = pm.response.json();\r",
+									"\r",
+									"    pm.expect(jsonResponse).have.property(\"accessToken\")\r",
+									"    pm.expect(jsonResponse).have.property(\"tokenType\")\r",
+									"    pm.expect(jsonResponse).have.property(\"expiresIn\")\r",
+									"});\r",
+									"\r",
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"accessToken\", jsonResponse.accessToken);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{p4paAuthBaseUrl}}/payhub/auth/token?client_id=piattaforma-unitaria&grant_type=urn:ietf:params:oauth:grant-type:token-exchange&subject_token={{tokenExchange_subjectToken}}&subject_issuer={{tokenExchange_issuer}}&scope=openid&subject_token_type=urn:ietf:params:oauth:token-type:jwt",
+							"host": [
+								"{{p4paAuthBaseUrl}}"
+							],
+							"path": [
+								"payhub",
+								"auth",
+								"token"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "piattaforma-unitaria"
+								},
+								{
+									"key": "grant_type",
+									"value": "urn:ietf:params:oauth:grant-type:token-exchange"
+								},
+								{
+									"key": "subject_token",
+									"value": "{{tokenExchange_subjectToken}}"
+								},
+								{
+									"key": "subject_issuer",
+									"value": "{{tokenExchange_issuer}}"
+								},
+								{
+									"key": "scope",
+									"value": "openid"
+								},
+								{
+									"key": "subject_token_type",
+									"value": "urn:ietf:params:oauth:token-type:jwt"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
 		{
 			"name": "Create Service Happy Case",
 			"item": [
@@ -340,6 +418,16 @@
 					"response": []
 				}
 			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
 			"event": [
 				{
 					"listen": "prerequest",
@@ -700,6 +788,16 @@
 					"response": []
 				}
 			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
 			"event": [
 				{
 					"listen": "prerequest",
@@ -741,7 +839,69 @@
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
-					""
+					"// START COMMON UTILITIES",
+					"",
+					"// global variable to use in order to skip tests",
+					"skipTests=false;",
+					"",
+					"// method to be invoked as first thing inside tests in order to instrument the \"pm\" variable:",
+					"// eg: pm = pm=instrumentPmMethod(pm);",
+					"instrumentPmMethod = (pm) => {",
+					"    const pmProxy = {",
+					"        get: function(pm, key) {",
+					"            if (key == 'test') {",
+					"                return (skipTests ? pm.test.skip : pm.test);",
+					"            }",
+					"            return pm[key];",
+					"        }",
+					"    };",
+					"",
+					"    return new Proxy(pm, pmProxy);",
+					"}",
+					"",
+					"// function to be used in order to retry the current request, configuring a maximum number of attempts and a fixed delay between each invoke",
+					"retryRequest = (pm, setTimeout, waitingMillis = 1000, maxAttempts = 30) => {",
+					"    if(!pm || !setTimeout){",
+					"        throw new Error(\"Invalid invoke to retryRequest function! Some required parameters are undefined: pm=\" + pm + \", setTimeout=\" + setTimeout)",
+					"    }",
+					"",
+					"    const retryVariableName = \"retry_\" + pm.info.requestId",
+					"    const attempt = (pm.variables.get(retryVariableName) ?? 0) + 1;",
+					"    if(attempt < maxAttempts) {",
+					"        console.info(pm.info.requestName + \" not ready, retrying [attempt \" + attempt + \"/\" + maxAttempts + \"] after \" + waitingMillis + \" ms\");",
+					"        pm.variables.set(retryVariableName, attempt)",
+					"        pm.execution.setNextRequest(pm.info.requestId);",
+					"        return setTimeout(()=>{}, waitingMillis);",
+					"    } else {",
+					"        pm.test(pm.info.requestName + \" not ready\", () => pm.expect.fail(attempt + \" attempts\"));",
+					"    }",
+					"}",
+					"",
+					"// function to be used in order to retry the current request until it returns a known response HTTP status code",
+					"retryWhenStatusCode = (pm, setTimeout, statusCode, waitingMillis, maxAttempts) => {",
+					"    if(pm.response.code == statusCode){",
+					"        console.log(\"Obtained \" + statusCode + \"! Performing retry...\")",
+					"        skipTests=true;",
+					"        return retryRequest(pm, setTimeout, waitingMillis, maxAttempts)",
+					"    }",
+					"}",
+					"",
+					"// XML utilities",
+					"xml2js = require('xml2js');",
+					"",
+					"parseXmlResponse = (response) => {",
+					"    let body;",
+					"    xml2js.parseString(response.text(), {",
+					"            ignoreAttrs: true, ",
+					"            explicitArray: false,",
+					"        }, function (err, result) {",
+					"            if(err){",
+					"                console.error(err)",
+					"            }",
+					"        body = result;",
+					"    });",
+					"    return body;",
+					"};"
 				]
 			}
 		}
@@ -800,6 +960,10 @@
 		},
 		{
 			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "accessToken",
 			"value": ""
 		}
 	]

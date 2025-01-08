@@ -40,11 +40,13 @@ val wiremockVersion = "3.10.0"
 val hibernateValidatorVersion = "8.0.2.Final"
 val micrometerVersion = "1.4.1"
 val commonsIoVersion = "2.18.0"
+val bouncycastleVersion = "1.79"
 
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("io.micrometer:micrometer-tracing-bridge-otel:$micrometerVersion")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocOpenApiVersion")
@@ -55,6 +57,9 @@ dependencies {
 	implementation("org.hibernate.validator:hibernate-validator:$hibernateValidatorVersion")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka")
+
+	//security
+	implementation("org.bouncycastle:bcprov-jdk18on:$bouncycastleVersion")
 
 	// Security Fixes
 	implementation("commons-io:commons-io:$commonsIoVersion")
