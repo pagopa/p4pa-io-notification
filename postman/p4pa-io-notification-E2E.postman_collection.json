@@ -8,7 +8,7 @@
 	},
 	"item": [
 		{
-			"name": "00_login Copy",
+			"name": "00_login",
 			"item": [
 				{
 					"name": "00_authtoken jwt",
