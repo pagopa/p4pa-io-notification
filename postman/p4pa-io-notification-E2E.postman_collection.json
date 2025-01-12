@@ -143,9 +143,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -197,9 +197,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -250,9 +250,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/message",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/message",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -291,9 +291,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{serviceId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{serviceId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -345,9 +345,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -401,9 +401,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/message/{{userId}}/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/message/{{userId}}/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -529,9 +529,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -580,9 +580,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -623,9 +623,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -676,9 +676,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -719,9 +719,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{serviceId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{serviceId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -772,9 +772,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
