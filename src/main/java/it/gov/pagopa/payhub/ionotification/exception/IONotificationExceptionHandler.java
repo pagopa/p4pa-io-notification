@@ -1,7 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.exception;
 
-import it.gov.pagopa.payhub.ionotification.exception.custom.*;
 import it.gov.pagopa.payhub.ionotification.dto.generated.IoNotificationErrorDTO;
+import it.gov.pagopa.payhub.ionotification.exception.custom.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -34,8 +35,8 @@ public class IONotificationExceptionHandler {
         return handleIONotificationErrorException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, IoNotificationErrorDTO.CodeEnum.GENERIC_ERROR);
     }
 
-    @ExceptionHandler({IOWrongPayloadException.class})
-    public ResponseEntity<IoNotificationErrorDTO> handleWrongPayloadException(RuntimeException ex, HttpServletRequest request) {
+    @ExceptionHandler({IOWrongPayloadException.class, MethodArgumentNotValidException.class})
+    public ResponseEntity<IoNotificationErrorDTO> handleWrongPayloadException(Exception ex, HttpServletRequest request) {
         return handleIONotificationErrorException(ex, request, HttpStatus.BAD_REQUEST, IoNotificationErrorDTO.CodeEnum.WRONG_PAYLOAD);
     }
 
@@ -62,10 +63,10 @@ public class IONotificationExceptionHandler {
     }
 
     private ResponseEntity<IoNotificationErrorDTO> handleIONotificationErrorException(
-            RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus, IoNotificationErrorDTO.CodeEnum errorEnum) {
+            Exception ex, HttpServletRequest request, HttpStatus httpStatus, IoNotificationErrorDTO.CodeEnum errorEnum) {
         String message = ex.getMessage();
         log.info("A {} occurred handling request {}: HttpStatus {} - {}",
-                ex.getClass(),
+                ex.getClass().getName(),
                 getRequestDetails(request),
                 httpStatus.value(),
                 message);

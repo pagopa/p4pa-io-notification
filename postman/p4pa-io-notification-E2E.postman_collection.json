@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "ebe4196a-8e19-48c0-964e-c8c728b6f816",
+		"_postman_id": "427beec3-67d1-4a93-84d4-037870063aa5",
 		"name": "IONotification E2E",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "15747968",
-		"_collection_link": "https://warped-astronaut-141685.postman.co/workspace/P4PA~9a8b7dd5-97b6-4dd0-b3f5-95f25fd0b455/collection/15747968-ebe4196a-8e19-48c0-964e-c8c728b6f816?action=share&source=collection_link&creator=15747968"
+		"_collection_link": "https://warped-astronaut-141685.postman.co/workspace/P4PA~9a8b7dd5-97b6-4dd0-b3f5-95f25fd0b455/collection/15747968-427beec3-67d1-4a93-84d4-037870063aa5?action=share&source=collection_link&creator=15747968"
 	},
 	"item": [
 		{
@@ -26,13 +26,13 @@
 									"pm.test(\"p4paAuth - 01_authtoken jwt - Verify response body\", function () {\r",
 									"    let jsonResponse = pm.response.json();\r",
 									"\r",
-									"    pm.expect(jsonResponse).have.property(\"accessToken\")\r",
-									"    pm.expect(jsonResponse).have.property(\"tokenType\")\r",
-									"    pm.expect(jsonResponse).have.property(\"expiresIn\")\r",
+									"    pm.expect(jsonResponse).have.property(\"access_token\")\r",
+									"    pm.expect(jsonResponse).have.property(\"token_type\")\r",
+									"    pm.expect(jsonResponse).have.property(\"expires_in\")\r",
 									"});\r",
 									"\r",
 									"let jsonResponse = pm.response.json();\r",
-									"pm.collectionVariables.set(\"accessToken\", jsonResponse.accessToken);\r",
+									"pm.collectionVariables.set(\"accessToken\", jsonResponse.access_token);\r",
 									""
 								],
 								"type": "text/javascript",
@@ -44,12 +44,11 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{p4paAuthBaseUrl}}/payhub/auth/token?client_id=piattaforma-unitaria&grant_type=urn:ietf:params:oauth:grant-type:token-exchange&subject_token={{tokenExchange_subjectToken}}&subject_issuer={{tokenExchange_issuer}}&scope=openid&subject_token_type=urn:ietf:params:oauth:token-type:jwt",
+							"raw": "{{p4paAuthBaseUrl}}/auth/token?client_id=piattaforma-unitaria&grant_type=urn:ietf:params:oauth:grant-type:token-exchange&subject_token={{tokenExchange_subjectToken}}&subject_issuer={{tokenExchange_issuer}}&scope=openid&subject_token_type=urn:ietf:params:oauth:token-type:jwt",
 							"host": [
 								"{{p4paAuthBaseUrl}}"
 							],
 							"path": [
-								"payhub",
 								"auth",
 								"token"
 							],
@@ -144,9 +143,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -198,9 +197,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -251,9 +250,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/message",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/message",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -292,9 +291,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{serviceId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{serviceId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -346,9 +345,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -402,9 +401,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/message/{{userId}}/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/message/{{userId}}/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -477,7 +476,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"IONotification - createService - Unhappy case: Wrong Payload - Responses with 403\", function () {\r",
+									"pm.test(\"IONotification - createService - Unhappy case: Wrong Payload - Responses with 400\", function () {\r",
 									"    pm.response.to.have.status(400);\r",
 									"});\r",
 									"\r",
@@ -530,9 +529,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -545,19 +544,19 @@
 					"response": []
 				},
 				{
-					"name": "GetService IONotification",
+					"name": "GetService IONotification NotFound",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
 									"let response = pm.response.json();\r",
-									"pm.test(\"IONotification - getService - Happy case - Responses with 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
+									"pm.test(\"IONotification - getService - Unhappy case - Responses with 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
 									"});\r",
 									"\r",
-									"pm.test(\"Status should be REQUESTED\", function () {\r",
-									"        pm.expect(response.status).to.eql(\"REQUESTED\");\r",
+									"pm.test(\"Status should be IO_NOTIFICATION_SERVICE_NOT_FOUND\", function () {\r",
+									"        pm.expect(response.code).to.eql(\"IO_NOTIFICATION_SERVICE_NOT_FOUND\");\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -581,9 +580,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -624,9 +623,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -677,9 +676,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -720,9 +719,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{serviceId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{serviceId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",
@@ -773,9 +772,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseUrlNotification}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/service/{{enteId}}/{{tipoDovutoId}}",
 							"host": [
-								"{{baseUrlNotification}}"
+								"{{ioNotificationBaseUrl}}"
 							],
 							"path": [
 								"ionotification",

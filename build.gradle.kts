@@ -49,6 +49,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("io.micrometer:micrometer-tracing-bridge-otel:$micrometerVersion")
+	implementation("io.micrometer:micrometer-registry-prometheus")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocOpenApiVersion")
 	implementation("org.codehaus.janino:janino:$janinoVersion")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
@@ -109,7 +110,16 @@ configurations {
 }
 
 tasks.compileJava {
-	dependsOn("openApiGenerate")
+	dependsOn("dependenciesBuild")
+}
+
+tasks.register("dependenciesBuild") {
+	group = "AutomaticallyGeneratedCode"
+	description = "grouping all together automatically generate code tasks"
+
+	dependsOn(
+		"openApiGenerate"
+	)
 }
 
 configure<SourceSetContainer> {
@@ -129,14 +139,14 @@ openApiGenerate {
 	apiPackage.set("it.gov.pagopa.payhub.ionotification.controller.generated")
 	modelPackage.set("it.gov.pagopa.payhub.ionotification.dto.generated")
 	configOptions.set(mapOf(
-			"dateLibrary" to "java8",
-			"requestMappingMode" to "api_interface",
-			"useSpringBoot3" to "true",
-			"interfaceOnly" to "true",
-			"useTags" to "true",
-			"generateConstructorWithAllArgs" to "false",
-			"generatedConstructorWithRequiredArgs" to "true",
-			"additionalModelTypeAnnotations" to "@lombok.Data @lombok.Builder @lombok.AllArgsConstructor",
-			"serializationLibrary" to "jackson"
+		"dateLibrary" to "java8",
+		"requestMappingMode" to "api_interface",
+		"useSpringBoot3" to "true",
+		"interfaceOnly" to "true",
+		"useTags" to "true",
+		"useBeanValidation" to "true",
+		"generateConstructorWithAllArgs" to "true",
+		"generatedConstructorWithRequiredArgs" to "true",
+		"additionalModelTypeAnnotations" to "@lombok.Builder"
 	))
 }
