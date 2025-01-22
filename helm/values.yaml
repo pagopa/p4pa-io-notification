@@ -74,10 +74,13 @@ microservice-chart:
     APPLICATIONINSIGHTS_CONNECTION_STRING: appinsights-connection-string
     JWT_TOKEN_PUBLIC_KEY: jwt-public-key
     MONGODB_URI: mongodb-connection-string
+
     IO_BACKEND_SERVICE_SUBSCRIPTION_API_KEY: io-backend-manage-api-key
+
+    KAFKA_BINDER_BROKER: p4pa-payhub-kafka-broker
     KAFKA_NOTIFICATION_OUT_SASL_JAAS_CONFIG: p4pa-payhub-notification-evh-producer-jaas-config
     KAFKA_NOTIFICATION_IN_SASL_JAAS_CONFIG: p4pa-payhub-notification-evh-consumer-jaas-config
-    KAFKA_BINDER_BROKER: p4pa-payhub-notification-kafka-broker
+
     DATA_CIPHER_ENCRYPT_PASSWORD: io-notification-data-cipher-encrypt-password
 
   # nodeSelector: {}
