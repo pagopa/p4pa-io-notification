@@ -65,9 +65,9 @@ microservice-chart:
 
   externalConfigMapValues:
     eventhub-config:
+      KAFKA_CONFIG_SECURITY_PROTOCOL: p4pa-payhub-security-protocol
+      KAFKA_CONFIG_SASL_MECHANISM: p4pa-payhub-sasl-mechanism
       KAFKA_TOPIC_NOTIFICATION: p4pa-payhub-notification-topic
-      KAFKA_NOTIFICATION_SASL_MECHANISM: p4pa-payhub-notification-sasl-mechanism
-      KAFKA_NOTIFICATION_SECURITY_PROTOCOL: p4pa-payhub-notification-security-protocol
 
 
   envSecret:
