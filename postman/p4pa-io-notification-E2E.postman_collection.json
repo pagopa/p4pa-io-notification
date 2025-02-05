@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "427beec3-67d1-4a93-84d4-037870063aa5",
+		"_postman_id": "9631a636-d10d-45a9-bfca-9c267d979df4",
 		"name": "IONotification E2E",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "15747968",
-		"_collection_link": "https://warped-astronaut-141685.postman.co/workspace/P4PA~9a8b7dd5-97b6-4dd0-b3f5-95f25fd0b455/collection/15747968-427beec3-67d1-4a93-84d4-037870063aa5?action=share&source=collection_link&creator=15747968"
+		"_collection_link": "https://warped-astronaut-141685.postman.co/workspace/P4PA~9a8b7dd5-97b6-4dd0-b3f5-95f25fd0b455/collection/15747968-9631a636-d10d-45a9-bfca-9c267d979df4?action=share&source=collection_link&creator=15747968"
 	},
 	"item": [
 		{
@@ -482,7 +482,7 @@
 									"\r",
 									"pm.test(\"IONotification - Unhappy case: Wrong Payload\", function () {\r",
 									"    const responseJson = pm.response.json();\r",
-									"    pm.expect(responseJson.code).to.eql(\"IO_NOTIFICATION_WRONG_PAYLOAD\");\r",
+									"    pm.expect(responseJson.code).to.eql(\"IO_NOTIFICATION_BAD_REQUEST\");\r",
 									"});"
 								],
 								"type": "text/javascript",
