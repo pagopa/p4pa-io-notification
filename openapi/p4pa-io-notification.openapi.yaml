@@ -404,5 +404,6 @@ components:
             - IO_NOTIFICATION_GENERIC_ERROR
             - IO_NOTIFICATION_TOO_MANY_REQUESTS
             - IO_NOTIFICATION_INVALID_REQUEST
+            - IO_NOTIFICATION_BAD_REQUEST
         message:
           type: string

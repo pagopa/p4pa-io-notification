@@ -1,177 +1,227 @@
 package it.gov.pagopa.payhub.ionotification.exception;
 
-import com.mongodb.MongoQueryException;
-import com.mongodb.MongoWriteException;
-import com.mongodb.ServerAddress;
-import com.mongodb.WriteError;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gov.pagopa.payhub.ionotification.config.json.JsonConfig;
 import it.gov.pagopa.payhub.ionotification.exception.custom.IOWrongPayloadException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.RetrieveServicesInvocationException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceAlreadyDeletedException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceNotFoundException;
+import jakarta.servlet.ServletException;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.BsonDocument;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.mongodb.UncategorizedMongoDbException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.json.JsonCompareMode;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerErrorException;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
-import java.util.Collections;
+import java.time.LocalDateTime;
+import java.util.Set;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(value = {
-        IONotificationExceptionHandlerTest.TestController.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
-@ContextConfiguration(classes = {IONotificationExceptionHandler.class,
-        IONotificationExceptionHandlerTest.TestController.class})
+@ExtendWith({SpringExtension.class})
+@WebMvcTest(value = {IONotificationExceptionHandlerTest.TestController.class}, excludeAutoConfiguration = SecurityAutoConfiguration.class)
+@ContextConfiguration(classes = {
+        IONotificationExceptionHandlerTest.TestController.class,
+        IONotificationExceptionHandler.class,
+        MongoTooManyRequestsExceptionHandler.class,
+        JsonConfig.class})
 class IONotificationExceptionHandlerTest {
+
+    public static final String DATA = "data";
+    public static final TestRequestBody BODY = new TestRequestBody("bodyData", null, "abc", LocalDateTime.now());
+
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockitoSpyBean
     private TestController testControllerSpy;
-
+    @MockitoSpyBean
+    private RequestMappingHandlerAdapter requestMappingHandlerAdapterSpy;
 
     @RestController
     @Slf4j
     static class TestController {
-
-        @GetMapping("/test")
-        String testEndpoint() {
+        @PostMapping(value = "/test", produces = MediaType.APPLICATION_JSON_VALUE)
+        String testEndpoint(@RequestParam(DATA) String data, @Valid @RequestBody TestRequestBody body) {
             return "OK";
         }
     }
 
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class TestRequestBody {
+        @NotNull
+        private String requiredField;
+        private String notRequiredField;
+        @Pattern(regexp = "[a-z]+")
+        private String lowerCaseAlphabeticField;
+        private LocalDateTime dateTimeField;
+    }
+
+    private ResultActions performRequest(String data, MediaType accept) throws Exception {
+        return performRequest(data, accept, objectMapper.writeValueAsString(IONotificationExceptionHandlerTest.BODY));
+    }
+
+    private ResultActions performRequest(String data, MediaType accept, String body) throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/test")
+                .param(DATA, data)
+                .accept(accept);
+
+        if (body != null) {
+            requestBuilder
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(body);
+        }
+
+        return mockMvc.perform(requestBuilder);
+    }
+
     @Test
     void handleFeignClientException() throws Exception {
-        doThrow(new RetrieveServicesInvocationException("Error")).when(testControllerSpy).testEndpoint();
+        doThrow(new RetrieveServicesInvocationException("Error")).when(testControllerSpy).testEndpoint(DATA, BODY);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/test")
-                        .contentType(MediaType.APPLICATION_JSON))
+        performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isInternalServerError())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"));
     }
 
     @Test
     void handleWrongPayloadException() throws Exception {
-        doThrow(new IOWrongPayloadException("Error")).when(testControllerSpy).testEndpoint();
+        doThrow(new IOWrongPayloadException("Error")).when(testControllerSpy).testEndpoint(DATA, BODY);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/test")
-                        .contentType(MediaType.APPLICATION_JSON))
+        performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"));
     }
 
     @Test
     void handleServiceAlreadyDeletedException() throws Exception {
-        doThrow(new ServiceAlreadyDeletedException("Error")).when(testControllerSpy).testEndpoint();
+        doThrow(new ServiceAlreadyDeletedException("Error")).when(testControllerSpy).testEndpoint(DATA, BODY);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/test")
-                        .contentType(MediaType.APPLICATION_JSON))
+        performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isForbidden())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"));
     }
 
     @Test
     void handleNotFoundException() throws Exception {
-        doThrow(new ServiceNotFoundException("Error")).when(testControllerSpy).testEndpoint();
+        doThrow(new ServiceNotFoundException("Error")).when(testControllerSpy).testEndpoint(DATA, BODY);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/test")
-                        .contentType(MediaType.APPLICATION_JSON))
+        performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"));
     }
 
     @Test
-    void handleUncategorizedMongoDbException() throws Exception {
+    void handleMissingServletRequestParameterException() throws Exception {
+        performRequest(null, MediaType.APPLICATION_JSON)
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required request parameter 'data' for method parameter type String is not present"));
 
-        String mongoFullErrorResponse = """
-        {"ok": 0.0, "errmsg": "Error=16500, RetryAfterMs=34,\s
-        Details='Response status code does not indicate success: TooManyRequests (429) Substatus: 3200 ActivityId: 46ba3855-bc3b-4670-8609-17e1c2c87778 Reason:\s
-        (\\r\\nErrors : [\\r\\n \\"Request rate is large. More Request Units may be needed, so no changes were made. Please retry this request later. Learn more:
-         http://aka.ms/cosmosdb-error-429\\"\\r\\n]\\r\\n) ", "code": 16500, "codeName": "RequestRateTooLarge"}
-        """;
-
-        final MongoQueryException mongoQueryException = new MongoQueryException(
-                BsonDocument.parse(mongoFullErrorResponse), new ServerAddress());
-        doThrow(
-                new UncategorizedMongoDbException(mongoQueryException.getMessage(), mongoQueryException))
-                .when(testControllerSpy).testEndpoint();
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/test")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isTooManyRequests())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Too Many Requests"))
-                .andExpect(MockMvcResultMatchers.header().exists(HttpHeaders.RETRY_AFTER))
-                .andExpect(MockMvcResultMatchers.header().string(HttpHeaders.RETRY_AFTER, "1"))
-                .andExpect(MockMvcResultMatchers.header().string("Retry-After-Ms", "34"));
     }
 
     @Test
-    void handleWriteDbWithoutTooManyRequestsException() throws Exception {
+    void handleRuntimeExceptionError() throws Exception {
+        doThrow(new RuntimeException("Error")).when(testControllerSpy).testEndpoint(DATA, BODY);
 
-        String writeErrorMessage = """
-            Error=16500, Substatus: 3200; ActivityId: 822d212d-5aac-4f5d-a2d4-76d6da7b619e; Reason: (
-            Errors : [
-              "Request rate is large. More Request Units may be needed, so no changes were made. Please retry this request later. Learn more: http://aka.ms/cosmosdb-error-429"
-            ]
-            );
-            """;
-
-        handleMongoWriteException(writeErrorMessage);
-    }
-
-    @Test
-    void handleTooManyRequestsWriteDbException() throws Exception {
-
-        String writeErrorMessage = """
-            RetryAfterMs=34, Details='Response status code does not indicate success: TooManyRequests (429); Substatus: 3200; ActivityId: 822d212d-5aac-4f5d-a2d4-76d6da7b619e; Reason: (
-            Errors : [
-              "Request rate is large. More Request Units may be needed, so no changes were made. Please retry this request later. Learn more: http://aka.ms/cosmosdb-error-429"
-            ]
-            );
-            """;
-
-        handleMongoWriteException(writeErrorMessage);
-    }
-
-    @Test
-    void handleUncategorizedMongoDbExceptionNotRequestRateTooLarge() throws Exception {
-
-        doThrow(new UncategorizedMongoDbException("DUMMY", new Exception()))
-                .when(testControllerSpy).testEndpoint();
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/test")
-                        .contentType(MediaType.APPLICATION_JSON))
+        performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isInternalServerError())
-                .andExpect(MockMvcResultMatchers.content().json("{\"message\":\"DUMMY\"}", JsonCompareMode.LENIENT));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_GENERIC_ERROR"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"));
     }
 
+    @Test
+    void handleGenericServletException() throws Exception {
+        doThrow(new ServletException("Error"))
+                .when(requestMappingHandlerAdapterSpy).handle(any(), any(), any());
 
-    private void handleMongoWriteException(String writeErrorMessage) throws Exception {
-        final MongoWriteException mongoWriteException = new MongoWriteException(
-                new WriteError(16500, writeErrorMessage, BsonDocument.parse("{}")), new ServerAddress(), Collections.emptySet());
-        doThrow(
-                new DataIntegrityViolationException(mongoWriteException.getMessage(), mongoWriteException))
-                .when(testControllerSpy).testEndpoint();
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/test")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isTooManyRequests())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Too Many Requests"));
+        performRequest(DATA, MediaType.APPLICATION_JSON)
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_GENERIC_ERROR"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"));
     }
+
+    @Test
+    void handle4xxHttpServletException() throws Exception {
+        performRequest(DATA, MediaType.parseMediaType("application/hal+json"))
+                .andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No acceptable representation"));
+    }
+
+    @Test
+    void handleNoBodyException() throws Exception {
+        performRequest(DATA, MediaType.APPLICATION_JSON, null)
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required request body is missing"));
+    }
+
+    @Test
+    void handleInvalidBodyException() throws Exception {
+        performRequest(DATA, MediaType.APPLICATION_JSON,
+                "{\"notRequiredField\":\"notRequired\",\"lowerCaseAlphabeticField\":\"ABC\"}")
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Invalid request content: lowerCaseAlphabeticField: must match \"[a-z]+\"; requiredField: must not be null"));
+    }
+
+    @Test
+    void handleNotParsableBodyException() throws Exception {
+        performRequest(DATA, MediaType.APPLICATION_JSON,
+                "{\"notRequiredField\":\"notRequired\",\"dateTimeField\":\"2025-02-05\"}")
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Cannot parse body: dateTimeField: Text '2025-02-05' could not be parsed at index 10"));
+    }
+
+    @Test
+    void handle5xxHttpServletException() throws Exception {
+        doThrow(new ServerErrorException("Error", new RuntimeException("Error")))
+                .when(requestMappingHandlerAdapterSpy).handle(any(), any(), any());
+
+        performRequest(DATA, MediaType.APPLICATION_JSON)
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_GENERIC_ERROR"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("500 INTERNAL_SERVER_ERROR \"Error\""));
+    }
+
+    @Test
+    void handleViolationException() throws Exception {
+        doThrow(new ConstraintViolationException("Error", Set.of())).when(testControllerSpy).testEndpoint(DATA, BODY);
+
+        performRequest(DATA, MediaType.APPLICATION_JSON)
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"));
+    }
+
 }
