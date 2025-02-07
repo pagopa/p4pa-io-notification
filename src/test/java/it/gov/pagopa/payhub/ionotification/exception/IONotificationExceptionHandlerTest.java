@@ -178,6 +178,14 @@ class IONotificationExceptionHandlerTest {
     }
 
     @Test
+    void handleUrlNotFound() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/NOTEXISTENTURL"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_NOT_FOUND"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No static resource NOTEXISTENTURL."));
+    }
+
+    @Test
     void handleNoBodyException() throws Exception {
         performRequest(DATA, MediaType.APPLICATION_JSON, null)
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
