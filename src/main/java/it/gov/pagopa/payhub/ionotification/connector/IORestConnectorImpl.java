@@ -3,7 +3,7 @@ package it.gov.pagopa.payhub.ionotification.connector;
 import feign.FeignException;
 import it.gov.pagopa.payhub.ionotification.dto.*;
 import it.gov.pagopa.payhub.ionotification.exception.custom.*;
-import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

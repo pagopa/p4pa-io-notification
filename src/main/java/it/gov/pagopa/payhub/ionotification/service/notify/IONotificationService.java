@@ -1,6 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.service.notify;
 
-import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationQueueDTO;
 
 public interface IONotificationService {
 

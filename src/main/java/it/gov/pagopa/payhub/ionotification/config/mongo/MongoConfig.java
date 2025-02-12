@@ -3,6 +3,7 @@ package it.gov.pagopa.payhub.ionotification.config.mongo;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.mongo.MongoClientSettingsBuilderCustomizer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
@@ -15,8 +16,9 @@ public class MongoConfig {
 
     @Configuration
     @ConfigurationProperties(prefix = "spring.data.mongodb.config")
+    @Setter
     public static class MongoDbCustomProperties {
-        @Setter
+        @NestedConfigurationProperty
         ConnectionPoolSettings connectionPool;
 
         @Setter

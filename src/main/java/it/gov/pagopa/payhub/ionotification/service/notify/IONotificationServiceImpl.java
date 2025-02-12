@@ -11,7 +11,7 @@ import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
 import it.gov.pagopa.payhub.ionotification.repository.IOServiceRepository;
 import it.gov.pagopa.payhub.ionotification.service.UserIdObfuscatorService;
-import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationQueueDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -122,12 +122,14 @@ public class IONotificationServiceImpl implements IONotificationService {
     }
 
     private void sendNotification(NotificationQueueDTO notificationQueueDTO, IOService ioService, String token) {
-        String customSubject = subject.replace("%tipoDovutoName%", ioService.getServiceName());
+        // To be replaced once IoNotification is corrected to accept subject and markdown in input
+        String message = "DebtPositionNotification";
+        String customSubject = subject.replace("%tipoDovutoName%", ioService.getServiceName() != null ? ioService.getServiceName() : message);
         String customMarkdown = markdown
-                .replace("%amount%", notificationQueueDTO.getAmount())
-                .replace("%paymentDate%", notificationQueueDTO.getPaymentDate())
-                .replace("%iuv%", notificationQueueDTO.getIuv())
-                .replace("%paymentReason%", notificationQueueDTO.getPaymentReason());
+                .replace("%amount%", notificationQueueDTO.getAmount() != null ? notificationQueueDTO.getAmount() : message)
+                .replace("%paymentDate%", notificationQueueDTO.getPaymentDate() != null ? notificationQueueDTO.getPaymentDate() : message)
+                .replace("%iuv%", notificationQueueDTO.getIuv() != null ? notificationQueueDTO.getIuv() : message)
+                .replace("%paymentReason%", notificationQueueDTO.getPaymentReason() != null ? notificationQueueDTO.getPaymentReason() : message);
 
         NotificationDTO notificationDTO = ioNotificationMapper
                 .mapToQueue(notificationQueueDTO.getFiscalCode(), timeToLive, customSubject, customMarkdown);
