@@ -1,10 +1,8 @@
 package it.gov.pagopa.payhub.ionotification.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gov.pagopa.payhub.ionotification.dto.generated.*;
 import it.gov.pagopa.payhub.ionotification.service.IOService;
-import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationQueueDTO;
-import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
-import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -54,18 +52,22 @@ class IONotificationControllerImplTest {
     }
 
     @Test
-    void givenSendNotificationThenSuccess() throws Exception {
-        NotificationQueueDTO notificationQueueDTO = mapToSendMessageToQueue();
+    void givenSendMessageThenSuccess() throws Exception {
+        NotificationRequestDTO notificationRequestDTO = buildNotificationRequestDTO();
+        MessageResponseDTO messageResponseDTO = MessageResponseDTO.builder().notificationId("id").build();
         doNothing().when(ioService)
-                .sendMessage(notificationQueueDTO);
+                .sendMessage(notificationRequestDTO);
 
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                         post("/ionotification/message")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                                .content(objectMapper.writeValueAsString(notificationQueueDTO)))
+                                .content(objectMapper.writeValueAsString(notificationRequestDTO)))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
+
+        MessageResponseDTO resultResponse = objectMapper.readValue(result.getResponse().getContentAsString(), MessageResponseDTO.class);
+        assertEquals(messageResponseDTO, resultResponse);
     }
 
     @Test

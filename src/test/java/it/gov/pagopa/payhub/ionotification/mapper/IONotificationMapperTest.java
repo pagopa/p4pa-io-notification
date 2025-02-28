@@ -12,7 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static it.gov.pagopa.payhub.ionotification.enums.NotificationStatus.OK;
 import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.USER_ID;
-import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.mapToSendMessageToQueue;
+import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.buildNotificationRequestDTO;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
@@ -23,23 +23,23 @@ class IONotificationMapperTest {
     IONotificationMapper ioNotificationMapper;
 
     @Test
-    void whenMapToQueueThenSuccess(){
+    void whenMapThenSuccess(){
         NotificationDTO notificationDTO = ioNotificationMapper
-                .mapToQueue("FISCAL_CODE", 1L, "SUBJECT", "MARKDOWN");
+                .map("FISCAL_CODE", 1L, "SUBJECT", "MARKDOWN");
         assertNotNull(notificationDTO);
     }
 
     @Test
     void whenMapToGetProfileThenSuccess(){
         FiscalCodeDTO fiscalCodeDTO = ioNotificationMapper
-                .mapToGetProfile(mapToSendMessageToQueue());
+                .mapToGetProfile(buildNotificationRequestDTO());
         assertNotNull(fiscalCodeDTO);
     }
 
     @Test
     void whenMapToSaveNotificationThenSuccess(){
         IONotification ioNotification = ioNotificationMapper
-                .mapToSaveNotification(mapToSendMessageToQueue(), OK, USER_ID);
+                .mapToSaveNotification(buildNotificationRequestDTO(), OK, USER_ID);
         assertNotNull(ioNotification);
     }
 }

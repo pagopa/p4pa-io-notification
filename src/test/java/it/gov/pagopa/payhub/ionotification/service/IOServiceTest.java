@@ -1,11 +1,11 @@
 package it.gov.pagopa.payhub.ionotification.service;
 
+import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationRequestDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
 import it.gov.pagopa.payhub.ionotification.service.ioservice.IOManageService;
 import it.gov.pagopa.payhub.ionotification.service.ioservice.IOServiceCreationService;
 import it.gov.pagopa.payhub.ionotification.service.notify.IONotificationService;
-import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationQueueDTO;
-import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
-import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,14 +53,14 @@ class IOServiceTest {
 
     @Test
     void givenSendMessageThenSuccess(){
-        NotificationQueueDTO notificationQueueDTO = mapToSendMessageToQueue();
+        NotificationRequestDTO notificationRequestDTO = buildNotificationRequestDTO();
 
         doNothing().when(ioNotificationService)
-                .sendMessage(notificationQueueDTO);
+                .sendMessage(notificationRequestDTO);
 
-        service.sendMessage(notificationQueueDTO);
+        service.sendMessage(notificationRequestDTO);
 
-        verify(ioNotificationService, times(1)).sendMessage(notificationQueueDTO);
+        verify(ioNotificationService, times(1)).sendMessage(notificationRequestDTO);
 
     }
 
@@ -84,18 +84,6 @@ class IOServiceTest {
         verify(ioManageService, times(1)).deleteService(SERVICE_ID);
     }
 
-    @Test
-    void givenSendNotificationThenSuccess(){
-        NotificationQueueDTO notificationQueueDTO = mapToSendMessageToQueue();
-
-        doNothing().when(ioNotificationService)
-                .sendNotification(notificationQueueDTO);
-
-        service.sendNotification(notificationQueueDTO);
-
-        verify(ioNotificationService, times(1)).sendNotification(notificationQueueDTO);
-
-    }
 
     @Test
     void givenDeleteNotificationThenSuccess(){

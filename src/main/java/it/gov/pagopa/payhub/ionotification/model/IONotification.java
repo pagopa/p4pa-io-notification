@@ -20,10 +20,8 @@ public class IONotification {
     private String userId;
     private String notificationId;
     private NotificationStatus notificationStatus;
-    private Long enteId;
-    private String enteName;
-    private Long tipoDovutoId;
-    private String tipoDovutoName;
+    private Long orgId;
+    private Long debtPositionTypeOrgId;
     private LocalDateTime notificationDate;
 
 }

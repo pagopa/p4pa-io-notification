@@ -147,10 +147,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NotificationQueueDTO'
+              $ref: '#/components/schemas/NotificationRequestDTO'
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponseDTO'
         '401':
           description: Authentication failed
           content:
@@ -364,30 +368,43 @@ components:
           type: number
           x-field-extra-annotation: |-
             @JsonProperty("topic_id")
-    NotificationQueueDTO:
+    NotificationRequestDTO:
       type: object
       required:
-        - fiscalCode
-        - enteId
-        - tipoDovutoId
+        - serviceId
+        - subject
+        - markdown
+        - orgId
+        - debtPositionTypeOrgId
       properties:
+        serviceId:
+          type: string
+        orgId:
+          type: integer
+          format: int64
+        debtPositionTypeOrgId:
+          type: integer
+          format: int64
+        subject:
+          type: string
+        markdown:
+          type: string
         fiscalCode:
           type: string
-        enteId:
-          type: integer
-          format: int64
-        tipoDovutoId:
-          type: integer
-          format: int64
         operationType:
           type: string
-        paymentDate:
+        dueDate:
           type: string
         amount:
           type: string
         iuv:
           type: string
         paymentReason:
+          type: string
+    MessageResponseDTO:
+      type: object
+      properties:
+        notificationId:
           type: string
     IoNotificationErrorDTO:
       type: object
