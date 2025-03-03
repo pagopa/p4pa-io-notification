@@ -1,7 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.event.consumer;
 
 import it.gov.pagopa.payhub.ionotification.service.IOService;
-import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationQueueDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,8 +1,8 @@
 package it.gov.pagopa.payhub.ionotification.service;
 
-import it.gov.pagopa.payhub.model.generated.NotificationQueueDTO;
-import it.gov.pagopa.payhub.model.generated.ServiceDTO;
-import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationQueueDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
 
 public interface IOService {
 

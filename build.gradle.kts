@@ -1,18 +1,18 @@
 plugins {
 	java
-	id("org.springframework.boot") version "3.2.5"
-	id("io.spring.dependency-management") version "1.1.4"
+	id("org.springframework.boot") version "3.4.3"
+	id("io.spring.dependency-management") version "1.1.7"
 	jacoco
-	id("org.sonarqube") version "5.0.0.4638"
+	id("org.sonarqube") version "6.0.1.5171"
 	id("com.github.ben-manes.versions") version "0.51.0"
-	id ("org.openapi.generator") version "7.5.0"
+	id ("org.openapi.generator") version "7.10.0"
 }
 
 group = "it.gov.pagopa.payhub"
 version = "0.0.1"
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = JavaVersion.VERSION_21
 }
 
 configurations {
@@ -29,24 +29,27 @@ repositories {
 
 dependencyManagement {
 	imports {
-		mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:2024.0.0")
 	}
 }
 
-val springDocOpenApiVersion = "2.5.0"
+val springDocOpenApiVersion = "2.8.5"
 val janinoVersion = "3.1.12"
 val openApiToolsVersion = "0.2.6"
-val wiremockVersion = "3.5.4"
-val snakeYamlVersion = "2.0"
-val hibernateValidatorVersion = "8.0.1.Final"
-val micrometerVersion = "1.3.5"
-
+val wiremockVersion = "3.12.0"
+val hibernateValidatorVersion = "8.0.2.Final"
+val micrometerVersion = "1.4.3"
+val commonsIoVersion = "2.18.0"
+val bouncycastleVersion = "1.80"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("io.micrometer:micrometer-tracing-bridge-otel:$micrometerVersion")
+	implementation("io.micrometer:micrometer-registry-prometheus")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocOpenApiVersion")
 	implementation("org.codehaus.janino:janino:$janinoVersion")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
@@ -55,9 +58,7 @@ dependencies {
 	implementation("org.hibernate.validator:hibernate-validator:$hibernateValidatorVersion")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka")
-
-	// Security fixes
-	implementation("org.yaml:snakeyaml:$snakeYamlVersion")
+	implementation("org.bouncycastle:bcprov-jdk18on:$bouncycastleVersion")
 
 	//	Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -69,12 +70,23 @@ dependencies {
 
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
+	testAnnotationProcessor("org.projectlombok:lombok")
 
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
 	finalizedBy(tasks.jacocoTestReport)
+}
+
+val mockitoAgent = configurations.create("mockitoAgent")
+dependencies {
+	mockitoAgent("org.mockito:mockito-core") { isTransitive = false }
+}
+tasks {
+	test {
+		jvmArgs("-javaagent:${mockitoAgent.asPath}")
+	}
 }
 
 tasks.jacocoTestReport {
@@ -104,7 +116,16 @@ configurations {
 }
 
 tasks.compileJava {
-	dependsOn("openApiGenerate")
+	dependsOn("dependenciesBuild")
+}
+
+tasks.register("dependenciesBuild") {
+	group = "AutomaticallyGeneratedCode"
+	description = "grouping all together automatically generate code tasks"
+
+	dependsOn(
+		"openApiGenerate"
+	)
 }
 
 configure<SourceSetContainer> {
@@ -121,17 +142,17 @@ openApiGenerate {
 	generatorName.set("spring")
 	inputSpec.set("$rootDir/openapi/p4pa-io-notification.openapi.yaml")
 	outputDir.set("$projectDir/build/generated")
-	apiPackage.set("it.gov.pagopa.payhub.controller.generated")
-	modelPackage.set("it.gov.pagopa.payhub.model.generated")
+	apiPackage.set("it.gov.pagopa.payhub.ionotification.controller.generated")
+	modelPackage.set("it.gov.pagopa.payhub.ionotification.dto.generated")
 	configOptions.set(mapOf(
-			"dateLibrary" to "java8",
-			"requestMappingMode" to "api_interface",
-			"useSpringBoot3" to "true",
-			"interfaceOnly" to "true",
-			"useTags" to "true",
-			"generateConstructorWithAllArgs" to "false",
-			"generatedConstructorWithRequiredArgs" to "false",
-			"additionalModelTypeAnnotations" to "@lombok.Data @lombok.Builder @lombok.AllArgsConstructor @lombok.RequiredArgsConstructor",
-			"serializationLibrary" to "jackson"
+		"dateLibrary" to "java8",
+		"requestMappingMode" to "api_interface",
+		"useSpringBoot3" to "true",
+		"interfaceOnly" to "true",
+		"useTags" to "true",
+		"useBeanValidation" to "true",
+		"generateConstructorWithAllArgs" to "true",
+		"generatedConstructorWithRequiredArgs" to "true",
+		"additionalModelTypeAnnotations" to "@lombok.Builder"
 	))
 }

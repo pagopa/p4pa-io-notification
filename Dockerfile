@@ -1,13 +1,13 @@
-# syntax=docker/dockerfile:1.4
+# syntax=docker/dockerfile:1.4@sha256:9ba7531bd80fb0a858632727cf7a112fbfd19b17e94c4e84ced81e24ef1a0dbc
 
 #
 # 🎯 Version Management
 #
-ARG CORRETTO_VERSION="17-alpine3.19"
-ARG CORRETTO_SHA="2122cb140fa94053abce343fb854d24f4c62ba3c1ac701882dce12980396b477"
+ARG CORRETTO_VERSION="21-alpine3.21"
+ARG CORRETTO_SHA="1b53a05c5693b5452a0c41a39b1fa3b8e7d77aa37f325acc378b7928bc1d8253"
 ARG GRADLE_VERSION="8.10.2"
 ARG GRADLE_DOWNLOAD_SHA256="31c55713e40233a8303827ceb42ca48a47267a0ad4bab9177123121e71524c26"
-ARG APPINSIGHTS_VERSION="3.5.2"
+ARG APPINSIGHTS_VERSION="3.7.0"
 
 # 🌍 Timezone Configuration
 ARG TZ="Europe/Rome"
@@ -101,7 +101,7 @@ RUN mkdir -p src/main/java && \
 
 USER ${APP_USER}
 
-RUN gradle openApiGenerate dependencies --no-daemon
+RUN gradle dependenciesBuild dependencies --no-daemon
 
 #
 # 🏗️ Build Stage

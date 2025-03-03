@@ -1,8 +1,8 @@
 package it.gov.pagopa.payhub.ionotification.dto.mapper;
 
 import it.gov.pagopa.payhub.ionotification.model.IOService;
-import it.gov.pagopa.payhub.model.generated.ServiceDTO;
-import it.gov.pagopa.payhub.model.generated.ServiceRequestDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
