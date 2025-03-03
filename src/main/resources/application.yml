@@ -30,7 +30,8 @@ rest-client:
       subscriptionKey: \${IO_BACKEND_SERVICE_SUBSCRIPTION_API_KEY:}
       offset: \${IO_BACKEND_SERVICE_OFFSET:0}
       limit: \${IO_BACKEND_SERVICE_LIMIT:99}
-
+    notification:
+      ttl: \${IO_BACKEND_NOTIFICATION_TTL:3600}
 management:
   endpoints:
     jmx:
