@@ -1,6 +1,6 @@
 plugins {
 	java
-	id("org.springframework.boot") version "3.4.1"
+	id("org.springframework.boot") version "3.4.3"
 	id("io.spring.dependency-management") version "1.1.7"
 	jacoco
 	id("org.sonarqube") version "6.0.1.5171"
@@ -33,15 +33,14 @@ dependencyManagement {
 	}
 }
 
-val springDocOpenApiVersion = "2.7.0"
+val springDocOpenApiVersion = "2.8.5"
 val janinoVersion = "3.1.12"
 val openApiToolsVersion = "0.2.6"
-val wiremockVersion = "3.10.0"
+val wiremockVersion = "3.12.0"
 val hibernateValidatorVersion = "8.0.2.Final"
-val micrometerVersion = "1.4.1"
+val micrometerVersion = "1.4.3"
 val commonsIoVersion = "2.18.0"
-val bouncycastleVersion = "1.79"
-
+val bouncycastleVersion = "1.80"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
@@ -59,12 +58,7 @@ dependencies {
 	implementation("org.hibernate.validator:hibernate-validator:$hibernateValidatorVersion")
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka")
-
-	//security
 	implementation("org.bouncycastle:bcprov-jdk18on:$bouncycastleVersion")
-
-	// Security Fixes
-	implementation("commons-io:commons-io:$commonsIoVersion")
 
 	//	Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -83,6 +77,16 @@ dependencies {
 tasks.withType<Test> {
 	useJUnitPlatform()
 	finalizedBy(tasks.jacocoTestReport)
+}
+
+val mockitoAgent = configurations.create("mockitoAgent")
+dependencies {
+	mockitoAgent("org.mockito:mockito-core") { isTransitive = false }
+}
+tasks {
+	test {
+		jvmArgs("-javaagent:${mockitoAgent.asPath}")
+	}
 }
 
 tasks.jacocoTestReport {

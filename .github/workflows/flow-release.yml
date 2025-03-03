@@ -49,6 +49,8 @@ jobs:
           azure_devops_pat: ${{ secrets.AZURE_DEVOPS_TOKEN }}
           azure_template_parameters: |
             {
+              "APPS_TOP": "[]",
+              "APPS_MID": "[]",
               "APPS_EXT": "[p4pa-io-notification]",
               "POSTMAN_BRANCH": "${{ github.ref_name }}",
               "TRIGGER_MESSAGE": "p4pa-io-notification"
