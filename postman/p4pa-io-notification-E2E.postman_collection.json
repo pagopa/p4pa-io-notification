@@ -94,7 +94,10 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									""
+									"pm.collectionVariables.set(\"serviceId\", `01J1F178BDBCGWE8HEN13WMK6N`);\r",
+									"pm.collectionVariables.set(\"fiscalCode\", `AAAAAA69A45A602A`);\r",
+									"pm.collectionVariables.set(\"orgId\", `56`);\r",
+									"pm.collectionVariables.set(\"debtPositionTypeOrgId\", `318`);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -106,7 +109,16 @@
 								"exec": [
 									"pm.test(\"IONotification - sendMessage - Responses with 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
-									"});"
+									"});\r",
+									"\r",
+									"/*pm.test(\"IONotification - sendMessage - Verify response body\", function () {\r",
+									"    let jsonResponse = pm.response.json();\r",
+									"\r",
+									"    pm.expect(jsonResponse).have.property(\"notificationId\")\r",
+									"});\r",
+									"\r",
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"notificationId\", jsonResponse.workflowId);*/"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -118,7 +130,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"fiscalCode\": \"{{fiscalCode}}\",\r\n  \"orgId\": {{enteId}},\r\n  \"debtPositionTypeOrgId\": {{tipoDovutoId}},\r\n  \"subject\": \"Pay your debts\",\r\n  \"markdown\": \"La informiamo che è stata generata una nuova posizione debitoria a suo carico.  Causale %paymentReason%. La invitiamo a effettuare il pagamento con codice identificativo unico %iuv% per un totale di %amount% euro entro la data di scadenza %paymentDate% per evitare eventuali sanzioni o interessi di mora.\",\r\n  \"operationType\": \"CREATE_DP\",\r\n  \"dueDate\": \"28/02/2025\",\r\n  \"amount\": \"100\",\r\n  \"iuv\": \"iuv\",\r\n  \"paymentReason\": \"payment\"\r\n}",
+							"raw": "{\r\n  \"serviceId\": \"{{serviceId}}\",\r\n  \"fiscalCode\": \"{{fiscalCode}}\",\r\n  \"orgId\": {{orgId}},\r\n  \"debtPositionTypeOrgId\": {{debtPositionTypeOrgId}},\r\n  \"subject\": \"Pay your debts\",\r\n  \"markdown\": \"La informiamo che è stata generata una nuova posizione debitoria a suo carico.  Causale %causaleVersamento%. La invitiamo a effettuare il pagamento con codice identificativo unico %codIUV% per un totale di %importoDovuto% euro entro la data di scadenza %dataEsecuzionePagamento% per evitare eventuali sanzioni o interessi di mora.\",\r\n  \"operationType\": \"CREATE_DP\",\r\n  \"dueDate\": \"28/02/2025\",\r\n  \"amount\": \"100\",\r\n  \"iuv\": \"test_iuv\",\r\n  \"paymentReason\": \"test_paymentReason\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -133,63 +145,6 @@
 							"path": [
 								"ionotification",
 								"message"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "DeleteNotifica",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"\r",
-									"pm.test(\"IONotification - DeleteNotification - Happy case: Delete Service From IO - Responses with 200\", function () {\r",
-									"    pm.response.to.have.status(200);\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									"setTimeout(() =>{}, 10000);\r",
-									"\r",
-									"pm.collectionVariables.set(\"userId\", `IBNlZcXUQlEvAx3i3tgEKS5NaEhpz3GKJ7b6EM61a6Q=`);"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{ioNotificationBaseUrl}}/ionotification/message/{{userId}}/{{enteId}}/{{tipoDovutoId}}",
-							"host": [
-								"{{ioNotificationBaseUrl}}"
-							],
-							"path": [
-								"ionotification",
-								"message",
-								"{{userId}}",
-								"{{enteId}}",
-								"{{tipoDovutoId}}"
 							]
 						}
 					},
@@ -332,18 +287,32 @@
 	],
 	"variable": [
 		{
-			"key": "ente_test_ko",
-			"value": "0",
-			"type": "string"
+			"key": "fiscalCode",
+			"value": ""
 		},
 		{
-			"key": "tipoDovuto_test_ko",
-			"value": "0",
-			"type": "string"
+			"key": "serviceId",
+			"value": ""
 		},
 		{
-			"key": "serviceId_fake",
-			"value": "SERVICEIDFAKE123"
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "accessToken",
+			"value": ""
+		},
+		{
+			"key": "orgId",
+			"value": ""
+		},
+		{
+			"key": "debtPositionTypeOrgId",
+			"value": ""
+		},
+		{
+			"key": "notificationId",
+			"value": ""
 		},
 		{
 			"key": "randomNumber",
@@ -362,32 +331,11 @@
 			"value": ""
 		},
 		{
-			"key": "fiscalCode_ente",
-			"value": "99999999982",
-			"type": "string"
-		},
-		{
 			"key": "enteId",
 			"value": ""
 		},
 		{
 			"key": "tipoDovutoId",
-			"value": ""
-		},
-		{
-			"key": "fiscalCode",
-			"value": ""
-		},
-		{
-			"key": "serviceId",
-			"value": ""
-		},
-		{
-			"key": "userId",
-			"value": ""
-		},
-		{
-			"key": "accessToken",
 			"value": ""
 		}
 	]
