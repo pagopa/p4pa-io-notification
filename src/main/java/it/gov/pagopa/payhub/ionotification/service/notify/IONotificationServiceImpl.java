@@ -50,14 +50,13 @@ public class IONotificationServiceImpl implements IONotificationService {
             String notificationId = sendNotification(notificationRequestDTO, token);
             return MessageResponseDTO.builder().notificationId(notificationId).build();
         }
-        // return null o error???
         return null;
     }
 
     @Override
-    public void deleteNotification(String userId, Long enteId, Long tipoDovutoId) {
+    public void deleteNotification(String userId, Long orgId, Long debtPositionTypeOrgId) {
         Optional<IONotification> ioNotification = ioNotificationRepository
-                .findByUserIdAndEnteIdAndTipoDovutoId(userId, enteId, tipoDovutoId);
+                .findByUserIdAndOrgIdAndDebtPositionTypeOrgId(userId, orgId, debtPositionTypeOrgId);
 
         if (ioNotification.isPresent()) {
             log.info("Deleting notification {}", ioNotification.get().getNotificationId());

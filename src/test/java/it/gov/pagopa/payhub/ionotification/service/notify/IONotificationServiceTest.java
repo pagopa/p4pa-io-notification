@@ -112,7 +112,7 @@ class IONotificationServiceTest {
 
     @Test
     void givenDeleteNotificationThenSuccess() {
-        when(ioNotificationRepositoryMock.findByUserIdAndEnteIdAndTipoDovutoId(USER_ID, ORG_ID, DEBT_POSITION_TYPE_ORG_ID))
+        when(ioNotificationRepositoryMock.findByUserIdAndOrgIdAndDebtPositionTypeOrgId(USER_ID, ORG_ID, DEBT_POSITION_TYPE_ORG_ID))
                 .thenReturn(Optional.of(ioNotification));
 
         service.deleteNotification(USER_ID, ORG_ID, DEBT_POSITION_TYPE_ORG_ID);
@@ -123,13 +123,13 @@ class IONotificationServiceTest {
 
     @Test
     void givenDeleteNotificationWhenNotificationDoesNotExistThenDoNothing() {
-        when(ioNotificationRepositoryMock.findByUserIdAndEnteIdAndTipoDovutoId(USER_ID, ORG_ID, DEBT_POSITION_TYPE_ORG_ID))
+        when(ioNotificationRepositoryMock.findByUserIdAndOrgIdAndDebtPositionTypeOrgId(USER_ID, ORG_ID, DEBT_POSITION_TYPE_ORG_ID))
                 .thenReturn(Optional.empty());
 
         service.deleteNotification(USER_ID, ORG_ID, DEBT_POSITION_TYPE_ORG_ID);
 
         verify(ioNotificationRepositoryMock, times(0)).delete(any(IONotification.class));
-        verify(ioNotificationRepositoryMock, times(1)).findByUserIdAndEnteIdAndTipoDovutoId(USER_ID, ORG_ID, DEBT_POSITION_TYPE_ORG_ID);
+        verify(ioNotificationRepositoryMock, times(1)).findByUserIdAndOrgIdAndDebtPositionTypeOrgId(USER_ID, ORG_ID, DEBT_POSITION_TYPE_ORG_ID);
     }
 
     private void sendNotification(NotificationStatus status) {

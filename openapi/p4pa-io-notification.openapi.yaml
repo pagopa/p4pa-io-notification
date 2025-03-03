@@ -191,7 +191,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IoNotificationErrorDTO'
-  /message/{userId}/{enteId}/{tipoDovutoId}:
+  /message/{userId}/{orgId}/{debtPositionTypeOrgId}:
     delete:
       tags:
         - ioNotification
@@ -202,13 +202,13 @@ paths:
           required: true
           schema:
             type: string
-        - name: enteId
+        - name: orgId
           in: path
           required: true
           schema:
             type: integer
             format: int64
-        - name: tipoDovutoId
+        - name: debtPositionTypeOrgId
           in: path
           required: true
           schema:
