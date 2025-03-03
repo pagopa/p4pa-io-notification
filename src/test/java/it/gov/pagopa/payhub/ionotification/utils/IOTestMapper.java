@@ -198,6 +198,7 @@ public class IOTestMapper {
                 .iuv("IUV")
                 .dueDate("DATE")
                 .paymentReason("REASON")
+                .operationType("OPERATION_TYPE")
                 .build();
     }
 
