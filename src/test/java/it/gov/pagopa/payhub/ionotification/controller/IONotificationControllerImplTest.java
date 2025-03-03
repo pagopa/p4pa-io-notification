@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.payhub.ionotification.dto.generated.*;
 import it.gov.pagopa.payhub.ionotification.service.IOService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -55,8 +56,9 @@ class IONotificationControllerImplTest {
     void givenSendMessageThenSuccess() throws Exception {
         NotificationRequestDTO notificationRequestDTO = buildNotificationRequestDTO();
         MessageResponseDTO messageResponseDTO = MessageResponseDTO.builder().notificationId("id").build();
-        doNothing().when(ioService)
-                .sendMessage(notificationRequestDTO);
+
+        Mockito.when(ioService.sendMessage(notificationRequestDTO))
+                .thenReturn(messageResponseDTO);
 
         MvcResult result = mockMvc.perform(
                         post("/ionotification/message")
