@@ -24,8 +24,8 @@ public class IOTestMapper {
     public static final String VALUE = "VALUE";
     public static final String REASON = "REASON";
     public static final String FISCAL_CODE = "FISCAL_CODE";
-    public static final String MARKDOWN = "This is a markdow";
-    public static final String SUBJECT = "Test Subject %tipoDovutoName%";
+    public static final String MARKDOWN = "This is a markdown %causaleVersamento%";
+    public static final String SUBJECT = "Test Subject";
     public static final String SECONDARY_KEY = "SECONDARY_KEY";
     public static final String PRIMARY_KEY = "PRIMARY_KEY";
     public static final String DESCRIPTION = "DESCRIPTION";
@@ -190,9 +190,9 @@ public class IOTestMapper {
         return NotificationRequestDTO.builder()
                 .orgId(ORG_ID)
                 .debtPositionTypeOrgId(DEBT_POSITION_TYPE_ORG_ID)
-                .serviceId("SERVICE_ID")
-                .subject("SUBJECT")
-                .markdown("MARKDOWN")
+                .serviceId(SERVICE_ID)
+                .subject(SUBJECT)
+                .markdown(MARKDOWN)
                 .fiscalCode(FISCAL_CODE)
                 .amount("AMOUNT")
                 .iuv("IUV")

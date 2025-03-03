@@ -1,5 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.service;
 
+import it.gov.pagopa.payhub.ionotification.dto.generated.MessageResponseDTO;
 import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationRequestDTO;
 import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
 import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
@@ -55,12 +57,13 @@ class IOServiceTest {
     void givenSendMessageThenSuccess(){
         NotificationRequestDTO notificationRequestDTO = buildNotificationRequestDTO();
 
-        doNothing().when(ioNotificationService)
-                .sendMessage(notificationRequestDTO);
+        when(ioNotificationService.sendMessage(notificationRequestDTO))
+                .thenReturn(buildMessageResponseDTO());
 
-        service.sendMessage(notificationRequestDTO);
+        MessageResponseDTO messageResponseDTO = service.sendMessage(notificationRequestDTO);
 
         verify(ioNotificationService, times(1)).sendMessage(notificationRequestDTO);
+        assertEquals("notificationId", messageResponseDTO.getNotificationId());
 
     }
 
@@ -92,6 +95,10 @@ class IOServiceTest {
         service.deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
 
         verify(ioNotificationService, times(1)).deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+    }
+
+    private static MessageResponseDTO buildMessageResponseDTO() {
+        return MessageResponseDTO.builder().notificationId("notificationId").build();
     }
 
 }

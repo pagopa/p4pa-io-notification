@@ -93,12 +93,11 @@ public class IONotificationServiceImpl implements IONotificationService {
     }
 
     private String sendNotification(NotificationRequestDTO notificationRequestDTO, String token) {
-        // Placeholders in italiano???
         Map<String, String> placeholders = Map.of(
-                "%amount%", notificationRequestDTO.getAmount(),
-                "%dueDate%", notificationRequestDTO.getDueDate(),
-                "%iuv%", notificationRequestDTO.getIuv(),
-                "%paymentReason%", notificationRequestDTO.getPaymentReason()
+                "%importoDovuto%", notificationRequestDTO.getAmount(),
+                "%dataEsecuzionePagamento%", notificationRequestDTO.getDueDate(),
+                "%codIUV%", notificationRequestDTO.getIuv(),
+                "%causaleVersamento%", notificationRequestDTO.getPaymentReason()
         );
 
         String customMarkdown = replacePlaceholders(notificationRequestDTO.getMarkdown(), placeholders);

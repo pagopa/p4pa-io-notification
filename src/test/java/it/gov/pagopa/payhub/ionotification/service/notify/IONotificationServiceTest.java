@@ -73,7 +73,8 @@ class IONotificationServiceTest {
         when(connectorMock.getProfile(fiscalCodeDTO, keysDTO.getPrimaryKey()))
                 .thenReturn(getUserProfileResponse());
 
-        when(ioNotificationMapperMock.map(FISCAL_CODE, TIME_TO_LIVE, "Test Subject SERVICE_NAME", MARKDOWN)).thenReturn(sendNotificationRequest());
+        when(ioNotificationMapperMock.map(FISCAL_CODE, TIME_TO_LIVE, SUBJECT, "This is a markdown REASON"))
+                .thenReturn(sendNotificationRequest());
 
         when(connectorMock.sendNotification(sendNotificationRequest(), keysDTO.getPrimaryKey()))
                 .thenReturn(new NotificationResource("ID"));
