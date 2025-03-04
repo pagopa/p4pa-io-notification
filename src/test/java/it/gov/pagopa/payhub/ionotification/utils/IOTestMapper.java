@@ -1,9 +1,10 @@
 package it.gov.pagopa.payhub.ionotification.utils;
 
+import it.gov.pagopa.payhub.ionotification.dto.NotificationDTO;
 import it.gov.pagopa.payhub.ionotification.dto.*;
+import it.gov.pagopa.payhub.ionotification.dto.generated.*;
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
-import it.gov.pagopa.payhub.ionotification.dto.generated.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,16 +16,17 @@ import static it.gov.pagopa.payhub.ionotification.enums.ServiceStatus.CREATED;
 
 public class IOTestMapper {
 
-    public static final Long TIPO_DOVUTO_ID = 456L;
-    public static final Long ENTE_ID = 123L;
+    public static final Long DEBT_POSITION_TYPE_ORG_ID = 456L;
+    public static final Long ORG_ID = 123L;
     public static final String SERVICE_NAME = "SERVICE_NAME";
     public static final String SERVICE_ID = "SERVICE_ID";
+    public static final String API_KEY = "API_KEY";
     public static final String DATE = "DATE";
     public static final String VALUE = "VALUE";
     public static final String REASON = "REASON";
     public static final String FISCAL_CODE = "FISCAL_CODE";
-    public static final String MARKDOWN = "This is a markdow";
-    public static final String SUBJECT = "Test Subject %tipoDovutoName%";
+    public static final String MARKDOWN = "This is a markdown %causaleVersamento%";
+    public static final String SUBJECT = "Test Subject";
     public static final String SECONDARY_KEY = "SECONDARY_KEY";
     public static final String PRIMARY_KEY = "PRIMARY_KEY";
     public static final String DESCRIPTION = "DESCRIPTION";
@@ -41,8 +43,8 @@ public class IOTestMapper {
 
     public static IOService mapIoService(ServiceRequestDTO serviceRequestDTO) {
         return IOService.builder()
-                .enteId(ENTE_ID)
-                .tipoDovutoId(TIPO_DOVUTO_ID)
+                .enteId(ORG_ID)
+                .tipoDovutoId(DEBT_POSITION_TYPE_ORG_ID)
                 .serviceName(serviceRequestDTO.getName())
                 .serviceDescription(serviceRequestDTO.getDescription())
                 .organizationName(serviceRequestDTO.getOrganization().getName())
@@ -185,15 +187,20 @@ public class IOTestMapper {
                 .build();
     }
 
-    public static NotificationQueueDTO mapToSendMessageToQueue(){
-        return NotificationQueueDTO.builder()
-                .enteId(ENTE_ID)
-                .tipoDovutoId(TIPO_DOVUTO_ID)
+    public static NotificationRequestDTO buildNotificationRequestDTO(){
+        return NotificationRequestDTO.builder()
+                .orgId(ORG_ID)
+                .debtPositionTypeOrgId(DEBT_POSITION_TYPE_ORG_ID)
+                .serviceId(SERVICE_ID)
+                .subject(SUBJECT)
+                .markdown(MARKDOWN)
                 .fiscalCode(FISCAL_CODE)
                 .amount("AMOUNT")
                 .iuv("IUV")
-                .paymentDate("DATE")
+                .dueDate("DATE")
                 .paymentReason("REASON")
+                .apiKey(API_KEY)
+                .operationType(NotificationRequestDTO.OperationTypeEnum.CREATE_DP)
                 .build();
     }
 
@@ -209,8 +216,8 @@ public class IOTestMapper {
     public static IONotification mapIONotification(){
         return IONotification.builder()
                 .userId(USER_ID)
-                .tipoDovutoId(TIPO_DOVUTO_ID)
-                .enteId(ENTE_ID)
+                .debtPositionTypeOrgId(DEBT_POSITION_TYPE_ORG_ID)
+                .orgId(ORG_ID)
                 .notificationStatus(OK)
                 .build();
     }

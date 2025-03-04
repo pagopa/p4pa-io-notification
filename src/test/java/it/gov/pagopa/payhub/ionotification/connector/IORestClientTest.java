@@ -119,7 +119,7 @@ class IORestClientTest {
                 )
         );
 
-        KeysDTO keys = ioRestConnector.getServiceKeys("SERVICE_ID");
+        KeysDTO keys = ioRestConnector.getServiceKeys("SERVICE_ID", "API_KEY");
 
         assertNotNull(keys);
     }
@@ -136,7 +136,7 @@ class IORestClientTest {
         );
 
         assertThrows(RetrieveServicesInvocationException.class, () ->
-                ioRestConnector.getServiceKeys("SERVICE_ID"));
+                ioRestConnector.getServiceKeys("SERVICE_ID", "API_KEY"));
     }
 
     @Test

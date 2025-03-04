@@ -36,9 +36,9 @@ public class IORestConnectorImpl implements IORestConnector {
     }
 
     @Override
-    public KeysDTO getServiceKeys(String serviceId) {
+    public KeysDTO getServiceKeys(String serviceId, String apiKey) {
         try {
-            return ioFeignRestClient.getServiceKeys(serviceId, subscriptionKey);
+            return ioFeignRestClient.getServiceKeys(serviceId, apiKey);
         } catch (FeignException e) {
             log.error("An error occurred while retrieving the token: {}", e.getMessage());
             throw new RetrieveServicesInvocationException("It was not possible to retrieve the token from IO");

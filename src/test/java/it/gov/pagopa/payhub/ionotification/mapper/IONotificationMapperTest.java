@@ -2,6 +2,7 @@ package it.gov.pagopa.payhub.ionotification.mapper;
 
 import it.gov.pagopa.payhub.ionotification.dto.FiscalCodeDTO;
 import it.gov.pagopa.payhub.ionotification.dto.NotificationDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationRequestDTO;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IONotificationMapper;
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static it.gov.pagopa.payhub.ionotification.enums.NotificationStatus.OK;
 import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.USER_ID;
-import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.mapToSendMessageToQueue;
+import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.buildNotificationRequestDTO;
+import static it.gov.pagopa.payhub.ionotification.utils.TestUtils.checkNotNullFields;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
@@ -23,23 +25,32 @@ class IONotificationMapperTest {
     IONotificationMapper ioNotificationMapper;
 
     @Test
-    void whenMapToQueueThenSuccess(){
+    void whenMapThenSuccess(){
         NotificationDTO notificationDTO = ioNotificationMapper
-                .mapToQueue("FISCAL_CODE", 1L, "SUBJECT", "MARKDOWN");
+                .map("FISCAL_CODE", 1L, "SUBJECT", "MARKDOWN");
+
         assertNotNull(notificationDTO);
+        checkNotNullFields(notificationDTO);
     }
 
     @Test
     void whenMapToGetProfileThenSuccess(){
         FiscalCodeDTO fiscalCodeDTO = ioNotificationMapper
-                .mapToGetProfile(mapToSendMessageToQueue());
+                .mapToGetProfile(buildNotificationRequestDTO());
+
         assertNotNull(fiscalCodeDTO);
+        checkNotNullFields(fiscalCodeDTO);
     }
 
     @Test
     void whenMapToSaveNotificationThenSuccess(){
+        NotificationRequestDTO notificationRequestDTO = buildNotificationRequestDTO();
+
         IONotification ioNotification = ioNotificationMapper
-                .mapToSaveNotification(mapToSendMessageToQueue(), OK, USER_ID);
+                .mapToSaveNotification(notificationRequestDTO, OK, USER_ID);
+
         assertNotNull(ioNotification);
+        // the notificationId is set only when notification was sent successfully
+        checkNotNullFields(ioNotification, "id", "notificationId");
     }
 }
