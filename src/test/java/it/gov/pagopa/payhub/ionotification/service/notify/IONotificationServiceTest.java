@@ -33,6 +33,7 @@ import static org.mockito.Mockito.*;
 class IONotificationServiceTest {
 
     public static final long TIME_TO_LIVE = 3600L;
+    public static final String API_KEY = "API_KEY";
     private IONotificationService service;
 
     @Mock
@@ -146,7 +147,7 @@ class IONotificationServiceTest {
         ioService.setServiceId(SERVICE_ID);
 
 
-        when(connectorMock.getServiceKeys(SERVICE_ID)).thenReturn(keysDTO);
+        when(connectorMock.getServiceKeys(SERVICE_ID, API_KEY)).thenReturn(keysDTO);
 
         when(ioNotificationMapperMock.mapToGetProfile(notificationRequestDTO)).thenReturn(fiscalCodeDTO);
     }

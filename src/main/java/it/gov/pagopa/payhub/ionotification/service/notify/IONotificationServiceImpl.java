@@ -45,7 +45,7 @@ public class IONotificationServiceImpl implements IONotificationService {
     @Override
     public MessageResponseDTO sendMessage(NotificationRequestDTO notificationRequestDTO) {
         log.info("Sending message to notify of type {}", notificationRequestDTO.getOperationType());
-        String token = retrieveTokenIO(notificationRequestDTO.getServiceId());
+        String token = retrieveTokenIO(notificationRequestDTO.getServiceId(), notificationRequestDTO.getApiKey());
         if (isSenderAllowed(notificationRequestDTO, token)) {
             String notificationId = sendNotification(notificationRequestDTO, token);
             return MessageResponseDTO.builder().notificationId(notificationId).build();
@@ -65,9 +65,9 @@ public class IONotificationServiceImpl implements IONotificationService {
 
     }
 
-    private String retrieveTokenIO(String serviceId) {
+    private String retrieveTokenIO(String serviceId, String apiKey) {
         log.info("Retrieve token from IO for service {}", serviceId);
-        KeysDTO keys = connector.getServiceKeys(serviceId);
+        KeysDTO keys = connector.getServiceKeys(serviceId, apiKey);
         return keys.getPrimaryKey();
     }
 

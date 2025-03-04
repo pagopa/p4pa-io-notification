@@ -379,6 +379,8 @@ components:
       properties:
         serviceId:
           type: string
+        apiKey:
+          type: string
         orgId:
           type: integer
           format: int64
