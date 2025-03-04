@@ -37,7 +37,7 @@ public class IONotificationMapper {
                 .notificationStatus(status)
                 .debtPositionTypeOrgId(notificationRequestDTO.getDebtPositionTypeOrgId())
                 .orgId(notificationRequestDTO.getOrgId())
-                .operationType(notificationRequestDTO.getOperationType())
+                .operationType(notificationRequestDTO.getOperationType().getValue())
                 .build();
     }
 }

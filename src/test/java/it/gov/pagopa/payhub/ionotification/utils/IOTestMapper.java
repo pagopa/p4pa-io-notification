@@ -198,7 +198,7 @@ public class IOTestMapper {
                 .iuv("IUV")
                 .dueDate("DATE")
                 .paymentReason("REASON")
-                .operationType("OPERATION_TYPE")
+                .operationType(NotificationRequestDTO.OperationTypeEnum.CREATE_DP)
                 .build();
     }
 

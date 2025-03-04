@@ -393,6 +393,10 @@ components:
           type: string
         operationType:
           type: string
+          enum:
+            - CREATE_DP
+            - UPDATE_DP
+            - DELETE_DP
         dueDate:
           type: string
         amount:
