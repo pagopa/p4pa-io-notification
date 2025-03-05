@@ -25,4 +25,7 @@ public class NotificationDTO {
     private String fiscalCode;
 
     @NotNull private MessageContent content;
+
+    @JsonProperty("payment_data")
+    private PaymentData paymentData;
 }

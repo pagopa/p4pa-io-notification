@@ -1,8 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.dto.mapper;
 
-import it.gov.pagopa.payhub.ionotification.dto.FiscalCodeDTO;
-import it.gov.pagopa.payhub.ionotification.dto.MessageContent;
-import it.gov.pagopa.payhub.ionotification.dto.NotificationDTO;
+import it.gov.pagopa.payhub.ionotification.dto.*;
 import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationRequestDTO;
 import it.gov.pagopa.payhub.ionotification.enums.NotificationStatus;
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
@@ -12,15 +10,25 @@ import java.time.LocalDateTime;
 
 @Service
 public class IONotificationMapper {
-    public NotificationDTO map(String fiscalCode, Long timeToLive, String subject, String markdown){
+    public NotificationDTO map(String fiscalCode, Long timeToLive, String subject, String markdown, String nav, Integer amount){
         MessageContent messageContent = MessageContent.builder()
                 .markdown(markdown)
                 .subject(subject)
+                .build();
+        Payee payee = Payee.builder()
+                .fiscalCode(fiscalCode)
+                .build();
+        PaymentData paymentData = PaymentData.builder()
+                .payee(payee)
+                .noticeNumber(nav)
+                .invalidAfterDueDate(false)
+                .amount(amount)
                 .build();
         return NotificationDTO.builder()
                 .timeToLive(timeToLive)
                 .content(messageContent)
                 .fiscalCode(fiscalCode)
+                .paymentData(paymentData)
                 .build();
     }
 
