@@ -387,6 +387,8 @@ components:
         debtPositionTypeOrgId:
           type: integer
           format: int64
+        nav:
+          type: string
         subject:
           type: string
         markdown:
@@ -402,7 +404,7 @@ components:
         dueDate:
           type: string
         amount:
-          type: string
+          type: integer
         iuv:
           type: string
         paymentReason:

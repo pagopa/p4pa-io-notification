@@ -93,7 +93,7 @@ public class IONotificationServiceImpl implements IONotificationService {
 
     private String sendNotification(NotificationRequestDTO notificationRequestDTO, String token) {
         Map<String, String> placeholders = Map.of(
-                "%importoDovuto%", notificationRequestDTO.getAmount(),
+                "%importoDovuto%", String.valueOf(notificationRequestDTO.getAmount()),
                 "%dataEsecuzionePagamento%", notificationRequestDTO.getDueDate(),
                 "%codIUV%", notificationRequestDTO.getIuv(),
                 "%causaleVersamento%", notificationRequestDTO.getPaymentReason()
@@ -102,7 +102,7 @@ public class IONotificationServiceImpl implements IONotificationService {
         String customMarkdown = replacePlaceholders(notificationRequestDTO.getMarkdown(), placeholders);
 
         NotificationDTO notificationDTO = ioNotificationMapper
-                .map(notificationRequestDTO.getFiscalCode(), timeToLive, notificationRequestDTO.getSubject(), customMarkdown);
+                .map(notificationRequestDTO.getFiscalCode(), timeToLive, notificationRequestDTO.getSubject(), customMarkdown, notificationRequestDTO.getNav(), notificationRequestDTO.getAmount());
 
         log.info("Sending notification to IO");
         NotificationResource notificationResource = connector.sendNotification(notificationDTO, token);
