@@ -405,6 +405,7 @@ components:
           type: string
         amount:
           type: integer
+          format: int64
         iuv:
           type: string
         paymentReason:

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Service
 public class IONotificationMapper {
-    public NotificationDTO map(String fiscalCode, Long timeToLive, String subject, String markdown, String nav, Integer amount){
+    public NotificationDTO map(String fiscalCode, Long timeToLive, String subject, String markdown, String nav, Long amount){
         MessageContent messageContent = MessageContent.builder()
                 .markdown(markdown)
                 .subject(subject)

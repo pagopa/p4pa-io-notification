@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static it.gov.pagopa.payhub.ionotification.enums.NotificationStatus.KO_SENDER_NOT_ALLOWED;
 import static it.gov.pagopa.payhub.ionotification.enums.NotificationStatus.OK;
+import static it.gov.pagopa.payhub.ionotification.utils.Utilities.centsAmountToEuroString;
 
 @Service
 @Slf4j
@@ -93,7 +94,7 @@ public class IONotificationServiceImpl implements IONotificationService {
 
     private String sendNotification(NotificationRequestDTO notificationRequestDTO, String token) {
         Map<String, String> placeholders = Map.of(
-                "%importoDovuto%", String.valueOf(notificationRequestDTO.getAmount()),
+                "%importoDovuto%", centsAmountToEuroString(notificationRequestDTO.getAmount()),
                 "%dataEsecuzionePagamento%", notificationRequestDTO.getDueDate(),
                 "%codIUV%", notificationRequestDTO.getIuv(),
                 "%causaleVersamento%", notificationRequestDTO.getPaymentReason()

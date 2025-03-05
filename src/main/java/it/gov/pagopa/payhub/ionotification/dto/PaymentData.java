@@ -13,7 +13,7 @@ public class PaymentData {
 
     @JsonProperty("amount")
     @NotNull
-    private Integer amount;
+    private Long amount;
 
     @JsonProperty("notice_number")
     @NotNull

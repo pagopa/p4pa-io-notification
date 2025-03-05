@@ -195,7 +195,7 @@ public class IOTestMapper {
                 .subject(SUBJECT)
                 .markdown(MARKDOWN)
                 .fiscalCode(FISCAL_CODE)
-                .amount(1)
+                .amount(1L)
                 .nav("NAV")
                 .iuv("IUV")
                 .dueDate("DATE")

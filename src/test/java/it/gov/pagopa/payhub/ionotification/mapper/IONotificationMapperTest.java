@@ -27,7 +27,7 @@ class IONotificationMapperTest {
     @Test
     void whenMapThenSuccess(){
         NotificationDTO notificationDTO = ioNotificationMapper
-                .map("FISCAL_CODE", 1L, "SUBJECT", "MARKDOWN", "NAV", 1);
+                .map("FISCAL_CODE", 1L, "SUBJECT", "MARKDOWN", "NAV", 1L);
 
         assertNotNull(notificationDTO);
         checkNotNullFields(notificationDTO);
