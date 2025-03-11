@@ -25,8 +25,8 @@ public class IOServiceImpl implements IOService {
     }
 
     @Override
-    public MessageResponseDTO sendMessage(NotificationRequestDTO notificationRequestDTO) {
-        return ioNotificationService.sendMessage(notificationRequestDTO);
+    public MessageResponseDTO sendMessage(String accessToken, NotificationRequestDTO notificationRequestDTO) {
+        return ioNotificationService.sendMessage(accessToken, notificationRequestDTO);
     }
 
     @Override

@@ -23,7 +23,15 @@ spring:
           maxConnectionIdleTimeMS: \${MONGODB_CONNECTIONPOOL_MAX_CONNECTION_IDLE_MS:120000}
           maxConnecting: \${MONGODB_CONNECTIONPOOL_MAX_CONNECTING:2}
 
-rest-client:
+rest:
+  default-timeout:
+    connect-millis: "\${DEFAULT_REST_CONNECT_TIMEOUT_MILLIS:60000}"
+    read-millis: "\${DEFAULT_REST_READ_TIMEOUT_MILLIS:60000}"
+  organization:
+    base-url: "\${ORGANIZATION_BASE_URL:http://localhost:8081}"
+    max-attempts: "\${ORGANIZATION_MAX_ATTEMPTS:3}" # It's counting also the first attempt
+    wait-time-millis: "\${ORGANIZATION_WAIT_TIME_MILLIS:500}"
+    print-body-when-error: "\${ORGANIZATION_PRINT_BODY_WHEN_ERROR:true}"
   backend-io-manage:
     service:
       base-url: \${IO_MANAGE_BACKEND_SERVICE_BASE_URL:}

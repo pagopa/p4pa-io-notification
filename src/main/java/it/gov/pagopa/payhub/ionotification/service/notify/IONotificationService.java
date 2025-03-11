@@ -5,6 +5,6 @@ import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationRequestDTO;
 
 public interface IONotificationService {
 
-    MessageResponseDTO sendMessage(NotificationRequestDTO notificationRequestDTO);
+    MessageResponseDTO sendMessage(String accessToken, NotificationRequestDTO notificationRequestDTO);
     void deleteNotification(String userId, Long enteId, Long tipoDovutoId);
 }

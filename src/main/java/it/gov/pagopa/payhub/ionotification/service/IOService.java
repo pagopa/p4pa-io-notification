@@ -6,7 +6,7 @@ public interface IOService {
 
     void createService(Long enteId, Long tipoDovutoId, ServiceRequestDTO serviceRequestDTO);
 
-    MessageResponseDTO sendMessage(NotificationRequestDTO notificationRequestDTO);
+    MessageResponseDTO sendMessage(String accessToken, NotificationRequestDTO notificationRequestDTO);
 
     ServiceDTO getService(Long enteId, Long tipoDovutoId);
 

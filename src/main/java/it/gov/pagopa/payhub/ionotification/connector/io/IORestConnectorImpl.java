@@ -1,4 +1,4 @@
-package it.gov.pagopa.payhub.ionotification.connector;
+package it.gov.pagopa.payhub.ionotification.connector.io;
 
 import feign.FeignException;
 import it.gov.pagopa.payhub.ionotification.dto.*;
@@ -16,7 +16,7 @@ public class IORestConnectorImpl implements IORestConnector {
     private final IOFeignRestClient ioFeignRestClient;
 
     public IORestConnectorImpl(
-            @Value("${rest-client.backend-io-manage.service.subscriptionKey}") String subscriptionKey,
+            @Value("${rest.backend-io-manage.service.subscriptionKey}") String subscriptionKey,
             IOFeignRestClient ioFeignRestClient) {
         this.subscriptionKey = subscriptionKey;
         this.ioFeignRestClient = ioFeignRestClient;

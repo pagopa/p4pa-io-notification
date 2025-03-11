@@ -1,6 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.service.ioservice;
 
-import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
+import it.gov.pagopa.payhub.ionotification.connector.io.IORestConnector;
 import it.gov.pagopa.payhub.ionotification.dto.PaginationDTO;
 import it.gov.pagopa.payhub.ionotification.dto.ServicePaginatedResponseDTO;
 import it.gov.pagopa.payhub.ionotification.dto.ServicesListDTO;
@@ -23,8 +23,8 @@ public class IOServiceSearchServiceImpl implements IOServiceSearchService {
     private final int limit;
 
     public IOServiceSearchServiceImpl(IORestConnector connector,
-                                      @Value("${rest-client.backend-io-manage.service.offset}") int offset,
-                                      @Value("${rest-client.backend-io-manage.service.limit}") int limit) {
+                                      @Value("${rest.backend-io-manage.service.offset}") int offset,
+                                      @Value("${rest.backend-io-manage.service.limit}") int limit) {
         this.connector = connector;
         this.offset = offset;
         this.limit = limit;

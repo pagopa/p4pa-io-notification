@@ -20,7 +20,6 @@ public class IOTestMapper {
     public static final Long ORG_ID = 123L;
     public static final String SERVICE_NAME = "SERVICE_NAME";
     public static final String SERVICE_ID = "SERVICE_ID";
-    public static final String API_KEY = "API_KEY";
     public static final String DATE = "DATE";
     public static final String VALUE = "VALUE";
     public static final String REASON = "REASON";
@@ -197,10 +196,6 @@ public class IOTestMapper {
                 .fiscalCode(FISCAL_CODE)
                 .amount(1L)
                 .nav("NAV")
-                .iuv("IUV")
-                .dueDate("DATE")
-                .paymentReason("REASON")
-                .apiKey(API_KEY)
                 .operationType(NotificationRequestDTO.OperationTypeEnum.CREATE_DP)
                 .build();
     }
