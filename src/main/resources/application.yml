@@ -41,6 +41,10 @@ rest:
     notification:
       ttl: \${IO_BACKEND_NOTIFICATION_TTL:3600}
 management:
+  info:
+    build.enabled: true
+    java.enabled: true
+    git.enabled: true
   endpoints:
     jmx:
       exposure.include: "*"
