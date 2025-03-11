@@ -1,7 +1,10 @@
 package it.gov.pagopa.payhub.ionotification.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gov.pagopa.payhub.ionotification.dto.generated.*;
+import it.gov.pagopa.payhub.ionotification.dto.generated.MessageResponseDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationRequestDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
 import it.gov.pagopa.payhub.ionotification.service.IOService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -57,7 +60,7 @@ class IONotificationControllerImplTest {
         NotificationRequestDTO notificationRequestDTO = buildNotificationRequestDTO();
         MessageResponseDTO messageResponseDTO = MessageResponseDTO.builder().notificationId("id").build();
 
-        Mockito.when(ioService.sendMessage(notificationRequestDTO))
+        Mockito.when(ioService.sendMessage(null, notificationRequestDTO))
                 .thenReturn(messageResponseDTO);
 
         MvcResult result = mockMvc.perform(

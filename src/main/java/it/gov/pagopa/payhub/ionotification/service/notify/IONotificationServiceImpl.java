@@ -1,6 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.service.notify;
 
-import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
+import it.gov.pagopa.payhub.ionotification.connector.io.IORestConnector;
+import it.gov.pagopa.payhub.ionotification.connector.organization.OrganizationService;
 import it.gov.pagopa.payhub.ionotification.dto.*;
 import it.gov.pagopa.payhub.ionotification.dto.generated.MessageResponseDTO;
 import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationRequestDTO;
@@ -10,16 +11,15 @@ import it.gov.pagopa.payhub.ionotification.exception.custom.SenderNotAllowedExce
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
 import it.gov.pagopa.payhub.ionotification.service.UserIdObfuscatorService;
+import it.gov.pagopa.pu.organization.dto.generated.OrganizationApiKeys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.Optional;
 
 import static it.gov.pagopa.payhub.ionotification.enums.NotificationStatus.KO_SENDER_NOT_ALLOWED;
 import static it.gov.pagopa.payhub.ionotification.enums.NotificationStatus.OK;
-import static it.gov.pagopa.payhub.ionotification.utils.Utilities.centsAmountToEuroString;
 
 @Service
 @Slf4j
@@ -29,27 +29,33 @@ public class IONotificationServiceImpl implements IONotificationService {
     private final IORestConnector connector;
     private final IONotificationMapper ioNotificationMapper;
     private final UserIdObfuscatorService obfuscatorService;
+    private final OrganizationService organizationService;
     private final Long timeToLive;
+
 
     public IONotificationServiceImpl(IONotificationRepository ioNotificationRepository,
                                      IORestConnector connector,
                                      IONotificationMapper ioNotificationMapper,
-                                     UserIdObfuscatorService obfuscatorService,
-                                     @Value("${rest-client.backend-io-manage.notification.ttl}") Long timeToLive) {
+                                     UserIdObfuscatorService obfuscatorService, OrganizationService organizationService,
+                                     @Value("${rest.backend-io-manage.notification.ttl}") Long timeToLive) {
         this.ioNotificationRepository = ioNotificationRepository;
         this.connector = connector;
         this.ioNotificationMapper = ioNotificationMapper;
         this.obfuscatorService = obfuscatorService;
+        this.organizationService = organizationService;
         this.timeToLive = timeToLive;
     }
 
     @Override
-    public MessageResponseDTO sendMessage(NotificationRequestDTO notificationRequestDTO) {
+    public MessageResponseDTO sendMessage(String accessToken, NotificationRequestDTO notificationRequestDTO) {
         log.info("Sending message to notify of type {}", notificationRequestDTO.getOperationType());
-        String token = retrieveTokenIO(notificationRequestDTO.getServiceId(), notificationRequestDTO.getApiKey());
-        if (isSenderAllowed(notificationRequestDTO, token)) {
-            String notificationId = sendNotification(notificationRequestDTO, token);
-            return MessageResponseDTO.builder().notificationId(notificationId).build();
+        String apiKey = organizationService.getOrganizationApiKey(accessToken, notificationRequestDTO.getOrgId(), OrganizationApiKeys.KeyTypeEnum.IO);
+        if (apiKey != null) {
+            String token = retrieveTokenIO(notificationRequestDTO.getServiceId(), apiKey);
+            if (isSenderAllowed(notificationRequestDTO, token)) {
+                String notificationId = sendNotification(notificationRequestDTO, token);
+                return MessageResponseDTO.builder().notificationId(notificationId).build();
+            }
         }
         return null;
     }
@@ -93,30 +99,15 @@ public class IONotificationServiceImpl implements IONotificationService {
     }
 
     private String sendNotification(NotificationRequestDTO notificationRequestDTO, String token) {
-        Map<String, String> placeholders = Map.of(
-                "%importoDovuto%", centsAmountToEuroString(notificationRequestDTO.getAmount()),
-                "%dataEsecuzionePagamento%", notificationRequestDTO.getDueDate(),
-                "%codIUV%", notificationRequestDTO.getIuv(),
-                "%causaleVersamento%", notificationRequestDTO.getPaymentReason()
-        );
-
-        String customMarkdown = replacePlaceholders(notificationRequestDTO.getMarkdown(), placeholders);
 
         NotificationDTO notificationDTO = ioNotificationMapper
-                .map(notificationRequestDTO.getFiscalCode(), timeToLive, notificationRequestDTO.getSubject(), customMarkdown, notificationRequestDTO.getNav(), notificationRequestDTO.getAmount());
+                .map(timeToLive, notificationRequestDTO);
 
         log.info("Sending notification to IO");
         NotificationResource notificationResource = connector.sendNotification(notificationDTO, token);
         saveNotification(notificationRequestDTO, notificationResource.getId(), OK);
 
         return notificationResource.getId();
-    }
-
-    private String replacePlaceholders(String template, Map<String, String> placeholders) {
-        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
-            template = template.replace(entry.getKey(), entry.getValue() != null ? entry.getValue() : "");
-        }
-        return template.replaceAll("\\s{2,}", " ").trim();
     }
 
     private void saveNotification(NotificationRequestDTO notificationRequestDTO, String notificationId, NotificationStatus status) {

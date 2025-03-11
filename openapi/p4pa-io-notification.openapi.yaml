@@ -374,12 +374,8 @@ components:
         - serviceId
         - subject
         - markdown
-        - orgId
-        - debtPositionTypeOrgId
       properties:
         serviceId:
-          type: string
-        apiKey:
           type: string
         orgId:
           type: integer
@@ -401,15 +397,9 @@ components:
             - CREATE_DP
             - UPDATE_DP
             - DELETE_DP
-        dueDate:
-          type: string
         amount:
           type: integer
           format: int64
-        iuv:
-          type: string
-        paymentReason:
-          type: string
     MessageResponseDTO:
       type: object
       properties:

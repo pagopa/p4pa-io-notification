@@ -56,13 +56,13 @@ class IOServiceTest {
     @Test
     void givenSendMessageThenSuccess(){
         NotificationRequestDTO notificationRequestDTO = buildNotificationRequestDTO();
-
-        when(ioNotificationService.sendMessage(notificationRequestDTO))
+        String accessToken = "accessToken";
+        when(ioNotificationService.sendMessage(accessToken, notificationRequestDTO))
                 .thenReturn(buildMessageResponseDTO());
 
-        MessageResponseDTO messageResponseDTO = service.sendMessage(notificationRequestDTO);
+        MessageResponseDTO messageResponseDTO = service.sendMessage(accessToken, notificationRequestDTO);
 
-        verify(ioNotificationService, times(1)).sendMessage(notificationRequestDTO);
+        verify(ioNotificationService, times(1)).sendMessage(accessToken, notificationRequestDTO);
         assertEquals("notificationId", messageResponseDTO.getNotificationId());
 
     }

@@ -1,4 +1,4 @@
-package it.gov.pagopa.payhub.ionotification.connector;
+package it.gov.pagopa.payhub.ionotification.connector.io;
 
 import it.gov.pagopa.payhub.ionotification.dto.*;
 import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;

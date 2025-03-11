@@ -1,7 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.service.ioservice;
 
 import com.mongodb.client.result.UpdateResult;
-import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
+import it.gov.pagopa.payhub.ionotification.connector.io.IORestConnector;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IOServiceMapper;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IOServiceRepository;

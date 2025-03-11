@@ -10,24 +10,24 @@ import java.time.LocalDateTime;
 
 @Service
 public class IONotificationMapper {
-    public NotificationDTO map(String fiscalCode, Long timeToLive, String subject, String markdown, String nav, Long amount){
+    public NotificationDTO map(Long timeToLive, NotificationRequestDTO notificationRequestDTO){
         MessageContent messageContent = MessageContent.builder()
-                .markdown(markdown)
-                .subject(subject)
+                .markdown(notificationRequestDTO.getMarkdown())
+                .subject(notificationRequestDTO.getSubject())
                 .build();
         Payee payee = Payee.builder()
-                .fiscalCode(fiscalCode)
+                .fiscalCode(notificationRequestDTO.getFiscalCode())
                 .build();
         PaymentData paymentData = PaymentData.builder()
                 .payee(payee)
-                .noticeNumber(nav)
+                .noticeNumber(notificationRequestDTO.getNav())
                 .invalidAfterDueDate(false)
-                .amount(amount)
+                .amount(notificationRequestDTO.getAmount())
                 .build();
         return NotificationDTO.builder()
                 .timeToLive(timeToLive)
                 .content(messageContent)
-                .fiscalCode(fiscalCode)
+                .fiscalCode(notificationRequestDTO.getFiscalCode())
                 .paymentData(paymentData)
                 .build();
     }

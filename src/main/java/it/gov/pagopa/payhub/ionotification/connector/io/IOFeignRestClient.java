@@ -1,4 +1,4 @@
-package it.gov.pagopa.payhub.ionotification.connector;
+package it.gov.pagopa.payhub.ionotification.connector.io;
 
 import it.gov.pagopa.payhub.ionotification.dto.*;
 import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @FeignClient(
         name = "backend-io-manage",
-        url = "${rest-client.backend-io-manage.service.base-url}")
+        url = "${rest.backend-io-manage.service.base-url}")
 public interface IOFeignRestClient {
 
     @PostMapping(

@@ -1,10 +1,12 @@
 package it.gov.pagopa.payhub.ionotification.service.notify;
 
-import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
+import it.gov.pagopa.payhub.ionotification.connector.io.IORestConnector;
+import it.gov.pagopa.payhub.ionotification.connector.organization.OrganizationService;
 import it.gov.pagopa.payhub.ionotification.dto.FiscalCodeDTO;
 import it.gov.pagopa.payhub.ionotification.dto.KeysDTO;
 import it.gov.pagopa.payhub.ionotification.dto.NotificationResource;
 import it.gov.pagopa.payhub.ionotification.dto.ProfileResource;
+import it.gov.pagopa.payhub.ionotification.dto.generated.MessageResponseDTO;
 import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationRequestDTO;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IONotificationMapper;
 import it.gov.pagopa.payhub.ionotification.enums.NotificationStatus;
@@ -13,6 +15,7 @@ import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
 import it.gov.pagopa.payhub.ionotification.service.UserIdObfuscatorService;
+import it.gov.pagopa.pu.organization.dto.generated.OrganizationApiKeys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,6 +47,8 @@ class IONotificationServiceTest {
     private IONotificationMapper ioNotificationMapperMock;
     @Mock
     private UserIdObfuscatorService obfuscatorServiceMock;
+    @Mock
+    private OrganizationService organizationServiceMock;
 
     private IOService ioService;
     private KeysDTO keysDTO;
@@ -58,6 +63,7 @@ class IONotificationServiceTest {
                 connectorMock,
                 ioNotificationMapperMock,
                 obfuscatorServiceMock,
+                organizationServiceMock,
                 TIME_TO_LIVE);
 
         ioService = mapIoService(createServiceRequestDTO());
@@ -70,45 +76,72 @@ class IONotificationServiceTest {
     @Test
     void givenSendNotificationThenSuccess() {
         mockServiceAndObtainIOToken();
+        NotificationRequestDTO requestDTO = buildNotificationRequestDTO();
+        MessageResponseDTO messageResponseDTO = buildMessageResponseDTO();
+        String accessToken = "accessToken";
+
+        when(organizationServiceMock.getOrganizationApiKey(accessToken, ORG_ID, OrganizationApiKeys.KeyTypeEnum.IO))
+                .thenReturn("API_KEY");
 
         when(connectorMock.getProfile(fiscalCodeDTO, keysDTO.getPrimaryKey()))
                 .thenReturn(getUserProfileResponse());
 
-        when(ioNotificationMapperMock.map(FISCAL_CODE, TIME_TO_LIVE, SUBJECT, "This is a markdown REASON", "NAV", 1L))
+        when(ioNotificationMapperMock.map(TIME_TO_LIVE, requestDTO))
                 .thenReturn(sendNotificationRequest());
 
         when(connectorMock.sendNotification(sendNotificationRequest(), keysDTO.getPrimaryKey()))
                 .thenReturn(new NotificationResource("ID"));
 
-        sendNotification(OK);
+        MessageResponseDTO result = sendNotification(OK);
 
         assertEquals("ID", ioNotification.getNotificationId());
+        assertEquals(messageResponseDTO, result);
+    }
 
+    @Test
+    void givenSendNotificationWhenApiKeyNullThenReturnNull() {
+        String accessToken = "accessToken";
+
+        when(organizationServiceMock.getOrganizationApiKey(accessToken, ORG_ID, OrganizationApiKeys.KeyTypeEnum.IO))
+                .thenReturn(null);
+
+        MessageResponseDTO result = service.sendMessage(accessToken, notificationRequestDTO);
+
+        assertNull(ioNotification.getNotificationId());
+        assertNull(result);
     }
 
     @Test
     void givenSendNotificationWhenSenderIsNotAllowedThenSaveKO() {
         mockServiceAndObtainIOToken();
+        String accessToken = "accessToken";
+
+        when(organizationServiceMock.getOrganizationApiKey(accessToken, ORG_ID, OrganizationApiKeys.KeyTypeEnum.IO))
+                .thenReturn("API_KEY");
 
         when(connectorMock.getProfile(fiscalCodeDTO, keysDTO.getPrimaryKey()))
                 .thenReturn(new ProfileResource(false, new ArrayList<>()));
 
-        sendNotification(KO_SENDER_NOT_ALLOWED);
+        MessageResponseDTO result = sendNotification(KO_SENDER_NOT_ALLOWED);
 
         assertNull(ioNotification.getNotificationId());
-
+        assertNull(result);
     }
 
     @Test
     void givenSendNotificationWhenSenderNotAllowedExceptionThenSaveKO() {
         mockServiceAndObtainIOToken();
+        String accessToken = "accessToken";
+
+        when(organizationServiceMock.getOrganizationApiKey(accessToken, ORG_ID, OrganizationApiKeys.KeyTypeEnum.IO))
+                .thenReturn("API_KEY");
 
         doThrow(new SenderNotAllowedException("Error")).when(connectorMock).getProfile(fiscalCodeDTO, keysDTO.getPrimaryKey());
 
-        sendNotification(KO_SENDER_NOT_ALLOWED);
+        MessageResponseDTO result = sendNotification(KO_SENDER_NOT_ALLOWED);
 
         assertNull(ioNotification.getNotificationId());
-
+        assertNull(result);
     }
 
     @Test
@@ -133,19 +166,22 @@ class IONotificationServiceTest {
         verify(ioNotificationRepositoryMock, times(1)).findByUserIdAndOrgIdAndDebtPositionTypeOrgId(USER_ID, ORG_ID, DEBT_POSITION_TYPE_ORG_ID);
     }
 
-    private void sendNotification(NotificationStatus status) {
+    private MessageResponseDTO sendNotification(NotificationStatus status) {
         mockEncryptFiscalCode();
+        String accessToken = "accessToken";
+
         when(ioNotificationMapperMock.mapToSaveNotification(notificationRequestDTO, status, USER_ID))
                 .thenReturn(ioNotification);
 
-        service.sendMessage(notificationRequestDTO);
+        MessageResponseDTO messageResponseDTO = service.sendMessage(accessToken, notificationRequestDTO);
 
         verify(ioNotificationRepositoryMock, times(1)).save(ioNotification);
+
+        return messageResponseDTO;
     }
 
     private void mockServiceAndObtainIOToken() {
         ioService.setServiceId(SERVICE_ID);
-
 
         when(connectorMock.getServiceKeys(SERVICE_ID, API_KEY)).thenReturn(keysDTO);
 
@@ -154,5 +190,9 @@ class IONotificationServiceTest {
 
     private void mockEncryptFiscalCode() {
         when(obfuscatorServiceMock.obfuscate(FISCAL_CODE)).thenReturn(USER_ID);
+    }
+
+    private static MessageResponseDTO buildMessageResponseDTO() {
+        return MessageResponseDTO.builder().notificationId("ID").build();
     }
 }
