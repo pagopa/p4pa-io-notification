@@ -391,12 +391,6 @@ components:
           type: string
         fiscalCode:
           type: string
-        operationType:
-          type: string
-          enum:
-            - CREATE_DP
-            - UPDATE_DP
-            - DELETE_DP
         amount:
           type: integer
           format: int64
