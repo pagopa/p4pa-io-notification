@@ -44,6 +44,7 @@ val hibernateValidatorVersion = "8.0.2.Final"
 val micrometerVersion = "1.4.3"
 val commonsIoVersion = "2.18.0"
 val bouncycastleVersion = "1.80"
+val httpClientVersion = "5.4.2"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
@@ -62,6 +63,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka")
     implementation("org.bouncycastle:bcprov-jdk18on:$bouncycastleVersion")
+    implementation("org.apache.httpcomponents.client5:httpclient5:$httpClientVersion")
 
     //	Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
