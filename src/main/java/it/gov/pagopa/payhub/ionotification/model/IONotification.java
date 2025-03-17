@@ -23,6 +23,5 @@ public class IONotification {
     private Long orgId;
     private Long debtPositionTypeOrgId;
     private LocalDateTime notificationDate;
-    private String operationType;
 
 }

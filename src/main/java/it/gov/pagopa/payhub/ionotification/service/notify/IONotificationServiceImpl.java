@@ -48,7 +48,8 @@ public class IONotificationServiceImpl implements IONotificationService {
 
     @Override
     public MessageResponseDTO sendMessage(String accessToken, NotificationRequestDTO notificationRequestDTO) {
-        log.info("Sending message to notify of type {}", notificationRequestDTO.getOperationType());
+        log.info("Sending notification to organizationId {} and debtPositionTypeOrgId {}",
+                notificationRequestDTO.getOrgId(), notificationRequestDTO.getDebtPositionTypeOrgId());
         String apiKey = organizationService.getOrganizationApiKey(accessToken, notificationRequestDTO.getOrgId(), OrganizationApiKeys.KeyTypeEnum.IO);
         if (apiKey != null) {
             String token = retrieveTokenIO(notificationRequestDTO.getServiceId(), apiKey);

@@ -196,7 +196,6 @@ public class IOTestMapper {
                 .fiscalCode(FISCAL_CODE)
                 .amount(1L)
                 .nav("NAV")
-                .operationType(NotificationRequestDTO.OperationTypeEnum.CREATE_DP)
                 .build();
     }
 
