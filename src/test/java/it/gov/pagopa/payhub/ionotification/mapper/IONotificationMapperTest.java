@@ -27,11 +27,23 @@ class IONotificationMapperTest {
     @Test
     void whenMapThenSuccess(){
         NotificationRequestDTO notificationRequestDTO = buildNotificationRequestDTO();
+        notificationRequestDTO.setOrgFiscalCode("orgFiscalCode");
+        notificationRequestDTO.setNav("nav");
         NotificationDTO notificationDTO = ioNotificationMapper
                 .map(1L, notificationRequestDTO);
 
         assertNotNull(notificationDTO);
         checkNotNullFields(notificationDTO);
+    }
+
+    @Test
+    void givenMapWhenPaymentDateNullThenSuccess(){
+        NotificationRequestDTO notificationRequestDTO = buildNotificationRequestDTO();
+        NotificationDTO notificationDTO = ioNotificationMapper
+                .map(1L, notificationRequestDTO);
+
+        assertNotNull(notificationDTO);
+        checkNotNullFields(notificationDTO, "paymentData");
     }
 
     @Test

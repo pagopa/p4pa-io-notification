@@ -391,6 +391,8 @@ components:
           type: string
         fiscalCode:
           type: string
+        orgFiscalCode:
+          type: string
         amount:
           type: integer
           format: int64
