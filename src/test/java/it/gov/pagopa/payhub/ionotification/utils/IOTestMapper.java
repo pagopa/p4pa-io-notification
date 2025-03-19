@@ -195,7 +195,6 @@ public class IOTestMapper {
                 .markdown(MARKDOWN)
                 .fiscalCode(FISCAL_CODE)
                 .amount(1L)
-                .nav("NAV")
                 .build();
     }
 

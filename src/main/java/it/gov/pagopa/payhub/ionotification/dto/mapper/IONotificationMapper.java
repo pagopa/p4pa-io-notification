@@ -15,20 +15,27 @@ public class IONotificationMapper {
                 .markdown(notificationRequestDTO.getMarkdown())
                 .subject(notificationRequestDTO.getSubject())
                 .build();
-        Payee payee = Payee.builder()
-                .fiscalCode(notificationRequestDTO.getFiscalCode())
-                .build();
-        PaymentData paymentData = PaymentData.builder()
-                .payee(payee)
-                .noticeNumber(notificationRequestDTO.getNav())
-                .invalidAfterDueDate(false)
-                .amount(notificationRequestDTO.getAmount())
-                .build();
+        PaymentData paymentData = null;
+        if (notificationRequestDTO.getNav() != null && notificationRequestDTO.getOrgFiscalCode() != null) {
+            paymentData = buildPaymentData(notificationRequestDTO);
+        }
         return NotificationDTO.builder()
                 .timeToLive(timeToLive)
                 .content(messageContent)
                 .fiscalCode(notificationRequestDTO.getFiscalCode())
                 .paymentData(paymentData)
+                .build();
+    }
+
+    private static PaymentData buildPaymentData(NotificationRequestDTO notificationRequestDTO) {
+        Payee payee = Payee.builder()
+                .fiscalCode(notificationRequestDTO.getOrgFiscalCode())
+                .build();
+        return PaymentData.builder()
+                .payee(payee)
+                .noticeNumber(notificationRequestDTO.getNav())
+                .invalidAfterDueDate(false)
+                .amount(notificationRequestDTO.getAmount())
                 .build();
     }
 
