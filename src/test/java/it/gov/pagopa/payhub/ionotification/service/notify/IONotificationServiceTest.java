@@ -37,6 +37,7 @@ class IONotificationServiceTest {
 
     public static final long TIME_TO_LIVE = 3600L;
     public static final String API_KEY = "API_KEY";
+    public static final String NOTIFICATION_ID = "NOTIFICATION_ID";
     private IONotificationService service;
 
     @Mock
@@ -146,10 +147,10 @@ class IONotificationServiceTest {
 
     @Test
     void givenDeleteNotificationThenSuccess() {
-        when(ioNotificationRepositoryMock.findByUserIdAndOrgIdAndDebtPositionTypeOrgId(USER_ID, ORG_ID, DEBT_POSITION_TYPE_ORG_ID))
+        when(ioNotificationRepositoryMock.findByNotificationId(NOTIFICATION_ID))
                 .thenReturn(Optional.of(ioNotification));
 
-        service.deleteNotification(USER_ID, ORG_ID, DEBT_POSITION_TYPE_ORG_ID);
+        service.deleteNotification(NOTIFICATION_ID);
 
         verify(ioNotificationRepositoryMock, times(1)).delete(any(IONotification.class));
         verify(ioNotificationRepositoryMock, times(1)).delete(ioNotification);
@@ -157,13 +158,13 @@ class IONotificationServiceTest {
 
     @Test
     void givenDeleteNotificationWhenNotificationDoesNotExistThenDoNothing() {
-        when(ioNotificationRepositoryMock.findByUserIdAndOrgIdAndDebtPositionTypeOrgId(USER_ID, ORG_ID, DEBT_POSITION_TYPE_ORG_ID))
+        when(ioNotificationRepositoryMock.findByNotificationId(NOTIFICATION_ID))
                 .thenReturn(Optional.empty());
 
-        service.deleteNotification(USER_ID, ORG_ID, DEBT_POSITION_TYPE_ORG_ID);
+        service.deleteNotification(NOTIFICATION_ID);
 
         verify(ioNotificationRepositoryMock, times(0)).delete(any(IONotification.class));
-        verify(ioNotificationRepositoryMock, times(1)).findByUserIdAndOrgIdAndDebtPositionTypeOrgId(USER_ID, ORG_ID, DEBT_POSITION_TYPE_ORG_ID);
+        verify(ioNotificationRepositoryMock, times(1)).findByNotificationId(NOTIFICATION_ID);
     }
 
     private MessageResponseDTO sendNotification(NotificationStatus status) {

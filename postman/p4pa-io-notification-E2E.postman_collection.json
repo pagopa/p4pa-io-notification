@@ -4,7 +4,7 @@
 		"name": "IONotification E2E",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "21721488",
-		"_collection_link": "https://universal-meadow-88424.postman.co/workspace/PAP4~e3834aae-c5da-4699-87c8-55cd8293d10e/collection/21721488-6dc00217-dd3f-45ff-b585-e07e3d4edc81?action=share&source=collection_link&creator=21721488"
+		"_collection_link": "https://universal-meadow-88424.postman.co/workspace/e3834aae-c5da-4699-87c8-55cd8293d10e/collection/21721488-6dc00217-dd3f-45ff-b585-e07e3d4edc81?action=share&source=collection_link&creator=21721488"
 	},
 	"item": [
 		{
@@ -88,16 +88,14 @@
 			"name": "01_sendMessage",
 			"item": [
 				{
-					"name": "SendMessage",
+					"name": "01_getIONotificationDetails",
 					"event": [
 						{
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"pm.collectionVariables.set(\"serviceId\", `01J1F178BDBCGWE8HEN13WMK6N`);\r",
-									"pm.collectionVariables.set(\"fiscalCode\", `AAAAAA69A45A602A`);\r",
-									"pm.collectionVariables.set(\"orgId\", `56`);\r",
-									"pm.collectionVariables.set(\"debtPositionTypeOrgId\", `318`);"
+									"\r",
+									"pm.collectionVariables.set(\"debtPositionTypeOrgId\", `26`);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -107,18 +105,97 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"IONotification - sendMessage - Responses with 200\", function () {\r",
+									"pm=instrumentPmMethod(pm);\r",
+									"\r",
+									"pm.test(\"Payhub - 01_getIONotificationDetails - Responses with 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
 									"});\r",
 									"\r",
-									"/*pm.test(\"IONotification - sendMessage - Verify response body\", function () {\r",
+									"pm.test(\"DebtPositions - 01_getIONotificationDetails - Verify response body\", function () {\r",
 									"    let jsonResponse = pm.response.json();\r",
-									"\r",
-									"    pm.expect(jsonResponse).have.property(\"notificationId\")\r",
+									"    pm.expect(jsonResponse).to.have.property(\"serviceId\");\r",
+									"    pm.expect(jsonResponse).to.have.property(\"ioTemplateSubject\");\r",
+									"    pm.expect(jsonResponse).to.have.property(\"ioTemplateMessage\");\r",
 									"});\r",
 									"\r",
 									"let jsonResponse = pm.response.json();\r",
-									"pm.collectionVariables.set(\"notificationId\", jsonResponse.workflowId);*/"
+									"\r",
+									"pm.collectionVariables.set(\"serviceId\", jsonResponse.serviceId);\r",
+									"pm.collectionVariables.set(\"ioTemplateSubject\", jsonResponse.ioTemplateSubject);\r",
+									"pm.collectionVariables.set(\"ioTemplateMessage\", jsonResponse.ioTemplateMessage);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{debtPositionBaseUrl}}/debt-position-type-org/{{debtPositionTypeOrgId}}/io-notification/details?context=DP_CREATED",
+							"host": [
+								"{{debtPositionBaseUrl}}"
+							],
+							"path": [
+								"debt-position-type-org",
+								"{{debtPositionTypeOrgId}}",
+								"io-notification",
+								"details"
+							],
+							"query": [
+								{
+									"key": "context",
+									"value": "DP_CREATED"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_sendMessage",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.collectionVariables.set(\"orgId\", `3`);\r",
+									"pm.collectionVariables.set(\"debtPositionTypeOrgId\", `26`);\r",
+									"pm.collectionVariables.set(\"fiscalCode\", `AAAAAA00A00A000A`);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm=instrumentPmMethod(pm);\r",
+									"\r",
+									"pm.test(\"Payhub - 01_sendMessage - Responses with 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"DebtPositions - 01_sendMessage - Verify response body\", function () {\r",
+									"    let jsonResponse = pm.response.json();\r",
+									"    pm.expect(jsonResponse).to.have.property(\"notificationId\");\r",
+									"});\r",
+									"\r",
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"notificationId\", jsonResponse.notificationId);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -130,7 +207,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"serviceId\": \"{{serviceId}}\",\r\n  \"fiscalCode\": \"{{fiscalCode}}\",\r\n  \"orgId\": {{orgId}},\r\n  \"debtPositionTypeOrgId\": {{debtPositionTypeOrgId}},\r\n  \"subject\": \"Pay your debts\",\r\n  \"markdown\": \"La informiamo che è stata generata una nuova posizione debitoria a suo carico.  Causale %causaleVersamento%. La invitiamo a effettuare il pagamento con codice identificativo unico %codIUV% per un totale di %importoDovuto% euro entro la data di scadenza %dataEsecuzionePagamento% per evitare eventuali sanzioni o interessi di mora.\",\r\n  \"operationType\": \"CREATE_DP\",\r\n  \"dueDate\": \"28/02/2025\",\r\n  \"amount\": \"100\",\r\n  \"iuv\": \"test_iuv\",\r\n  \"paymentReason\": \"test_paymentReason\"\r\n}",
+							"raw": "{\r\n    \"serviceId\": \"{{serviceId}}\",\r\n    \"orgId\": \"{{orgId}}\",\r\n    \"debtPositionTypeOrgId\": \"{{debtPositionTypeOrgId}}\",\r\n    \"subject\": \"{{ioTemplateSubject}}\",\r\n    \"markdown\": \"{{ioTemplateMessage}}\",\r\n    \"fiscalCode\": \"{{fiscalCode}}\",\r\n    \"amount\": 10000\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -144,6 +221,51 @@
 							],
 							"path": [
 								"ionotification",
+								"message"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_deleteMessage",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm=instrumentPmMethod(pm);\r",
+									"\r",
+									"pm.test(\"Payhub - 01_deleteMessage - Responses with 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{ioNotificationBaseUrl}}/ionotification/{{notificationId}}/message",
+							"host": [
+								"{{ioNotificationBaseUrl}}"
+							],
+							"path": [
+								"ionotification",
+								"{{notificationId}}",
 								"message"
 							]
 						}
@@ -336,6 +458,26 @@
 		},
 		{
 			"key": "tipoDovutoId",
+			"value": ""
+		},
+		{
+			"key": "typeKey",
+			"value": ""
+		},
+		{
+			"key": "organizationId",
+			"value": ""
+		},
+		{
+			"key": "apiKey",
+			"value": ""
+		},
+		{
+			"key": "ioTemplateSubject",
+			"value": ""
+		},
+		{
+			"key": "ioTemplateMessage",
 			"value": ""
 		}
 	]

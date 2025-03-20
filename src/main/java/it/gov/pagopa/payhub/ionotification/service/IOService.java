@@ -12,6 +12,6 @@ public interface IOService {
 
     void deleteService(String serviceId);
 
-    void deleteNotification(String userId, Long enteId, Long tipoDovutoId);
+    void deleteNotification(String notificationId);
 
 }
