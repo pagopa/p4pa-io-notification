@@ -46,8 +46,8 @@ public class IONotificationControllerImpl implements IoNotificationApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteNotification(String userId, Long enteId, Long tipoDovutoId) {
-        ioService.deleteNotification(userId, enteId, tipoDovutoId);
+    public ResponseEntity<Void> deleteNotification(String notificationId) {
+        ioService.deleteNotification(notificationId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -23,6 +23,7 @@ class IOServiceTest {
 
     public static final Long TIPO_DOVUTO_ID = 456L;
     public static final Long ENTE_ID = 123L;
+    public static final String NOTIFICATION_ID = "NOTIFICATION_ID";
 
     @Mock
     IOServiceCreationService ioServiceCreationService;
@@ -90,11 +91,11 @@ class IOServiceTest {
 
     @Test
     void givenDeleteNotificationThenSuccess(){
-        doNothing().when(ioNotificationService).deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+        doNothing().when(ioNotificationService).deleteNotification(NOTIFICATION_ID);
 
-        service.deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+        service.deleteNotification(NOTIFICATION_ID);
 
-        verify(ioNotificationService, times(1)).deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+        verify(ioNotificationService, times(1)).deleteNotification(NOTIFICATION_ID);
     }
 
     private static MessageResponseDTO buildMessageResponseDTO() {

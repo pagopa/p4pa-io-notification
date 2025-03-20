@@ -29,7 +29,7 @@ class IONotificationControllerImplTest {
 
     public static final Long TIPO_DOVUTO_ID = 456L;
     public static final Long ENTE_ID = 123L;
-    public static final String USERID = "USERID";
+    public static final String NOTIFICATION_ID = "NOTIFICATION_ID";
 
     @Autowired
     private MockMvc mockMvc;
@@ -106,9 +106,9 @@ class IONotificationControllerImplTest {
     @Test
     void givenDeleteNotificationThenSuccess() throws Exception {
         doNothing().when(ioService)
-                .deleteNotification(USERID, ENTE_ID, TIPO_DOVUTO_ID);
+                .deleteNotification(NOTIFICATION_ID);
 
-        mockMvc.perform(delete("/ionotification/message/"+USERID+"/"+ENTE_ID+"/"+TIPO_DOVUTO_ID)
+        mockMvc.perform(delete("/ionotification/"+NOTIFICATION_ID+"/message")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is2xxSuccessful())

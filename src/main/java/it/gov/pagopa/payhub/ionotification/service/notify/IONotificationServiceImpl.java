@@ -62,15 +62,13 @@ public class IONotificationServiceImpl implements IONotificationService {
     }
 
     @Override
-    public void deleteNotification(String userId, Long orgId, Long debtPositionTypeOrgId) {
-        Optional<IONotification> ioNotification = ioNotificationRepository
-                .findByUserIdAndOrgIdAndDebtPositionTypeOrgId(userId, orgId, debtPositionTypeOrgId);
+    public void deleteNotification(String notificationId) {
+        Optional<IONotification> ioNotification = ioNotificationRepository.findByNotificationId(notificationId);
 
         if (ioNotification.isPresent()) {
-            log.info("Deleting notification {}", ioNotification.get().getNotificationId());
+            log.info("Deleting notification {}", notificationId);
             ioNotificationRepository.delete(ioNotification.get());
         }
-
     }
 
     private String retrieveTokenIO(String serviceId, String apiKey) {
