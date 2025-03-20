@@ -256,7 +256,7 @@
 						}
 					],
 					"request": {
-						"method": "POST",
+						"method": "DELETE",
 						"header": [],
 						"url": {
 							"raw": "{{ioNotificationBaseUrl}}/ionotification/{{notificationId}}/message",
