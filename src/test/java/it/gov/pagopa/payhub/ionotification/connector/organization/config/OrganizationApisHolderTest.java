@@ -1,6 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.connector.organization.config;
 
 import it.gov.pagopa.payhub.ionotification.connector.BaseApiHolderTest;
+import it.gov.pagopa.pu.organization.dto.generated.OrganizationApiKeyType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ class OrganizationApisHolderTest extends BaseApiHolderTest {
   void whenGetOrganizationEntityControllerApiThenAuthenticationShouldBeSetInThreadSafeMode() throws InterruptedException {
     assertAuthenticationShouldBeSetInThreadSafeMode(
       accessToken -> organizationApisHolder.getOrganizationApi(accessToken)
-              .getOrganizationApiKey(1L,"IO"),
+              .getOrganizationApiKey(1L, OrganizationApiKeyType.IO),
             String.class,
       organizationApisHolder::unload);
   }

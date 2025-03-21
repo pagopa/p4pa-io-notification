@@ -11,7 +11,7 @@ import it.gov.pagopa.payhub.ionotification.exception.custom.SenderNotAllowedExce
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
 import it.gov.pagopa.payhub.ionotification.service.UserIdObfuscatorService;
-import it.gov.pagopa.pu.organization.dto.generated.OrganizationApiKeys;
+import it.gov.pagopa.pu.organization.dto.generated.OrganizationApiKeyType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -50,7 +50,7 @@ public class IONotificationServiceImpl implements IONotificationService {
     public MessageResponseDTO sendMessage(String accessToken, NotificationRequestDTO notificationRequestDTO) {
         log.info("Sending notification to organizationId {} and debtPositionTypeOrgId {}",
                 notificationRequestDTO.getOrgId(), notificationRequestDTO.getDebtPositionTypeOrgId());
-        String apiKey = organizationService.getOrganizationApiKey(accessToken, notificationRequestDTO.getOrgId(), OrganizationApiKeys.KeyTypeEnum.IO);
+        String apiKey = organizationService.getOrganizationApiKey(accessToken, notificationRequestDTO.getOrgId(), OrganizationApiKeyType.IO);
         if (apiKey != null) {
             String token = retrieveTokenIO(notificationRequestDTO.getServiceId(), apiKey);
             if (isSenderAllowed(notificationRequestDTO, token)) {

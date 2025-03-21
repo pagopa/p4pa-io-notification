@@ -1,7 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.connector.organization;
 
 import it.gov.pagopa.payhub.ionotification.connector.organization.client.OrganizationClient;
-import it.gov.pagopa.pu.organization.dto.generated.OrganizationApiKeys;
+import it.gov.pagopa.pu.organization.dto.generated.OrganizationApiKeyType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public String getOrganizationApiKey(String accessToken, Long organizationId, OrganizationApiKeys.KeyTypeEnum keyType) {
+    public String getOrganizationApiKey(String accessToken, Long organizationId, OrganizationApiKeyType keyType) {
         log.info("Fetching API key for organizationId: {} and keyType: {}", organizationId, keyType);
         try {
             return organizationClient.getOrganizationApiKey(accessToken, organizationId, keyType);

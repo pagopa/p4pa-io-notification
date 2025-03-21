@@ -3,7 +3,7 @@ package it.gov.pagopa.payhub.ionotification.connector.organization.service;
 import it.gov.pagopa.payhub.ionotification.connector.organization.OrganizationService;
 import it.gov.pagopa.payhub.ionotification.connector.organization.OrganizationServiceImpl;
 import it.gov.pagopa.payhub.ionotification.connector.organization.client.OrganizationClient;
-import it.gov.pagopa.pu.organization.dto.generated.OrganizationApiKeys;
+import it.gov.pagopa.pu.organization.dto.generated.OrganizationApiKeyType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,11 +40,11 @@ class OrganizationServiceTest {
         // Given
         Long orgId = 1L;
         String accessToken = "accessToken";
-        Mockito.when(organizationClient.getOrganizationApiKey(accessToken, orgId, OrganizationApiKeys.KeyTypeEnum.IO))
+        Mockito.when(organizationClient.getOrganizationApiKey(accessToken, orgId, OrganizationApiKeyType.IO))
                 .thenReturn("apiKey");
 
         // When
-        String result = organizationService.getOrganizationApiKey(accessToken, orgId, OrganizationApiKeys.KeyTypeEnum.IO);
+        String result = organizationService.getOrganizationApiKey(accessToken, orgId, OrganizationApiKeyType.IO);
 
         // Then
         Assertions.assertEquals("apiKey", result);

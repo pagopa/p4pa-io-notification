@@ -15,7 +15,7 @@ import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
 import it.gov.pagopa.payhub.ionotification.service.UserIdObfuscatorService;
-import it.gov.pagopa.pu.organization.dto.generated.OrganizationApiKeys;
+import it.gov.pagopa.pu.organization.dto.generated.OrganizationApiKeyType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -81,7 +81,7 @@ class IONotificationServiceTest {
         MessageResponseDTO messageResponseDTO = buildMessageResponseDTO();
         String accessToken = "accessToken";
 
-        when(organizationServiceMock.getOrganizationApiKey(accessToken, ORG_ID, OrganizationApiKeys.KeyTypeEnum.IO))
+        when(organizationServiceMock.getOrganizationApiKey(accessToken, ORG_ID, OrganizationApiKeyType.IO))
                 .thenReturn("API_KEY");
 
         when(connectorMock.getProfile(fiscalCodeDTO, keysDTO.getPrimaryKey()))
@@ -103,7 +103,7 @@ class IONotificationServiceTest {
     void givenSendNotificationWhenApiKeyNullThenReturnNull() {
         String accessToken = "accessToken";
 
-        when(organizationServiceMock.getOrganizationApiKey(accessToken, ORG_ID, OrganizationApiKeys.KeyTypeEnum.IO))
+        when(organizationServiceMock.getOrganizationApiKey(accessToken, ORG_ID, OrganizationApiKeyType.IO))
                 .thenReturn(null);
 
         MessageResponseDTO result = service.sendMessage(accessToken, notificationRequestDTO);
@@ -117,7 +117,7 @@ class IONotificationServiceTest {
         mockServiceAndObtainIOToken();
         String accessToken = "accessToken";
 
-        when(organizationServiceMock.getOrganizationApiKey(accessToken, ORG_ID, OrganizationApiKeys.KeyTypeEnum.IO))
+        when(organizationServiceMock.getOrganizationApiKey(accessToken, ORG_ID, OrganizationApiKeyType.IO))
                 .thenReturn("API_KEY");
 
         when(connectorMock.getProfile(fiscalCodeDTO, keysDTO.getPrimaryKey()))
@@ -134,7 +134,7 @@ class IONotificationServiceTest {
         mockServiceAndObtainIOToken();
         String accessToken = "accessToken";
 
-        when(organizationServiceMock.getOrganizationApiKey(accessToken, ORG_ID, OrganizationApiKeys.KeyTypeEnum.IO))
+        when(organizationServiceMock.getOrganizationApiKey(accessToken, ORG_ID, OrganizationApiKeyType.IO))
                 .thenReturn("API_KEY");
 
         doThrow(new SenderNotAllowedException("Error")).when(connectorMock).getProfile(fiscalCodeDTO, keysDTO.getPrimaryKey());
