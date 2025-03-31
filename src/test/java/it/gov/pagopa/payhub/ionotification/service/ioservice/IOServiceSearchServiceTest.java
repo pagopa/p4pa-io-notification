@@ -1,6 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.service.ioservice;
 
-import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
+import it.gov.pagopa.payhub.ionotification.connector.io.IORestConnector;
 import it.gov.pagopa.payhub.ionotification.dto.PaginationDTO;
 import it.gov.pagopa.payhub.ionotification.dto.ServicesListDTO;
 import it.gov.pagopa.payhub.ionotification.model.IOService;

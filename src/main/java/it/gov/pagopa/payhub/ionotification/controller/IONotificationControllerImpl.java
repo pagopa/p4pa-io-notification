@@ -1,10 +1,12 @@
 package it.gov.pagopa.payhub.ionotification.controller;
 
 import it.gov.pagopa.payhub.ionotification.controller.generated.IoNotificationApi;
-import it.gov.pagopa.payhub.ionotification.service.IOService;
-import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationQueueDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.MessageResponseDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationRequestDTO;
 import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
 import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
+import it.gov.pagopa.payhub.ionotification.service.IOService;
+import it.gov.pagopa.payhub.ionotification.utils.SecurityUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,9 +27,10 @@ public class IONotificationControllerImpl implements IoNotificationApi {
     }
 
     @Override
-    public ResponseEntity<Void> sendMessage(NotificationQueueDTO notificationQueueDTO) {
-        ioService.sendMessage(notificationQueueDTO);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<MessageResponseDTO> sendMessage(NotificationRequestDTO notificationRequestDTO) {
+        String accessToken = SecurityUtils.getAccessToken();
+        MessageResponseDTO messageResponseDTO = ioService.sendMessage(accessToken, notificationRequestDTO);
+        return new ResponseEntity<>(messageResponseDTO, HttpStatus.OK);
     }
 
     @Override
@@ -43,8 +46,8 @@ public class IONotificationControllerImpl implements IoNotificationApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteNotification(String userId, Long enteId, Long tipoDovutoId) {
-        ioService.deleteNotification(userId, enteId, tipoDovutoId);
+    public ResponseEntity<Void> deleteNotification(String notificationId) {
+        ioService.deleteNotification(notificationId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

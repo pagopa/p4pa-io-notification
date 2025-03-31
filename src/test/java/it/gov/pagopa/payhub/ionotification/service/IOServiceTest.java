@@ -1,11 +1,12 @@
 package it.gov.pagopa.payhub.ionotification.service;
 
+import it.gov.pagopa.payhub.ionotification.dto.generated.MessageResponseDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationRequestDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
 import it.gov.pagopa.payhub.ionotification.service.ioservice.IOManageService;
 import it.gov.pagopa.payhub.ionotification.service.ioservice.IOServiceCreationService;
 import it.gov.pagopa.payhub.ionotification.service.notify.IONotificationService;
-import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationQueueDTO;
-import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
-import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
@@ -21,6 +23,7 @@ class IOServiceTest {
 
     public static final Long TIPO_DOVUTO_ID = 456L;
     public static final Long ENTE_ID = 123L;
+    public static final String NOTIFICATION_ID = "NOTIFICATION_ID";
 
     @Mock
     IOServiceCreationService ioServiceCreationService;
@@ -53,14 +56,15 @@ class IOServiceTest {
 
     @Test
     void givenSendMessageThenSuccess(){
-        NotificationQueueDTO notificationQueueDTO = mapToSendMessageToQueue();
+        NotificationRequestDTO notificationRequestDTO = buildNotificationRequestDTO();
+        String accessToken = "accessToken";
+        when(ioNotificationService.sendMessage(accessToken, notificationRequestDTO))
+                .thenReturn(buildMessageResponseDTO());
 
-        doNothing().when(ioNotificationService)
-                .sendMessage(notificationQueueDTO);
+        MessageResponseDTO messageResponseDTO = service.sendMessage(accessToken, notificationRequestDTO);
 
-        service.sendMessage(notificationQueueDTO);
-
-        verify(ioNotificationService, times(1)).sendMessage(notificationQueueDTO);
+        verify(ioNotificationService, times(1)).sendMessage(accessToken, notificationRequestDTO);
+        assertEquals("notificationId", messageResponseDTO.getNotificationId());
 
     }
 
@@ -84,26 +88,18 @@ class IOServiceTest {
         verify(ioManageService, times(1)).deleteService(SERVICE_ID);
     }
 
-    @Test
-    void givenSendNotificationThenSuccess(){
-        NotificationQueueDTO notificationQueueDTO = mapToSendMessageToQueue();
-
-        doNothing().when(ioNotificationService)
-                .sendNotification(notificationQueueDTO);
-
-        service.sendNotification(notificationQueueDTO);
-
-        verify(ioNotificationService, times(1)).sendNotification(notificationQueueDTO);
-
-    }
 
     @Test
     void givenDeleteNotificationThenSuccess(){
-        doNothing().when(ioNotificationService).deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+        doNothing().when(ioNotificationService).deleteNotification(NOTIFICATION_ID);
 
-        service.deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+        service.deleteNotification(NOTIFICATION_ID);
 
-        verify(ioNotificationService, times(1)).deleteNotification(USER_ID, ENTE_ID, TIPO_DOVUTO_ID);
+        verify(ioNotificationService, times(1)).deleteNotification(NOTIFICATION_ID);
+    }
+
+    private static MessageResponseDTO buildMessageResponseDTO() {
+        return MessageResponseDTO.builder().notificationId("notificationId").build();
     }
 
 }

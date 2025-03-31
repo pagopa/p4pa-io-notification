@@ -1,4 +1,4 @@
-package it.gov.pagopa.payhub.ionotification.connector;
+package it.gov.pagopa.payhub.ionotification.connector.io;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,9 +44,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestPropertySource(
         locations = "classpath:application.yml",
         properties = {
-                "rest-client.backend-io-manage.service.subscriptionKey=token",
-                "rest-client.backend-io-manage.service.limit=",
-                "rest-client.backend-io-manage.service.offset="
+                "rest.backend-io-manage.service.subscriptionKey=token",
+                "rest.backend-io-manage.service.limit=",
+                "rest.backend-io-manage.service.offset="
         })
 class IORestClientTest {
 
@@ -119,7 +119,7 @@ class IORestClientTest {
                 )
         );
 
-        KeysDTO keys = ioRestConnector.getServiceKeys("SERVICE_ID");
+        KeysDTO keys = ioRestConnector.getServiceKeys("SERVICE_ID", "API_KEY");
 
         assertNotNull(keys);
     }
@@ -136,7 +136,7 @@ class IORestClientTest {
         );
 
         assertThrows(RetrieveServicesInvocationException.class, () ->
-                ioRestConnector.getServiceKeys("SERVICE_ID"));
+                ioRestConnector.getServiceKeys("SERVICE_ID", "API_KEY"));
     }
 
     @Test
@@ -334,7 +334,7 @@ class IORestClientTest {
             TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
                     configurableApplicationContext,
                     String.format(
-                            "rest-client.backend-io-manage.service.base-url=http://%s:%d",
+                            "rest.backend-io-manage.service.base-url=http://%s:%d",
                             wireMockServer.getOptions().bindAddress(), wireMockServer.port()));
         }
     }
