@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import it.gov.pagopa.payhub.ionotification.config.IORestConnectorConfig;
+import it.gov.pagopa.payhub.ionotification.config.rest.IORestConnectorConfig;
 import it.gov.pagopa.payhub.ionotification.dto.*;
 import it.gov.pagopa.payhub.ionotification.exception.custom.*;
 import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;

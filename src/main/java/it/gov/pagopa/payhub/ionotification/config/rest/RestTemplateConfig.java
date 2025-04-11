@@ -1,4 +1,4 @@
-package it.gov.pagopa.payhub.ionotification.config;
+package it.gov.pagopa.payhub.ionotification.config.rest;
 
 import it.gov.pagopa.payhub.ionotification.performancelogger.RestInvokePerformanceLogger;
 import it.gov.pagopa.payhub.ionotification.utils.HttpUtils;

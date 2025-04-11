@@ -1,4 +1,4 @@
-package it.gov.pagopa.payhub.ionotification.config;
+package it.gov.pagopa.payhub.ionotification.config.rest;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
