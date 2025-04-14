@@ -1,4 +1,4 @@
-package it.gov.pagopa.payhub.ionotification.config;
+package it.gov.pagopa.payhub.ionotification.config.rest;
 
 import it.gov.pagopa.payhub.ionotification.performancelogger.RestInvokePerformanceLogger;
 import it.gov.pagopa.payhub.ionotification.utils.HttpUtils;
@@ -39,6 +39,7 @@ public class RestTemplateConfig {
   public RestTemplateBuilder restTemplateBuilder(RestTemplateBuilderConfigurer configurer, HttpClientConfig defaultHttpClientConfig, SslBundles sslBundles) {
     return configurer.configure(new RestTemplateBuilder())
       .additionalInterceptors(new RestInvokePerformanceLogger())
+      .additionalInterceptors(new QueryParamsPlusEncoderInterceptor())
       .requestFactoryBuilder(HttpUtils.buildPooledConnection(defaultHttpClientConfig, DefaultClientTlsStrategy.createSystemDefault()));
   }
 
