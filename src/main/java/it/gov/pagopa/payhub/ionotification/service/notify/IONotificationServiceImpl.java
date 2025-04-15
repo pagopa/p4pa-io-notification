@@ -57,6 +57,8 @@ public class IONotificationServiceImpl implements IONotificationService {
                 String notificationId = sendNotification(notificationRequestDTO, token);
                 return MessageResponseDTO.builder().notificationId(notificationId).build();
             }
+        } else {
+            log.info("No ApiKey configured for IO service on organization {}", notificationRequestDTO.getOrgId());
         }
         return null;
     }
