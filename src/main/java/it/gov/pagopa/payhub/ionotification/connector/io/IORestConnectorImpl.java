@@ -2,11 +2,13 @@ package it.gov.pagopa.payhub.ionotification.connector.io;
 
 import feign.FeignException;
 import it.gov.pagopa.payhub.ionotification.dto.*;
-import it.gov.pagopa.payhub.ionotification.exception.custom.*;
 import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
+import it.gov.pagopa.payhub.ionotification.exception.custom.*;
+import it.gov.pagopa.payhub.ionotification.performancelogger.PerformanceLogger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.function.ThrowingSupplier;
 
 @Service
 @Slf4j
@@ -25,7 +27,7 @@ public class IORestConnectorImpl implements IORestConnector {
     @Override
     public ServiceResponseDTO createService(ServiceRequestDTO serviceRequestDTO) {
         try {
-            return ioFeignRestClient.createService(serviceRequestDTO, subscriptionKey);
+            return execute("IO/createService", () -> ioFeignRestClient.createService(serviceRequestDTO, subscriptionKey));
         } catch (FeignException e) {
             log.error("An error occurred while creating service: {}", e.getMessage());
             if (e.status() == 400) {
@@ -38,7 +40,7 @@ public class IORestConnectorImpl implements IORestConnector {
     @Override
     public KeysDTO getServiceKeys(String serviceId, String apiKey) {
         try {
-            return ioFeignRestClient.getServiceKeys(serviceId, apiKey);
+            return execute("IO/getServiceKeys", () -> ioFeignRestClient.getServiceKeys(serviceId, apiKey));
         } catch (FeignException e) {
             log.error("An error occurred while retrieving the token: {}", e.getMessage());
             throw new RetrieveServicesInvocationException("It was not possible to retrieve the token from IO");
@@ -48,7 +50,7 @@ public class IORestConnectorImpl implements IORestConnector {
     @Override
     public ProfileResource getProfile(FiscalCodeDTO fiscalCode, String primaryKey) {
         try {
-            return ioFeignRestClient.getProfile(fiscalCode, primaryKey);
+            return execute("IO/getProfile", () -> ioFeignRestClient.getProfile(fiscalCode, primaryKey));
         } catch (FeignException e) {
             log.error("An error occurred while verifying if the user is allowed to receive notification: {}", e.getMessage());
             if (e.status() == 403) {
@@ -61,7 +63,7 @@ public class IORestConnectorImpl implements IORestConnector {
     @Override
     public NotificationResource sendNotification(NotificationDTO notificationDTO, String primaryKey) {
         try {
-            return ioFeignRestClient.sendNotification(notificationDTO, primaryKey);
+            return execute("IO/sendNotification", () -> ioFeignRestClient.sendNotification(notificationDTO, primaryKey));
         } catch (FeignException e) {
             log.error("An error occurred while sending notification: {}", e.getMessage());
             if (e.status() == 400) {
@@ -74,7 +76,7 @@ public class IORestConnectorImpl implements IORestConnector {
     @Override
     public ServicesListDTO getAllServices(Integer limit, Integer offset) {
         try {
-            return ioFeignRestClient.getAllServices(limit, offset, subscriptionKey);
+            return execute("IO/getAllServices", () -> ioFeignRestClient.getAllServices(limit, offset, subscriptionKey));
         } catch (FeignException e) {
             log.error("An error occurred while retrieving all services: {}", e.getMessage());
             throw new RetrieveServicesInvocationException("It was not possible to retrieve all services from IO, please retry it");
@@ -84,7 +86,10 @@ public class IORestConnectorImpl implements IORestConnector {
     @Override
     public void deleteService(String serviceId) {
         try {
-            ioFeignRestClient.deleteService(serviceId, subscriptionKey);
+            execute("IO/deleteService", () -> {
+                ioFeignRestClient.deleteService(serviceId, subscriptionKey);
+                return serviceId;
+            });
         } catch (FeignException e) {
             log.error("An error occurred while deleting service: {}", e.getMessage());
             if (e.status() == 404) {
@@ -94,5 +99,9 @@ public class IORestConnectorImpl implements IORestConnector {
             }
             throw new DeleteServiceInvocationException(String.format("It was not possible to delete the service with serviceId: %s in IO", serviceId));
         }
+    }
+
+    private <T> T execute(String service, ThrowingSupplier<T> logic){
+        return PerformanceLogger.execute("REST_INVOKE", service, logic, null, null);
     }
 }
