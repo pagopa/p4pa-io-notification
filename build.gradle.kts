@@ -2,12 +2,12 @@ import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 
 plugins {
     java
-    id("org.springframework.boot") version "3.4.3"
+    id("org.springframework.boot") version "3.4.5"
     id("io.spring.dependency-management") version "1.1.7"
     jacoco
-    id("org.sonarqube") version "6.0.1.5171"
-    id("com.github.ben-manes.versions") version "0.51.0"
-    id("org.openapi.generator") version "7.10.0"
+    id("org.sonarqube") version "6.1.0.5360"
+    id("com.github.ben-manes.versions") version "0.52.0"
+    id("org.openapi.generator") version "7.13.0"
     id("com.gorylenko.gradle-git-properties") version "2.5.0"
 }
 
@@ -32,19 +32,18 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2024.0.0")
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2024.0.1")
     }
 }
 
-val springDocOpenApiVersion = "2.8.5"
+val springDocOpenApiVersion = "2.8.6"
 val janinoVersion = "3.1.12"
 val openApiToolsVersion = "0.2.6"
-val wiremockVersion = "3.12.0"
+val wiremockVersion = "3.13.0"
 val hibernateValidatorVersion = "8.0.2.Final"
-val micrometerVersion = "1.4.3"
-val commonsIoVersion = "2.18.0"
+val micrometerVersion = "1.4.6"
 val bouncycastleVersion = "1.80"
-val httpClientVersion = "5.4.2"
+val httpClientVersion = "5.4.4"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
