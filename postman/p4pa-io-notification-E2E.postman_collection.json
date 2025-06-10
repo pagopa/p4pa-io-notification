@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "6dc00217-dd3f-45ff-b585-e07e3d4edc81",
+		"_postman_id": "655b05cf-f062-4aba-830e-038e403fc1fc",
 		"name": "IONotification E2E",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21721488",
-		"_collection_link": "https://universal-meadow-88424.postman.co/workspace/e3834aae-c5da-4699-87c8-55cd8293d10e/collection/21721488-6dc00217-dd3f-45ff-b585-e07e3d4edc81?action=share&source=collection_link&creator=21721488"
+		"_exporter_id": "15747968",
+		"_collection_link": "https://warped-astronaut-141685.postman.co/workspace/P4PA~9a8b7dd5-97b6-4dd0-b3f5-95f25fd0b455/collection/15747968-655b05cf-f062-4aba-830e-038e403fc1fc?action=share&source=collection_link&creator=15747968"
 	},
 	"item": [
 		{
@@ -88,6 +88,139 @@
 			"name": "01_sendMessage",
 			"item": [
 				{
+					"name": "01_findOrganizationByIpaCode",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm=instrumentPmMethod(pm);\r",
+									"\r",
+									"pm.test(\"DebtPosition - 00_findOrganizationByIpaCode - Responses with 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"DebtPosition - 00_getAuthtoken - Verify response body\", function () {\r",
+									"    let jsonResponse = pm.response.json();\r",
+									"\r",
+									"    pm.expect(jsonResponse).have.property(\"organizationId\")\r",
+									"    pm.expect(jsonResponse).have.property(\"orgFiscalCode\")\r",
+									"    pm.expect(jsonResponse).have.property(\"orgName\")\r",
+									"});\r",
+									"\r",
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"organizationId\", jsonResponse.organizationId);\r",
+									"pm.collectionVariables.set(\"orgFiscalCode\", jsonResponse.orgFiscalCode);\r",
+									"pm.collectionVariables.set(\"orgName\", jsonResponse.orgName);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{organizationBaseUrl}}/crud/organizations/search/findByIpaCode?ipaCode={{codIpaEnte}}",
+							"host": [
+								"{{organizationBaseUrl}}"
+							],
+							"path": [
+								"crud",
+								"organizations",
+								"search",
+								"findByIpaCode"
+							],
+							"query": [
+								{
+									"key": "ipaCode",
+									"value": "{{codIpaEnte}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01_findDebtPositionTypeOrgByOrgIdAndCode",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm=instrumentPmMethod(pm);\r",
+									"\r",
+									"pm.test(\"DebtPosition - 01_findDebtPositionTypeOrgByOrgIdAndCode - Responses with 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"DebtPosition - 01_findDebtPositionTypeOrgByOrgIdAndCode - Verify response body\", function () {\r",
+									"    let jsonResponse = pm.response.json();\r",
+									"\r",
+									"    pm.expect(jsonResponse).have.property(\"debtPositionTypeOrgId\")\r",
+									"    pm.expect(jsonResponse).have.property(\"code\")\r",
+									"});\r",
+									"\r",
+									"let jsonResponse = pm.response.json();\r",
+									"pm.collectionVariables.set(\"debtPositionTypeOrgId\", jsonResponse.debtPositionTypeOrgId);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{debtPositionBaseUrl}}/crud/debt-position-type-orgs/search/findByOrganizationIdAndCode?organizationId={{organizationId}}&code={{debtPositionTypeOrgCode}}",
+							"host": [
+								"{{debtPositionBaseUrl}}"
+							],
+							"path": [
+								"crud",
+								"debt-position-type-orgs",
+								"search",
+								"findByOrganizationIdAndCode"
+							],
+							"query": [
+								{
+									"key": "organizationId",
+									"value": "{{organizationId}}"
+								},
+								{
+									"key": "code",
+									"value": "{{debtPositionTypeOrgCode}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "01_getIONotificationDetails",
 					"event": [
 						{
@@ -95,7 +228,7 @@
 							"script": {
 								"exec": [
 									"\r",
-									"pm.collectionVariables.set(\"debtPositionTypeOrgId\", `26`);"
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -409,6 +542,11 @@
 	],
 	"variable": [
 		{
+			"key": "debtPositionTypeOrgCode",
+			"value": "CODE001",
+			"type": "string"
+		},
+		{
 			"key": "fiscalCode",
 			"value": ""
 		},
@@ -426,10 +564,6 @@
 		},
 		{
 			"key": "orgId",
-			"value": ""
-		},
-		{
-			"key": "debtPositionTypeOrgId",
 			"value": ""
 		},
 		{
@@ -478,6 +612,18 @@
 		},
 		{
 			"key": "ioTemplateMessage",
+			"value": ""
+		},
+		{
+			"key": "orgFiscalCode",
+			"value": ""
+		},
+		{
+			"key": "orgName",
+			"value": ""
+		},
+		{
+			"key": "debtPositionTypeOrgId",
 			"value": ""
 		}
 	]
