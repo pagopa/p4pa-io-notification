@@ -42,8 +42,8 @@ public class IOTestMapper {
 
     public static IOService mapIoService(ServiceRequestDTO serviceRequestDTO) {
         return IOService.builder()
-                .enteId(ORG_ID)
-                .tipoDovutoId(DEBT_POSITION_TYPE_ORG_ID)
+                .organizationId(ORG_ID)
+                .debtPositionTypeOrgId(DEBT_POSITION_TYPE_ORG_ID)
                 .serviceName(serviceRequestDTO.getName())
                 .serviceDescription(serviceRequestDTO.getDescription())
                 .organizationName(serviceRequestDTO.getOrganization().getName())

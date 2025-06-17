@@ -40,7 +40,7 @@ public class IOManageServiceTest {
     @Test
     void givenGetServiceThenSuccess(){
         IOService serviceModel = mapIoService(createServiceRequestDTO());
-        when(ioServiceRepository.findByEnteIdAndTipoDovutoId(ENTE_ID, TIPO_DOVUTO_ID))
+        when(ioServiceRepository.findByOrganizationIdAndDebtPositionTypeOrgId(ENTE_ID, TIPO_DOVUTO_ID))
                 .thenReturn(Optional.of(serviceModel));
 
         when(serviceMapper.mapService(serviceModel)).thenReturn(getServiceResponse());
@@ -48,13 +48,13 @@ public class IOManageServiceTest {
         ServiceDTO serviceDTO = service.getService(ENTE_ID, TIPO_DOVUTO_ID);
 
         assertNotNull(serviceDTO);
-        verify(ioServiceRepository, times(1)).findByEnteIdAndTipoDovutoId(ENTE_ID, TIPO_DOVUTO_ID);
+        verify(ioServiceRepository, times(1)).findByOrganizationIdAndDebtPositionTypeOrgId(ENTE_ID, TIPO_DOVUTO_ID);
     }
 
     @Test
     void givenGetServiceWhenServiceNotFoundThenThrowServiceNotFoundException(){
 
-        when(ioServiceRepository.findByEnteIdAndTipoDovutoId(ENTE_ID, TIPO_DOVUTO_ID))
+        when(ioServiceRepository.findByOrganizationIdAndDebtPositionTypeOrgId(ENTE_ID, TIPO_DOVUTO_ID))
                 .thenReturn(Optional.empty());
 
         ServiceNotFoundException exception =assertThrows(ServiceNotFoundException.class, () ->

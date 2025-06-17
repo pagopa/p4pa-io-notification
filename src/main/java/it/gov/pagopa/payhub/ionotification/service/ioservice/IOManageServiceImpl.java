@@ -27,12 +27,12 @@ public class IOManageServiceImpl implements IOManageService {
     }
 
     @Override
-    public ServiceDTO getService(Long enteId, Long tipoDovutoId) {
-        Optional<IOService> service = ioServiceRepository.findByEnteIdAndTipoDovutoId(enteId, tipoDovutoId);
+    public ServiceDTO getService(Long organizationId, Long debtPositionTypeOrgId) {
+        Optional<IOService> service = ioServiceRepository.findByOrganizationIdAndDebtPositionTypeOrgId(organizationId, debtPositionTypeOrgId);
         if (service.isEmpty()){
-            log.error("Service for {} associated with {} was not found", tipoDovutoId, enteId);
+            log.error("Service for {} associated with {} was not found", debtPositionTypeOrgId, organizationId);
             throw new ServiceNotFoundException(String.format(
-                    "The service for %s associated with %s does not exist", tipoDovutoId, enteId));
+                    "The service for %s associated with %s does not exist", debtPositionTypeOrgId, organizationId));
         }
         log.info("Service {} associated with {} found", service.get().getServiceName(), service.get().getOrganizationName());
         return ioServiceMapper.mapService(service.get());

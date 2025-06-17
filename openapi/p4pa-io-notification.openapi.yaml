@@ -6,19 +6,19 @@ info:
 servers:
   - url: "http://localhost:8080/ionotification"
 paths:
-  /service/{enteId}/{tipoDovutoId}:
+  /service/{organizationId}/{debtPositionTypeOrgId}:
     post:
       tags:
         - ioNotification
       operationId: createService
       parameters:
-        - name: enteId
+        - name: organizationId
           in: path
           required: true
           schema:
             type: integer
             format: int64
-        - name: tipoDovutoId
+        - name: debtPositionTypeOrgId
           in: path
           required: true
           schema:
@@ -62,13 +62,13 @@ paths:
         - ioNotification
       operationId: getService
       parameters:
-        - name: enteId
+        - name: organizationId
           in: path
           required: true
           schema:
             type: integer
             format: int64
-        - name: tipoDovutoId
+        - name: debtPositionTypeOrgId
           in: path
           required: true
           schema:

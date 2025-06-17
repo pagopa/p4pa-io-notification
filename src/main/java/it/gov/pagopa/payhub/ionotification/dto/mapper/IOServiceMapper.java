@@ -11,10 +11,10 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class IOServiceMapper {
 
-    public IOService apply(Long enteId, Long tipoDovutoId, ServiceRequestDTO serviceRequestDTO) {
+    public IOService apply(Long organizationId, Long debtPositionTypeOrgId, ServiceRequestDTO serviceRequestDTO) {
         return IOService.builder()
-                .enteId(enteId)
-                .tipoDovutoId(tipoDovutoId)
+                .organizationId(organizationId)
+                .debtPositionTypeOrgId(debtPositionTypeOrgId)
                 .serviceName(serviceRequestDTO.getName())
                 .serviceDescription(serviceRequestDTO.getDescription())
                 .organizationName(serviceRequestDTO.getOrganization().getName())
