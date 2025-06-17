@@ -45,6 +45,10 @@ See [log configured pattern](/src/main/resources/logback-spring.xml).
 * [p4pa-organization](https://github.com/pagopa/p4pa-organization):
     * To retrieve organization IO Api Key;
 
+### 🌍 External
+* PagoPA IO backend - The PagoPA IO application used to send notification to citizen:
+  * [OpenAPI](https://github.com/pagopa/io-functions-services/blob/master/openapi/index.yaml): To handle IO services and send notifications.
+
 ## 🗃️ Entities handled
 * `io_notification`
 * `io_service`
