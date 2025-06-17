@@ -20,6 +20,10 @@ See [Postman collection](/postman/p4pa-io-notification-E2E.postman_collection.js
 * `DELETE /ionotification/service/{serviceId}`: To delete a service on IO;
 * `POST /ionotification/message`: To send a message using IO.
 
+### 📌 Common HTTP status returned:
+* `401`: Invalid access token provided, thus a new login is required;
+* `403`: Trying to access a not authorized resource.
+
 ## 🔎 Monitoring
 See available actuator endpoints through the following path:
 * `/actuator`
