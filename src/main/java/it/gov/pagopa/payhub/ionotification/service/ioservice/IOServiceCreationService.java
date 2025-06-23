@@ -4,5 +4,5 @@ import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
 
 public interface IOServiceCreationService {
 
-    void createService(Long enteId, Long tipoDovutoId, ServiceRequestDTO serviceRequestDTO);
+    void createService(Long organizationId, Long debtPositionTypeOrgId, ServiceRequestDTO serviceRequestDTO);
 }

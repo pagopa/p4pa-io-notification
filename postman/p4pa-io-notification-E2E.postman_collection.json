@@ -437,8 +437,6 @@
 							"    pm.collectionVariables.set(\"name\", `test_service_${randomNumber}`);\r",
 							"    pm.collectionVariables.set(\"organization_name\", `test_ente_${randomNumber}`);\r",
 							"    pm.collectionVariables.set(\"department_name\", `test_department_ente_${randomNumber}`);\r",
-							"    pm.collectionVariables.set(\"enteId\", `${randomNumber}`);\r",
-							"    pm.collectionVariables.set(\"tipoDovutoId\", `${randomNumber}`);\r",
 							"}"
 						]
 					}
@@ -584,14 +582,6 @@
 		},
 		{
 			"key": "department_name",
-			"value": ""
-		},
-		{
-			"key": "enteId",
-			"value": ""
-		},
-		{
-			"key": "tipoDovutoId",
 			"value": ""
 		},
 		{

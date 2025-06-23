@@ -4,11 +4,11 @@ import it.gov.pagopa.payhub.ionotification.dto.generated.*;
 
 public interface IOService {
 
-    void createService(Long enteId, Long tipoDovutoId, ServiceRequestDTO serviceRequestDTO);
+    void createService(Long organizationId, Long debtPositionTypeOrgId, ServiceRequestDTO serviceRequestDTO);
 
     MessageResponseDTO sendMessage(String accessToken, NotificationRequestDTO notificationRequestDTO);
 
-    ServiceDTO getService(Long enteId, Long tipoDovutoId);
+    ServiceDTO getService(Long organizationId, Long debtPositionTypeOrgId);
 
     void deleteService(String serviceId);
 

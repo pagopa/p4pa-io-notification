@@ -11,17 +11,17 @@ spring:
       enabled: "\${VIRTUAL_THREADS_ENABLED:true}"
   data:
     mongodb:
-      uri: \${MONGODB_URI:mongodb://localhost:27017}
-      database: \${MONGODB_DBNAME:payhub}
+      uri: "\${MONGODB_URI:mongodb://localhost:27017}"
+      database: "\${MONGODB_DBNAME:payhub}"
       # custom configured properties
       config:
         connectionPool:
-          maxSize: \${MONGODB_CONNECTIONPOOL_MAX_SIZE:100}
-          minSize: \${MONGODB_CONNECTIONPOOL_MIN_SIZE:0}
-          maxWaitTimeMS: \${MONGODB_CONNECTIONPOOL_MAX_WAIT_MS:120000}
-          maxConnectionLifeTimeMS: \${MONGODB_CONNECTIONPOOL_MAX_CONNECTION_LIFE_MS:0}
-          maxConnectionIdleTimeMS: \${MONGODB_CONNECTIONPOOL_MAX_CONNECTION_IDLE_MS:120000}
-          maxConnecting: \${MONGODB_CONNECTIONPOOL_MAX_CONNECTING:2}
+          maxSize: "\${MONGODB_CONNECTIONPOOL_MAX_SIZE:100}"
+          minSize: "\${MONGODB_CONNECTIONPOOL_MIN_SIZE:0}"
+          maxWaitTimeMS: "\${MONGODB_CONNECTIONPOOL_MAX_WAIT_MS:120000}"
+          maxConnectionLifeTimeMS: "\${MONGODB_CONNECTIONPOOL_MAX_CONNECTION_LIFE_MS:0}"
+          maxConnectionIdleTimeMS: "\${MONGODB_CONNECTIONPOOL_MAX_CONNECTION_IDLE_MS:120000}"
+          maxConnecting: "\${MONGODB_CONNECTIONPOOL_MAX_CONNECTING:2}"
 
 rest:
   defaults:
@@ -39,12 +39,12 @@ rest:
     print-body-when-error: "\${ORGANIZATION_PRINT_BODY_WHEN_ERROR:true}"
   backend-io-manage:
     service:
-      base-url: \${IO_MANAGE_BACKEND_SERVICE_BASE_URL:}
-      subscriptionKey: \${IO_BACKEND_SERVICE_SUBSCRIPTION_API_KEY:}
-      offset: \${IO_BACKEND_SERVICE_OFFSET:0}
-      limit: \${IO_BACKEND_SERVICE_LIMIT:99}
+      base-url: "\${IO_MANAGE_BACKEND_SERVICE_BASE_URL:}"
+      subscriptionKey: "\${IO_BACKEND_SERVICE_SUBSCRIPTION_API_KEY:}"
+      offset: "\${IO_BACKEND_SERVICE_OFFSET:0}"
+      limit: "\${IO_BACKEND_SERVICE_LIMIT:99}"
     notification:
-      ttl: \${IO_BACKEND_NOTIFICATION_TTL:3600}
+      ttl: "\${IO_BACKEND_NOTIFICATION_TTL_SECONDS:3600}"
 management:
   info:
     build.enabled: true
@@ -101,7 +101,7 @@ logging:
     PERFORMANCE_LOG.REST_INVOKE: "\${LOG_LEVEL_PERFORMANCE_LOG_REST_INVOKE:\${logging.level.PERFORMANCE_LOG}}"
 
 data-cipher:
-  encrypt-psw: \${DATA_CIPHER_ENCRYPT_PASSWORD:PWD}
+  encrypt-psw: "\${DATA_CIPHER_ENCRYPT_PASSWORD:PWD}"
 
 springdoc:
   writer-with-default-pretty-printer: true

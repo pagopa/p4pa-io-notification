@@ -18,8 +18,8 @@ public class IOService {
     @Id
     private String id;
     private String serviceId;
-    private Long enteId;
-    private Long tipoDovutoId;
+    private Long organizationId;
+    private Long debtPositionTypeOrgId;
     private ServiceStatus status;
     private String serviceName;
     private String serviceDescription;

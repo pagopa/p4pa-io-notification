@@ -20,8 +20,8 @@ public class IOServiceImpl implements IOService {
     }
 
     @Override
-    public void createService(Long enteId, Long tipoDovutoId, ServiceRequestDTO serviceRequestDTO) {
-        ioServiceCreationService.createService(enteId, tipoDovutoId, serviceRequestDTO);
+    public void createService(Long organizationId, Long debtPositionTypeOrgId, ServiceRequestDTO serviceRequestDTO) {
+        ioServiceCreationService.createService(organizationId, debtPositionTypeOrgId, serviceRequestDTO);
     }
 
     @Override
@@ -30,8 +30,8 @@ public class IOServiceImpl implements IOService {
     }
 
     @Override
-    public ServiceDTO getService(Long enteId, Long tipoDovutoId) {
-        return ioManageService.getService(enteId, tipoDovutoId);
+    public ServiceDTO getService(Long organizationId, Long debtPositionTypeOrgId) {
+        return ioManageService.getService(organizationId, debtPositionTypeOrgId);
     }
 
     @Override
