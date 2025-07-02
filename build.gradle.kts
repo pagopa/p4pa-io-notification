@@ -185,6 +185,7 @@ tasks.register<GenerateTask>("openApiGenerateORGANIZATION") {
 		"generateSupportingFiles" to "true",
 		"generateConstructorWithAllArgs" to "true",
 		"generatedConstructorWithRequiredArgs" to "true",
+        "enumPropertyNaming" to "original",
 		"additionalModelTypeAnnotations" to "@lombok.experimental.SuperBuilder(toBuilder = true)"
 	))
     library.set("resttemplate")
