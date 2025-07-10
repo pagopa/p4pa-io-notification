@@ -181,6 +181,8 @@ tasks.register<GenerateTask>("openApiGenerateORGANIZATION") {
 		"serializableModel" to "true",
 		"useSpringBoot3" to "true",
 		"useJakartaEe" to "true",
+		"useOneOfInterfaces" to "true",
+		"useBeanValidation" to "true",
 		"serializationLibrary" to "jackson",
 		"generateSupportingFiles" to "true",
 		"generateConstructorWithAllArgs" to "true",
