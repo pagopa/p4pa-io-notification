@@ -27,15 +27,13 @@ configurations {
 
 repositories {
     mavenCentral()
-
-    dependencyManagement {
-        imports {
-            mavenBom("org.springframework.cloud:spring-cloud-dependencies:2025.0.0")
-        }
-    }
 }
 
-
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2025.0.0")
+    }
+}
 
 
 val springDocOpenApiVersion = "2.8.9"
