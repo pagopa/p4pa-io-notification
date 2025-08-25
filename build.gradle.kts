@@ -27,14 +27,16 @@ configurations {
 
 repositories {
     mavenCentral()
-}
 
-
-dependencyManagement {
-    imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2025.0.0")
+    dependencyManagement {
+        imports {
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:2025.0.0")
+        }
     }
 }
+
+
+
 
 val springDocOpenApiVersion = "2.8.9"
 val janinoVersion = "3.1.12"
@@ -44,6 +46,7 @@ val hibernateValidatorVersion = "8.0.2.Final"
 val micrometerVersion = "1.5.1"
 val bouncycastleVersion = "1.81"
 val httpClientVersion = "5.5"
+val fileUploadVersion = "1.6.0"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
@@ -63,6 +66,7 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-stream-kafka")
     implementation("org.bouncycastle:bcprov-jdk18on:$bouncycastleVersion")
     implementation("org.apache.httpcomponents.client5:httpclient5:$httpClientVersion")
+    implementation("commons-fileupload:commons-fileupload:$fileUploadVersion")
 
     //	Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
