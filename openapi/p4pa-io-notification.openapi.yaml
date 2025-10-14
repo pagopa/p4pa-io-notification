@@ -377,6 +377,11 @@ components:
           type: string
         markdown:
           type: string
+        personEntityType:
+          type: string
+          enum:
+            - F
+            - G
         fiscalCode:
           type: string
         orgFiscalCode:

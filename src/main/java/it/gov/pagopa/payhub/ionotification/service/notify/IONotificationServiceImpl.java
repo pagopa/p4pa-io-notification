@@ -80,6 +80,9 @@ public class IONotificationServiceImpl implements IONotificationService {
     }
 
     private boolean isSenderAllowed(NotificationRequestDTO notificationRequestDTO, String token) {
+        if (NotificationRequestDTO.PersonEntityTypeEnum.G.equals(notificationRequestDTO.getPersonEntityType())) {
+            return handleSenderNotAllowed(notificationRequestDTO);
+        }
         FiscalCodeDTO fiscalCode = ioNotificationMapper.mapToGetProfile(notificationRequestDTO);
         try {
             log.info("Verify if user is allowed to receive notification");
