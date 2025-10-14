@@ -100,6 +100,21 @@ class IONotificationServiceTest {
     }
 
     @Test
+    void givenSendNotificationWhenSenderIsLegalPersonThenSuccess() {
+        NotificationRequestDTO requestDTO = buildNotificationRequestDTO();
+        requestDTO.setPersonEntityType(NotificationRequestDTO.PersonEntityTypeEnum.G);
+        String accessToken = "accessToken";
+
+        when(organizationServiceMock.getOrganizationApiKey(accessToken, ORG_ID, OrganizationApiKeyType.IO))
+                .thenReturn("API_KEY");
+        when(connectorMock.getServiceKeys(SERVICE_ID, API_KEY)).thenReturn(keysDTO);
+
+        MessageResponseDTO result = service.sendMessage(accessToken, requestDTO);
+
+        assertNull(result);
+    }
+
+    @Test
     void givenSendNotificationWhenApiKeyNullThenReturnNull() {
         String accessToken = "accessToken";
 
