@@ -81,7 +81,7 @@ public class IONotificationServiceImpl implements IONotificationService {
 
     private boolean isSenderAllowed(NotificationRequestDTO notificationRequestDTO, String token) {
         if (NotificationRequestDTO.PersonEntityTypeEnum.G.equals(notificationRequestDTO.getPersonEntityType())) {
-            return false;
+            return handleSenderNotAllowed(notificationRequestDTO);
         }
         FiscalCodeDTO fiscalCode = ioNotificationMapper.mapToGetProfile(notificationRequestDTO);
         try {
