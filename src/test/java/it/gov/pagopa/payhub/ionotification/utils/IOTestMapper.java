@@ -193,6 +193,7 @@ public class IOTestMapper {
                 .serviceId(SERVICE_ID)
                 .subject(SUBJECT)
                 .markdown(MARKDOWN)
+                .personEntityType(NotificationRequestDTO.PersonEntityTypeEnum.F)
                 .fiscalCode(FISCAL_CODE)
                 .amount(1L)
                 .build();

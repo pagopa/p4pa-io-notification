@@ -100,6 +100,25 @@ class IONotificationServiceTest {
     }
 
     @Test
+    void givenSendNotificationWhenSenderIsLegalPersonThenSuccess() {
+        NotificationRequestDTO requestDTO = buildNotificationRequestDTO();
+        requestDTO.setPersonEntityType(NotificationRequestDTO.PersonEntityTypeEnum.G);
+        String accessToken = "accessToken";
+
+        when(organizationServiceMock.getOrganizationApiKey(accessToken, ORG_ID, OrganizationApiKeyType.IO))
+                .thenReturn("API_KEY");
+        when(connectorMock.getServiceKeys(SERVICE_ID, API_KEY)).thenReturn(keysDTO);
+
+        when(obfuscatorServiceMock.obfuscate(FISCAL_CODE)).thenReturn(USER_ID);
+        when(ioNotificationMapperMock.mapToSaveNotification(requestDTO, KO_SENDER_NOT_ALLOWED, USER_ID))
+                .thenReturn(ioNotification);
+
+        MessageResponseDTO result = service.sendMessage(accessToken, requestDTO);
+
+        assertNull(result);
+    }
+
+    @Test
     void givenSendNotificationWhenApiKeyNullThenReturnNull() {
         String accessToken = "accessToken";
 
