@@ -1,5 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.utils;
 
+import org.slf4j.MDC;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -28,5 +30,9 @@ public class Utilities {
 
     public static String centsAmountToEuroString(Long centsAmount){
         return parseBigDecimalToString(longCentsToBigDecimalEuro(centsAmount));
+    }
+
+    public static String getTraceId(){
+        return MDC.get("traceId");
     }
 }

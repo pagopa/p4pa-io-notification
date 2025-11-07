@@ -3,6 +3,7 @@ package it.gov.pagopa.payhub.ionotification.exception;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import it.gov.pagopa.payhub.ionotification.dto.generated.IoNotificationErrorDTO;
 import it.gov.pagopa.payhub.ionotification.exception.custom.*;
+import it.gov.pagopa.payhub.ionotification.utils.Utilities;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -86,7 +87,7 @@ public class IONotificationExceptionHandler {
         return ResponseEntity
                 .status(httpStatus)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new IoNotificationErrorDTO(errorEnum, message));
+                .body(new IoNotificationErrorDTO(errorEnum, message, Utilities.getTraceId()));
     }
 
     private static void logException(Exception ex, HttpServletRequest request, HttpStatusCode httpStatus) {

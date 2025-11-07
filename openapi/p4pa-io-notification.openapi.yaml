@@ -413,3 +413,5 @@ components:
             - IO_NOTIFICATION_BAD_REQUEST
         message:
           type: string
+        traceId:
+          type: string
