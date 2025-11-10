@@ -1,4 +1,6 @@
 import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+import com.github.jk1.license.render.*
+import com.github.jk1.license.filter.*
 
 plugins {
     java
@@ -9,6 +11,7 @@ plugins {
     id("com.github.ben-manes.versions") version "0.52.0"
     id("org.openapi.generator") version "7.15.0"
     id("com.gorylenko.gradle-git-properties") version "2.5.3"
+    id("com.github.jk1.dependency-license-report") version "3.0.1"
 }
 
 group = "it.gov.pagopa.payhub"
@@ -22,13 +25,23 @@ configurations {
     compileOnly {
         extendsFrom(configurations.annotationProcessor.get())
     }
+    compileClasspath {
+        resolutionStrategy.activateDependencyLocking()
+    }
 }
 
+licenseReport {
+    renderers = arrayOf(XmlReportRenderer("third-party-libs.xml", "Back-End Libraries"))
+    outputDir = "$projectDir/dependency-licenses"
+    filters = arrayOf(SpdxLicenseBundleNormalizer())
+}
+tasks.classes {
+    finalizedBy(tasks.generateLicenseReport)
+}
 
 repositories {
     mavenCentral()
 }
-
 
 val springDocOpenApiVersion = "2.8.13"
 val janinoVersion = "3.1.12"
@@ -39,6 +52,7 @@ val micrometerVersion = "1.5.4"
 val bouncycastleVersion = "1.82"
 val httpClientVersion = "5.5"
 val fileUploadVersion = "1.6.0"
+val commonsLang3Version = "3.19.0"
 val springCloudDepsVersion = "2025.0.0"
 
 dependencyManagement {
@@ -55,7 +69,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-tracing-bridge-otel:$micrometerVersion")
     implementation("io.micrometer:micrometer-registry-prometheus")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocOpenApiVersion")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocOpenApiVersion") {
+        exclude(group = "org.apache.commons", module = "commons-lang3")
+    }
+    implementation("org.apache.commons:commons-lang3:${commonsLang3Version}")
     implementation("org.codehaus.janino:janino:$janinoVersion")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
     implementation("org.openapitools:jackson-databind-nullable:$openApiToolsVersion")
@@ -112,12 +129,6 @@ tasks {
         filesMatching("**/application.yml") {
             expand(projectInfo)
         }
-    }
-}
-
-configurations {
-    compileClasspath {
-        resolutionStrategy.activateDependencyLocking()
     }
 }
 

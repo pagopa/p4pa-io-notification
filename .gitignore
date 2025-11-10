@@ -5,6 +5,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 helm/charts
+dependency-licenses/*/*
 
 ### STS ###
 .apt_generated
