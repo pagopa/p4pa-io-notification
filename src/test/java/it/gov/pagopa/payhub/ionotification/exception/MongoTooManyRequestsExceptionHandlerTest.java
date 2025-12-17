@@ -4,6 +4,7 @@ import com.mongodb.MongoQueryException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.ServerAddress;
 import com.mongodb.WriteError;
+import it.gov.pagopa.payhub.ionotification.config.json.JsonConfig;
 import it.gov.pagopa.payhub.ionotification.utils.UtilitiesTest;
 import org.bson.BsonDocument;
 import org.junit.jupiter.api.AfterEach;
@@ -11,8 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.mongodb.UncategorizedMongoDbException;
 import org.springframework.http.HttpHeaders;
@@ -32,11 +33,13 @@ import static org.mockito.Mockito.doThrow;
 
 @WebMvcTest(value = {
         MongoTooManyRequestsExceptionHandler.class,
-        IONotificationExceptionHandlerTest.TestController.class})
+        IONotificationExceptionHandlerTest.TestController.class,})
 @ContextConfiguration(classes = {
         IONotificationExceptionHandlerTest.class,
         MongoTooManyRequestsExceptionHandler.class,
-        IONotificationExceptionHandlerTest.TestController.class})
+        IONotificationExceptionHandlerTest.TestController.class,
+        JsonConfig.class
+})
 @AutoConfigureMockMvc(addFilters = false)
 class MongoTooManyRequestsExceptionHandlerTest {
     @Autowired
@@ -46,12 +49,14 @@ class MongoTooManyRequestsExceptionHandlerTest {
     private IONotificationExceptionHandlerTest.TestController testControllerSpy;
 
     private final String traceId = "TRACEID";
+
     @BeforeEach
-    void setTraceId(){
+    void setTraceId() {
         UtilitiesTest.setTraceId(traceId);
     }
+
     @AfterEach
-    void clearTraceId(){
+    void clearTraceId() {
         UtilitiesTest.clearTraceIdContext();
     }
 
@@ -59,11 +64,11 @@ class MongoTooManyRequestsExceptionHandlerTest {
     void handleUncategorizedMongoDbException() throws Exception {
 
         String mongoFullErrorResponse = """
-        {"ok": 0.0, "errmsg": "Error=16500, RetryAfterMs=34,\s
-        Details='Response status code does not indicate success: TooManyRequests (429) Substatus: 3200 ActivityId: 46ba3855-bc3b-4670-8609-17e1c2c87778 Reason:\s
-        (\\r\\nErrors : [\\r\\n \\"Request rate is large. More Request Units may be needed, so no changes were made. Please retry this request later. Learn more:
-         http://aka.ms/cosmosdb-error-429\\"\\r\\n]\\r\\n) ", "code": 16500, "codeName": "RequestRateTooLarge"}
-        """;
+                {"ok": 0.0, "errmsg": "Error=16500, RetryAfterMs=34,\s
+                Details='Response status code does not indicate success: TooManyRequests (429) Substatus: 3200 ActivityId: 46ba3855-bc3b-4670-8609-17e1c2c87778 Reason:\s
+                (\\r\\nErrors : [\\r\\n \\"Request rate is large. More Request Units may be needed, so no changes were made. Please retry this request later. Learn more:
+                 http://aka.ms/cosmosdb-error-429\\"\\r\\n]\\r\\n) ", "code": 16500, "codeName": "RequestRateTooLarge"}
+                """;
 
         final MongoQueryException mongoQueryException = new MongoQueryException(
                 BsonDocument.parse(mongoFullErrorResponse), new ServerAddress());
@@ -85,12 +90,12 @@ class MongoTooManyRequestsExceptionHandlerTest {
     void handleWriteDbWithoutTooManyRequestsException() throws Exception {
 
         String writeErrorMessage = """
-            Error=16500, Substatus: 3200; ActivityId: 822d212d-5aac-4f5d-a2d4-76d6da7b619e; Reason: (
-            Errors : [
-              "Request rate is large. More Request Units may be needed, so no changes were made. Please retry this request later. Learn more: http://aka.ms/cosmosdb-error-429"
-            ]
-            );
-            """;
+                Error=16500, Substatus: 3200; ActivityId: 822d212d-5aac-4f5d-a2d4-76d6da7b619e; Reason: (
+                Errors : [
+                  "Request rate is large. More Request Units may be needed, so no changes were made. Please retry this request later. Learn more: http://aka.ms/cosmosdb-error-429"
+                ]
+                );
+                """;
 
         handleMongoWriteException(writeErrorMessage);
     }
@@ -99,12 +104,12 @@ class MongoTooManyRequestsExceptionHandlerTest {
     void handleTooManyRequestsWriteDbException() throws Exception {
 
         String writeErrorMessage = """
-            RetryAfterMs=34, Details='Response status code does not indicate success: TooManyRequests (429); Substatus: 3200; ActivityId: 822d212d-5aac-4f5d-a2d4-76d6da7b619e; Reason: (
-            Errors : [
-              "Request rate is large. More Request Units may be needed, so no changes were made. Please retry this request later. Learn more: http://aka.ms/cosmosdb-error-429"
-            ]
-            );
-            """;
+                RetryAfterMs=34, Details='Response status code does not indicate success: TooManyRequests (429); Substatus: 3200; ActivityId: 822d212d-5aac-4f5d-a2d4-76d6da7b619e; Reason: (
+                Errors : [
+                  "Request rate is large. More Request Units may be needed, so no changes were made. Please retry this request later. Learn more: http://aka.ms/cosmosdb-error-429"
+                ]
+                );
+                """;
 
         handleMongoWriteException(writeErrorMessage);
     }
