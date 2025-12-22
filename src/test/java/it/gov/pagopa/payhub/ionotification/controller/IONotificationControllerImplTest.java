@@ -1,6 +1,5 @@
 package it.gov.pagopa.payhub.ionotification.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.payhub.ionotification.dto.generated.MessageResponseDTO;
 import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationRequestDTO;
 import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
@@ -9,12 +8,13 @@ import it.gov.pagopa.payhub.ionotification.service.IOService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import tools.jackson.databind.json.JsonMapper;
 
 import static it.gov.pagopa.payhub.ionotification.utils.IOTestMapper.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,7 +35,7 @@ class IONotificationControllerImplTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private JsonMapper jsonMapper;
 
     @MockitoBean
     private IOService ioService;
@@ -50,7 +50,7 @@ class IONotificationControllerImplTest {
                 post("/ionotification/service/"+ENTE_ID+"/"+TIPO_DOVUTO_ID)
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(serviceRequestDTO)))
+                        .content(jsonMapper.writeValueAsString(serviceRequestDTO)))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
     }
@@ -67,11 +67,11 @@ class IONotificationControllerImplTest {
                         post("/ionotification/message")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)
-                                .content(objectMapper.writeValueAsString(notificationRequestDTO)))
+                                .content(jsonMapper.writeValueAsString(notificationRequestDTO)))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        MessageResponseDTO resultResponse = objectMapper.readValue(result.getResponse().getContentAsString(), MessageResponseDTO.class);
+        MessageResponseDTO resultResponse = jsonMapper.readValue(result.getResponse().getContentAsString(), MessageResponseDTO.class);
         assertEquals(messageResponseDTO, resultResponse);
     }
 
@@ -87,7 +87,7 @@ class IONotificationControllerImplTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        ServiceDTO resultResponse = objectMapper.readValue(result.getResponse().getContentAsString(), ServiceDTO.class);
+        ServiceDTO resultResponse = jsonMapper.readValue(result.getResponse().getContentAsString(), ServiceDTO.class);
         assertEquals(serviceDTO, resultResponse);
     }
 
