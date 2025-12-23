@@ -6,10 +6,20 @@ import org.junit.jupiter.api.Assertions;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TimeZone;
 
 @Slf4j
 public class TestUtils {
-    private TestUtils(){}
+    private TestUtils() {
+    }
+
+    static {
+        clearDefaultTimezone();
+    }
+
+    public static void clearDefaultTimezone() {
+        TimeZone.setDefault(Constants.DEFAULT_TIMEZONE);
+    }
 
     /**
      * It will assert not null on all o's fields
@@ -19,7 +29,7 @@ public class TestUtils {
         org.springframework.util.ReflectionUtils.doWithFields(o.getClass(),
                 f -> {
                     f.setAccessible(true);
-                    Assertions.assertNotNull(f.get(o), "The field "+f.getName()+" of the input object of type "+o.getClass()+" is null!");
+                    Assertions.assertNotNull(f.get(o), "The field " + f.getName() + " of the input object of type " + o.getClass() + " is null!");
                 },
                 f -> !excludedFieldsSet.contains(f.getName()));
     }
