@@ -6,6 +6,7 @@ import it.gov.pagopa.payhub.ionotification.exception.custom.IOWrongPayloadExcept
 import it.gov.pagopa.payhub.ionotification.exception.custom.RetrieveServicesInvocationException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceAlreadyDeletedException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceNotFoundException;
+import it.gov.pagopa.payhub.ionotification.utils.TestUtils;
 import it.gov.pagopa.payhub.ionotification.utils.UtilitiesTest;
 import jakarta.servlet.ServletException;
 import jakarta.validation.ConstraintViolationException;
@@ -78,6 +79,11 @@ class IONotificationExceptionHandlerTest {
         String testEndpoint(@RequestParam(DATA) String data, @Valid @RequestBody TestRequestBody body) {
             return "OK";
         }
+    }
+
+    @BeforeEach
+    void init() {
+      TestUtils.clearDefaultTimezone();
     }
 
     @Data
