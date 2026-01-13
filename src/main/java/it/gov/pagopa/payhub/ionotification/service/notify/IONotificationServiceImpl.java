@@ -13,6 +13,7 @@ import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
 import it.gov.pagopa.payhub.ionotification.service.UserIdObfuscatorService;
 import it.gov.pagopa.pu.organization.dto.generated.OrganizationApiKeyType;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -85,9 +86,8 @@ public class IONotificationServiceImpl implements IONotificationService {
 
     private boolean isSenderAllowed(NotificationRequestDTO notificationRequestDTO, String token) {
         FiscalCodeDTO fiscalCode = ioNotificationMapper.mapToGetProfile(notificationRequestDTO);
-        String fiscalCodeStr = fiscalCode != null ? fiscalCode.getFiscalCode() : null;
 
-        if (fiscalCodeStr == null || !CF_PATTERN.matcher(fiscalCodeStr).matches()) {
+        if (StringUtils.isBlank(fiscalCode.getFiscalCode()) || !CF_PATTERN.matcher(fiscalCode.getFiscalCode()).matches()) {
             log.warn("Fiscal code is not a valid CF or is null. Blocking io-notification.");
             return handleSenderNotAllowed(notificationRequestDTO);
         }
