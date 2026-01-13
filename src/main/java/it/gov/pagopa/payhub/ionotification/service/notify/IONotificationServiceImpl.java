@@ -87,7 +87,7 @@ public class IONotificationServiceImpl implements IONotificationService {
     private boolean isSenderAllowed(NotificationRequestDTO notificationRequestDTO, String token) {
         FiscalCodeDTO fiscalCode = ioNotificationMapper.mapToGetProfile(notificationRequestDTO);
 
-        if (StringUtils.isBlank(fiscalCode.getFiscalCode()) || !CF_PATTERN.matcher(fiscalCode.getFiscalCode()).matches()) {
+        if (!CF_PATTERN.matcher(fiscalCode.getFiscalCode()).matches()) {
             log.warn("Fiscal code is not a valid CF or is null. Blocking io-notification.");
             return handleSenderNotAllowed(notificationRequestDTO);
         }
