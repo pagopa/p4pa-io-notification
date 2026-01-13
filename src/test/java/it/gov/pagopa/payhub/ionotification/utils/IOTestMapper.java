@@ -23,7 +23,7 @@ public class IOTestMapper {
     public static final String DATE = "DATE";
     public static final String VALUE = "VALUE";
     public static final String REASON = "REASON";
-    public static final String FISCAL_CODE = "FISCAL_CODE";
+    public static final String FISCAL_CODE = "RSSMRA80A01H501U";
     public static final String MARKDOWN = "This is a markdown %causaleVersamento%";
     public static final String SUBJECT = "Test Subject";
     public static final String SECONDARY_KEY = "SECONDARY_KEY";

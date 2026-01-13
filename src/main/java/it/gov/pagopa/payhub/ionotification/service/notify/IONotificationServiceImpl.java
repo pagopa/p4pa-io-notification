@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import static it.gov.pagopa.payhub.ionotification.enums.NotificationStatus.KO_SENDER_NOT_ALLOWED;
 import static it.gov.pagopa.payhub.ionotification.enums.NotificationStatus.OK;
@@ -32,6 +33,8 @@ public class IONotificationServiceImpl implements IONotificationService {
     private final OrganizationService organizationService;
     private final Long timeToLive;
 
+    private static final String CF_VALIDITY_REGEX = "^(?:[A-Z][AEIOUX][AEIOUX]|[B-DF-HJ-NP-TV-Z]{2}[A-Z]){2}(?:[\\dLMNP-V]{2}(?:[A-EHLMPR-T](?:[04LQ][1-9MNP-V]|[15MR][\\dLMNP-V]|[26NS][0-8LMNP-U])|[DHPS][37PT][0L]|[ACELMRT][37PT][01LM]|[AC-EHLMPR-T][26NS][9V])|(?:[02468LNQSU][048LQU]|[13579MPRTV][26NS])B[26NS][9V])(?:[A-MZ][1-9MNP-V][\\dLMNP-V]{2}|[A-M][0L](?:[1-9MNP-V][\\dLMNP-V]|[0L][1-9MNP-V]))[A-Z]$";
+    private static final Pattern CF_PATTERN = Pattern.compile(CF_VALIDITY_REGEX);
 
     public IONotificationServiceImpl(IONotificationRepository ioNotificationRepository,
                                      IORestConnector connector,
@@ -80,10 +83,14 @@ public class IONotificationServiceImpl implements IONotificationService {
     }
 
     private boolean isSenderAllowed(NotificationRequestDTO notificationRequestDTO, String token) {
-        if (NotificationRequestDTO.PersonEntityTypeEnum.G.equals(notificationRequestDTO.getPersonEntityType())) {
+        FiscalCodeDTO fiscalCode = ioNotificationMapper.mapToGetProfile(notificationRequestDTO);
+        String fiscalCodeStr = fiscalCode != null ? fiscalCode.getFiscalCode() : null;
+
+        if (fiscalCodeStr == null || !CF_PATTERN.matcher(fiscalCodeStr).matches()) {
+            log.warn("Fiscal code is not a valid CF or is null. Blocking io-notification.");
             return handleSenderNotAllowed(notificationRequestDTO);
         }
-        FiscalCodeDTO fiscalCode = ioNotificationMapper.mapToGetProfile(notificationRequestDTO);
+
         try {
             log.info("Verify if user is allowed to receive notification");
             ProfileResource profileResource = connector.getProfile(fiscalCode, token);
