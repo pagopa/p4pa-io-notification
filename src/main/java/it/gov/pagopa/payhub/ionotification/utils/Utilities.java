@@ -43,6 +43,7 @@ public class Utilities {
     }
 
     public static boolean checkFiscalCode(String fiscalCode) {
+        if(fiscalCode == null) return false;
         return CF_PATTERN.matcher(fiscalCode).matches();
     }
 }
