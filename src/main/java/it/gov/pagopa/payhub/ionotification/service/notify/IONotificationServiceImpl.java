@@ -11,14 +11,13 @@ import it.gov.pagopa.payhub.ionotification.exception.custom.SenderNotAllowedExce
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
 import it.gov.pagopa.payhub.ionotification.service.UserIdObfuscatorService;
+import it.gov.pagopa.payhub.ionotification.utils.Utilities;
 import it.gov.pagopa.pu.organization.dto.generated.OrganizationApiKeyType;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 import static it.gov.pagopa.payhub.ionotification.enums.NotificationStatus.KO_SENDER_NOT_ALLOWED;
 import static it.gov.pagopa.payhub.ionotification.enums.NotificationStatus.OK;
@@ -33,10 +32,6 @@ public class IONotificationServiceImpl implements IONotificationService {
     private final UserIdObfuscatorService obfuscatorService;
     private final OrganizationService organizationService;
     private final Long timeToLive;
-
-    @SuppressWarnings("java:S5843")
-    private static final String CF_VALIDITY_REGEX = "^(?:[A-Z][AEIOUX][AEIOUX]|[B-DF-HJ-NP-TV-Z]{2}[A-Z]){2}(?:[\\dLMNP-V]{2}(?:[A-EHLMPR-T](?:[04LQ][1-9MNP-V]|[15MR][\\dLMNP-V]|[26NS][0-8LMNP-U])|[DHPS][37PT][0L]|[ACELMRT][37PT][01LM]|[AC-EHLMPR-T][26NS][9V])|(?:[02468LNQSU][048LQU]|[13579MPRTV][26NS])B[26NS][9V])(?:[A-MZ][1-9MNP-V][\\dLMNP-V]{2}|[A-M][0L](?:[1-9MNP-V][\\dLMNP-V]|[0L][1-9MNP-V]))[A-Z]$";
-    private static final Pattern CF_PATTERN = Pattern.compile(CF_VALIDITY_REGEX);
 
     public IONotificationServiceImpl(IONotificationRepository ioNotificationRepository,
                                      IORestConnector connector,
@@ -87,7 +82,7 @@ public class IONotificationServiceImpl implements IONotificationService {
     private boolean isSenderAllowed(NotificationRequestDTO notificationRequestDTO, String token) {
         FiscalCodeDTO fiscalCode = ioNotificationMapper.mapToGetProfile(notificationRequestDTO);
 
-        if (!CF_PATTERN.matcher(fiscalCode.getFiscalCode()).matches()) {
+        if (!Utilities.checkFiscalCode(fiscalCode.getFiscalCode())) {
             return handleSenderNotAllowed(notificationRequestDTO);
         }
 
