@@ -100,10 +100,12 @@ class IONotificationServiceTest {
     }
 
     @Test
-    void givenSendNotificationWhenSenderIsLegalPersonThenSuccess() {
+    void givenSendNotificationWhenSenderIsLegalPersonWithInvalidCFThenSuccess() {
         NotificationRequestDTO requestDTO = buildNotificationRequestDTO();
-        requestDTO.setPersonEntityType(NotificationRequestDTO.PersonEntityTypeEnum.G);
         String accessToken = "accessToken";
+        FiscalCodeDTO legalPersonCF = new FiscalCodeDTO("12345678901");
+
+        when(ioNotificationMapperMock.mapToGetProfile(requestDTO)).thenReturn(legalPersonCF);
 
         when(organizationServiceMock.getOrganizationApiKey(accessToken, ORG_ID, OrganizationApiKeyType.IO))
                 .thenReturn("API_KEY");
@@ -116,6 +118,7 @@ class IONotificationServiceTest {
         MessageResponseDTO result = service.sendMessage(accessToken, requestDTO);
 
         assertNull(result);
+        verify(ioNotificationMapperMock).mapToSaveNotification(any(), any(), any());
     }
 
     @Test
