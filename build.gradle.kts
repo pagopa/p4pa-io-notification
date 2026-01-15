@@ -1,6 +1,8 @@
 import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 import com.github.jk1.license.render.*
 import com.github.jk1.license.filter.*
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     java
@@ -108,6 +110,8 @@ dependencies {
 tasks {
     test {
         jvmArgs("-javaagent:${mockitoAgent.asPath}")
+    testLogging.events = setOf(TestLogEvent.FAILED)
+    testLogging.exceptionFormat = TestExceptionFormat.FULL
     }
 }
 

@@ -11,6 +11,7 @@ import it.gov.pagopa.payhub.ionotification.exception.custom.SenderNotAllowedExce
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
 import it.gov.pagopa.payhub.ionotification.service.UserIdObfuscatorService;
+import it.gov.pagopa.payhub.ionotification.utils.Utilities;
 import it.gov.pagopa.pu.organization.dto.generated.OrganizationApiKeyType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +32,6 @@ public class IONotificationServiceImpl implements IONotificationService {
     private final UserIdObfuscatorService obfuscatorService;
     private final OrganizationService organizationService;
     private final Long timeToLive;
-
 
     public IONotificationServiceImpl(IONotificationRepository ioNotificationRepository,
                                      IORestConnector connector,
@@ -80,10 +80,12 @@ public class IONotificationServiceImpl implements IONotificationService {
     }
 
     private boolean isSenderAllowed(NotificationRequestDTO notificationRequestDTO, String token) {
-        if (NotificationRequestDTO.PersonEntityTypeEnum.G.equals(notificationRequestDTO.getPersonEntityType())) {
+        FiscalCodeDTO fiscalCode = ioNotificationMapper.mapToGetProfile(notificationRequestDTO);
+
+        if (!Utilities.checkFiscalCode(fiscalCode.getFiscalCode())) {
             return handleSenderNotAllowed(notificationRequestDTO);
         }
-        FiscalCodeDTO fiscalCode = ioNotificationMapper.mapToGetProfile(notificationRequestDTO);
+
         try {
             log.info("Verify if user is allowed to receive notification");
             ProfileResource profileResource = connector.getProfile(fiscalCode, token);
