@@ -1,8 +1,17 @@
 locals {
+  # Common Tags:
+  common_tags = {
+    CreatedBy   = "Terraform"
+    Environment = var.env
+    Owner       = upper(var.prefix)
+    Source      = "https://github.com/pagopa/p4pa-io-notification" # Repository URL
+    CostCenter  = "TS310 - PAGAMENTI & SERVIZI"
+  }
+
   # Repo
   github = {
     org        = "pagopa"
-    repository = "p4pa-io-notification"
+    repository = "p4pa-io-notification" # Repository Name
   }
 
   env_secrets   = {}
