@@ -54,6 +54,7 @@ val bouncycastleVersion = "1.83"
 val httpClientVersion = "5.5.1"
 val fileUploadVersion = "1.6.0"
 val commonsLang3Version = "3.20.0"
+val caffeineVersion = "3.2.3"
 val springCloudDepsVersion = "2025.1.0"
 
 dependencyManagement {
@@ -75,6 +76,8 @@ dependencies {
         exclude(group = "org.apache.commons", module = "commons-lang3")
     }
     implementation("org.apache.commons:commons-lang3:$commonsLang3Version")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("com.github.ben-manes.caffeine:caffeine:$caffeineVersion")
     implementation("org.codehaus.janino:janino:$janinoVersion")
     implementation("org.openapitools:jackson-databind-nullable:$openApiToolsVersion")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")

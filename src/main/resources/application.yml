@@ -62,7 +62,7 @@ management:
       exposure.include: "*"
     web:
       exposure:
-        include: health, info, prometheus, metrics
+        include: health, info, prometheus, metrics, caches
       base-path: /actuator
   endpoint:
     health:
@@ -118,3 +118,14 @@ jwt:
                 odND6HPvvvmgbK1/2qTHn/HJjWUm11LUC73BszR32BKbdEEhxPQnnwswVekWzPi1
                 IwIDAQAB
                 -----END PUBLIC KEY-----}"
+
+cache:
+  organizationApiKey:
+    size: "\${CACHE_ORGANIZATION_API_KEYS_SIZE:100}"
+    expire-in: "\${CACHE_ORGANIZATION_API_KEYS_MINUTES:10}"
+  ioServices:
+    size: "\${CACHE_IO_SERVICES_SIZE:100}"
+    expire-in: "\${CACHE_IO_SERVICES_MINUTES:60}"
+  ioProfiles:
+    size: "\${CACHE_IO_PROFILES_SIZE:1000}"
+    expire-in: "\${CACHE_IO_PROFILES_MINUTES:60}"

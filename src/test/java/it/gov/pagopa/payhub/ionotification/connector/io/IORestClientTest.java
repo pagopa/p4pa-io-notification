@@ -7,8 +7,9 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import it.gov.pagopa.payhub.ionotification.config.rest.IORestConnectorConfig;
 import it.gov.pagopa.payhub.ionotification.dto.*;
-import it.gov.pagopa.payhub.ionotification.exception.custom.*;
 import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
+import it.gov.pagopa.payhub.ionotification.exception.custom.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,7 +159,7 @@ class IORestClientTest {
     }
 
     @Test
-    void givenGetUserProfileWhenSenderNotAllowedTokenThenThrowSenderNotAllowedException() throws JsonProcessingException {
+    void givenGetUserProfileWhenSenderNotAllowedTokenThenReturnNull() throws JsonProcessingException {
 
         FiscalCodeDTO fiscalCodeDTO = getUserProfileRequest();
         wireMockServer.stubFor(post(urlEqualTo("/profiles"))
@@ -170,8 +171,9 @@ class IORestClientTest {
                 )
         );
 
-        assertThrows(SenderNotAllowedException.class, () ->
-                ioRestConnector.getProfile(fiscalCodeDTO, "TOKEN"));
+        ProfileResource result = ioRestConnector.getProfile(fiscalCodeDTO, "TOKEN");
+
+        Assertions.assertNull(result);
     }
 
     @Test

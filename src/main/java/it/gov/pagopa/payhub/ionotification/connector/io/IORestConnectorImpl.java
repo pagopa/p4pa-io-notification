@@ -7,11 +7,14 @@ import it.gov.pagopa.payhub.ionotification.exception.custom.*;
 import it.gov.pagopa.payhub.ionotification.performancelogger.PerformanceLogger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.function.ThrowingSupplier;
 
 @Service
 @Slf4j
+@CacheConfig
 public class IORestConnectorImpl implements IORestConnector {
 
     private final String subscriptionKey;
@@ -37,6 +40,7 @@ public class IORestConnectorImpl implements IORestConnector {
     }
 
     @Override
+    @Cacheable(cacheNames = it.gov.pagopa.payhub.ionotification.config.CacheConfig.Fields.ioServices, key = "#serviceId")
     public KeysDTO getServiceKeys(String serviceId, String apiKey) {
         try {
             return execute("IO/getServiceKeys", () -> ioFeignRestClient.getServiceKeys(serviceId, apiKey));
@@ -46,12 +50,13 @@ public class IORestConnectorImpl implements IORestConnector {
     }
 
     @Override
+    @Cacheable(cacheNames = it.gov.pagopa.payhub.ionotification.config.CacheConfig.Fields.ioServices, key = "#fiscalCode.getFiscalCode()")
     public ProfileResource getProfile(FiscalCodeDTO fiscalCode, String primaryKey) {
         try {
             return execute("IO/getProfile", () -> ioFeignRestClient.getProfile(fiscalCode, primaryKey));
         } catch (FeignException e) {
             if (e.status() == 403) {
-                throw new SenderNotAllowedException(String.format("The user is not enabled to receive notifications: %s", e.getMessage()));
+                return null;
             }
             throw new RetrieveSenderProfileInvocationException("It was not possible to verify if the user is allowed to receive notification:" + e.getMessage());
         }

@@ -10,7 +10,6 @@ import it.gov.pagopa.payhub.ionotification.dto.generated.MessageResponseDTO;
 import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationRequestDTO;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IONotificationMapper;
 import it.gov.pagopa.payhub.ionotification.enums.NotificationStatus;
-import it.gov.pagopa.payhub.ionotification.exception.custom.SenderNotAllowedException;
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
@@ -159,7 +158,7 @@ class IONotificationServiceTest {
         when(organizationServiceMock.getOrganizationApiKey(accessToken, ORG_ID, OrganizationApiKeyType.IO))
                 .thenReturn("API_KEY");
 
-        doThrow(new SenderNotAllowedException("Error")).when(connectorMock).getProfile(fiscalCodeDTO, keysDTO.getPrimaryKey());
+        doReturn(null).when(connectorMock).getProfile(fiscalCodeDTO, keysDTO.getPrimaryKey());
 
         MessageResponseDTO result = sendNotification(KO_SENDER_NOT_ALLOWED);
 

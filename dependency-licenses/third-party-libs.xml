@@ -56,6 +56,16 @@
 <td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
 </tr>
 <tr>
+<td><a href='https://github.com/ben-manes/caffeine'>com.github.ben-manes.caffeine:caffeine</a></td>
+<td>3.2.3</td>
+<td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
+</tr>
+<tr>
+<td><a href='https://errorprone.info/error_prone_annotations'>com.google.errorprone:error_prone_annotations</a></td>
+<td>2.43.0</td>
+<td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
+</tr>
+<tr>
 <td><a href='https://developers.google.com/protocol-buffers/'>com.google.protobuf:protobuf-java</a></td>
 <td>4.32.0</td>
 <td><a href='https://opensource.org/licenses/BSD-3-Clause'>BSD-3-Clause</a></td>
@@ -486,6 +496,11 @@
 <td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
 </tr>
 <tr>
+<td><a href='https://github.com/spring-projects/spring-framework'>org.springframework:spring-context-support</a></td>
+<td>7.0.1</td>
+<td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
+</tr>
+<tr>
 <td><a href='https://github.com/spring-projects/spring-framework'>org.springframework:spring-core</a></td>
 <td>7.0.1</td>
 <td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
@@ -527,6 +542,11 @@
 </tr>
 <tr>
 <td><a href='https://spring.io/projects/spring-boot'>org.springframework.boot:spring-boot-autoconfigure</a></td>
+<td>4.0.0</td>
+<td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
+</tr>
+<tr>
+<td><a href='https://spring.io/projects/spring-boot'>org.springframework.boot:spring-boot-cache</a></td>
 <td>4.0.0</td>
 <td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
 </tr>
@@ -622,6 +642,11 @@
 </tr>
 <tr>
 <td><a href='https://spring.io/projects/spring-boot'>org.springframework.boot:spring-boot-starter-actuator</a></td>
+<td>4.0.0</td>
+<td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
+</tr>
+<tr>
+<td><a href='https://spring.io/projects/spring-boot'>org.springframework.boot:spring-boot-starter-cache</a></td>
 <td>4.0.0</td>
 <td><a href='https://www.apache.org/licenses/LICENSE-2.0'>Apache-2.0</a></td>
 </tr>
