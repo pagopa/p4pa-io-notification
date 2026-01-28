@@ -37,7 +37,7 @@ public class IONotificationExceptionHandler {
             SendNotificationInvocationException.class,
             RetrieveSenderProfileInvocationException.class})
     public ResponseEntity<IoNotificationErrorDTO> handleFeignClientException(RuntimeException ex, HttpServletRequest request) {
-        return handleException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, IoNotificationErrorDTO.CodeEnum.IO_NOTIFICATION_GENERIC_ERROR);
+        return handleException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, IoNotificationErrorDTO.CodeEnum.IO_NOTIFICATION_GENERIC_ERROR, false);
     }
 
     @ExceptionHandler(IOWrongPayloadException.class)
@@ -81,7 +81,12 @@ public class IONotificationExceptionHandler {
     }
 
     static ResponseEntity<IoNotificationErrorDTO> handleException(Exception ex, HttpServletRequest request, HttpStatusCode httpStatus, IoNotificationErrorDTO.CodeEnum errorEnum) {
-        logException(ex, request, httpStatus);
+        boolean printStackTrace = httpStatus.is5xxServerError();
+        return handleException(ex, request, httpStatus, errorEnum, printStackTrace);
+    }
+
+    static ResponseEntity<IoNotificationErrorDTO> handleException(Exception ex, HttpServletRequest request, HttpStatusCode httpStatus, IoNotificationErrorDTO.CodeEnum errorEnum, boolean printStackTrace) {
+        logException(ex, request, httpStatus, printStackTrace);
 
         String message = buildReturnedMessage(ex);
 
@@ -91,8 +96,7 @@ public class IONotificationExceptionHandler {
                 .body(new IoNotificationErrorDTO(errorEnum, message, Utilities.getTraceId()));
     }
 
-    private static void logException(Exception ex, HttpServletRequest request, HttpStatusCode httpStatus) {
-        boolean printStackTrace = httpStatus.is5xxServerError();
+    private static void logException(Exception ex, HttpServletRequest request, HttpStatusCode httpStatus, boolean printStackTrace) {
         Level logLevel = printStackTrace ? Level.ERROR : Level.INFO;
         log.makeLoggingEventBuilder(logLevel)
                 .log("A {} occurred handling request {}: HttpStatus {} - {}",

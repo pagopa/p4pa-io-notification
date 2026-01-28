@@ -87,7 +87,8 @@ class IORestClientTest {
         CreateServiceInvocationException exception = assertThrows(CreateServiceInvocationException.class, () ->
                 ioRestConnector.createService(serviceRequestDTO));
 
-        assertEquals("The service was not created, please retry it", exception.getMessage());
+        String exceptionMessage = exception.getMessage().replaceAll("\\[http://0.0.0.0:[0-9]+/manage/services]", "[http://0.0.0.0:<PORT>/manage/services]");
+        assertEquals("The service was not created, please retry it:[403 Forbidden] during [POST] to [http://0.0.0.0:<PORT>/manage/services] [IOFeignRestClient#createService(ServiceRequestDTO,String)]: []", exceptionMessage);
     }
 
     @Test
