@@ -82,6 +82,16 @@ See [application.yml](src/main/resources/application.yml) for each configurable 
 
 #### 🔁 Integrations
 
+##### 📋 [Caching](https://pagopa.atlassian.net/wiki/spaces/SPAC/pages/1542128077/Caching)
+| ENV                                 | DESCRIPTION                                         | DEFAULT |
+|-------------------------------------|-----------------------------------------------------|---------|
+| CACHE_ORGANIZATION_API_KEYS_SIZE    | Organization ApiKeys data cache size                | 100     |
+| CACHE_ORGANIZATION_API_KEYS_MINUTES | Organization ApiKeys data cache retention (minutes) | 10      |
+| CACHE_IO_SERVICES_SIZE              | IO Services data cache size                         | 100     |
+| CACHE_IO_SERVICES_MINUTES           | IO Services data cache retention (minutes)          | 60      |
+| CACHE_IO_PROFILES_SIZE              | IO Profiles data cache size                         | 1000    |
+| CACHE_IO_PROFILES_MINUTES           | IO Profiles data cache retention (minutes)          | 60      |
+
 ##### 🗄️ Resources
 | ENV                                           | DESCRIPTION                             | DEFAULT                   |
 |-----------------------------------------------|-----------------------------------------|---------------------------|

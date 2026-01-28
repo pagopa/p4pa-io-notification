@@ -7,7 +7,6 @@ import it.gov.pagopa.payhub.ionotification.dto.generated.MessageResponseDTO;
 import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationRequestDTO;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IONotificationMapper;
 import it.gov.pagopa.payhub.ionotification.enums.NotificationStatus;
-import it.gov.pagopa.payhub.ionotification.exception.custom.SenderNotAllowedException;
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
 import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
 import it.gov.pagopa.payhub.ionotification.service.UserIdObfuscatorService;
@@ -48,8 +47,8 @@ public class IONotificationServiceImpl implements IONotificationService {
 
     @Override
     public MessageResponseDTO sendMessage(String accessToken, NotificationRequestDTO notificationRequestDTO) {
-        log.info("Sending notification to organizationId {} and debtPositionTypeOrgId {}",
-                notificationRequestDTO.getOrgId(), notificationRequestDTO.getDebtPositionTypeOrgId());
+        log.info("Sending notification to organizationId {} and debtPositionTypeOrgId {} related to nav {}",
+                notificationRequestDTO.getOrgId(), notificationRequestDTO.getDebtPositionTypeOrgId(), notificationRequestDTO.getNav());
         String apiKey = organizationService.getOrganizationApiKey(accessToken, notificationRequestDTO.getOrgId(), OrganizationApiKeyType.IO);
         if (apiKey != null) {
             String token = retrieveTokenIO(notificationRequestDTO.getServiceId(), apiKey);
@@ -86,13 +85,9 @@ public class IONotificationServiceImpl implements IONotificationService {
             return handleSenderNotAllowed(notificationRequestDTO);
         }
 
-        try {
-            log.debug("Verify if user is allowed to receive notification");
-            ProfileResource profileResource = connector.getProfile(fiscalCode, token);
-            if (!profileResource.isSenderAllowed()) {
-                return handleSenderNotAllowed(notificationRequestDTO);
-            }
-        } catch (SenderNotAllowedException e) {
+        log.debug("Verify if user is allowed to receive notification");
+        ProfileResource profileResource = connector.getProfile(fiscalCode, token);
+        if (profileResource == null || !profileResource.isSenderAllowed()) {
             return handleSenderNotAllowed(notificationRequestDTO);
         }
         return true;
@@ -124,7 +119,7 @@ public class IONotificationServiceImpl implements IONotificationService {
             ioNotification.setNotificationId(notificationId);
         }
 
-        log.info("Saving notification with status {}", status);
+        log.debug("Saving notification with status {}", status);
         ioNotificationRepository.save(ioNotification);
     }
 
