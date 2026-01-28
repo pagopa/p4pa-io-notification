@@ -29,11 +29,10 @@ public class IORestConnectorImpl implements IORestConnector {
         try {
             return execute("IO/createService", () -> ioFeignRestClient.createService(serviceRequestDTO, subscriptionKey));
         } catch (FeignException e) {
-            log.error("An error occurred while creating service: {}", e.getMessage());
             if (e.status() == 400) {
                 throw new IOWrongPayloadException(String.format("There is something wrong with the payload: %s", e.getMessage()));
             }
-            throw new CreateServiceInvocationException("The service was not created, please retry it");
+            throw new CreateServiceInvocationException("The service was not created, please retry it:" + e.getMessage());
         }
     }
 
@@ -42,8 +41,7 @@ public class IORestConnectorImpl implements IORestConnector {
         try {
             return execute("IO/getServiceKeys", () -> ioFeignRestClient.getServiceKeys(serviceId, apiKey));
         } catch (FeignException e) {
-            log.error("An error occurred while retrieving the token: {}", e.getMessage());
-            throw new RetrieveServicesInvocationException("It was not possible to retrieve the token from IO");
+            throw new RetrieveServicesInvocationException("It was not possible to retrieve the token from IO: " +  e.getMessage());
         }
     }
 
@@ -52,11 +50,10 @@ public class IORestConnectorImpl implements IORestConnector {
         try {
             return execute("IO/getProfile", () -> ioFeignRestClient.getProfile(fiscalCode, primaryKey));
         } catch (FeignException e) {
-            log.error("An error occurred while verifying if the user is allowed to receive notification: {}", e.getMessage());
             if (e.status() == 403) {
                 throw new SenderNotAllowedException(String.format("The user is not enabled to receive notifications: %s", e.getMessage()));
             }
-            throw new RetrieveSenderProfileInvocationException("It was not possible to verify if the user is allowed to receive notification");
+            throw new RetrieveSenderProfileInvocationException("It was not possible to verify if the user is allowed to receive notification:" + e.getMessage());
         }
     }
 
@@ -65,11 +62,10 @@ public class IORestConnectorImpl implements IORestConnector {
         try {
             return execute("IO/sendNotification", () -> ioFeignRestClient.sendNotification(notificationDTO, primaryKey));
         } catch (FeignException e) {
-            log.error("An error occurred while sending notification: {}", e.getMessage());
             if (e.status() == 400) {
                 throw new IOWrongPayloadException(String.format("There is something wrong with the payload: %s", e.getMessage()));
             }
-            throw new SendNotificationInvocationException("There was an error processing the request of notification");
+            throw new SendNotificationInvocationException("There was an error processing the request of notification: " + e.getMessage());
         }
     }
 
@@ -78,8 +74,7 @@ public class IORestConnectorImpl implements IORestConnector {
         try {
             return execute("IO/getAllServices", () -> ioFeignRestClient.getAllServices(limit, offset, subscriptionKey));
         } catch (FeignException e) {
-            log.error("An error occurred while retrieving all services: {}", e.getMessage());
-            throw new RetrieveServicesInvocationException("It was not possible to retrieve all services from IO, please retry it");
+            throw new RetrieveServicesInvocationException("It was not possible to retrieve all services from IO, please retry it: " + e.getMessage());
         }
     }
 
@@ -91,13 +86,12 @@ public class IORestConnectorImpl implements IORestConnector {
                 return serviceId;
             });
         } catch (FeignException e) {
-            log.error("An error occurred while deleting service: {}", e.getMessage());
             if (e.status() == 404) {
                 throw new ServiceNotFoundException(String.format("The service with serviceId %s does not exist in IO", serviceId));
             } else if (e.status() == 409) {
                 throw new ServiceAlreadyDeletedException(String.format("The service with serviceId %s is already deleted from IO", serviceId));
             }
-            throw new DeleteServiceInvocationException(String.format("It was not possible to delete the service with serviceId: %s in IO", serviceId));
+            throw new DeleteServiceInvocationException(String.format("It was not possible to delete the service with serviceId: %s in IO: %s", serviceId, e.getMessage()));
         }
     }
 

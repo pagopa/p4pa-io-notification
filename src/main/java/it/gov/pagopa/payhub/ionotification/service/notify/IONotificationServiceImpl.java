@@ -74,7 +74,7 @@ public class IONotificationServiceImpl implements IONotificationService {
     }
 
     private String retrieveTokenIO(String serviceId, String apiKey) {
-        log.info("Retrieve token from IO for service {}", serviceId);
+        log.debug("Retrieve token from IO for service {}", serviceId);
         KeysDTO keys = connector.getServiceKeys(serviceId, apiKey);
         return keys.getPrimaryKey();
     }
@@ -87,7 +87,7 @@ public class IONotificationServiceImpl implements IONotificationService {
         }
 
         try {
-            log.info("Verify if user is allowed to receive notification");
+            log.debug("Verify if user is allowed to receive notification");
             ProfileResource profileResource = connector.getProfile(fiscalCode, token);
             if (!profileResource.isSenderAllowed()) {
                 return handleSenderNotAllowed(notificationRequestDTO);
@@ -109,7 +109,7 @@ public class IONotificationServiceImpl implements IONotificationService {
         NotificationDTO notificationDTO = ioNotificationMapper
                 .map(timeToLive, notificationRequestDTO);
 
-        log.info("Sending notification to IO");
+        log.debug("Sending notification to IO");
         NotificationResource notificationResource = connector.sendNotification(notificationDTO, token);
         saveNotification(notificationRequestDTO, notificationResource.getId(), OK);
 
