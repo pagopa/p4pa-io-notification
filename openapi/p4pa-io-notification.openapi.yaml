@@ -397,10 +397,10 @@ components:
     IoNotificationErrorDTO:
       type: object
       required:
-        - code
+        - category
         - message
       properties:
-        code:
+        category:
           type: string
           enum:
             - IO_NOTIFICATION_SERVICE_NOT_FOUND
