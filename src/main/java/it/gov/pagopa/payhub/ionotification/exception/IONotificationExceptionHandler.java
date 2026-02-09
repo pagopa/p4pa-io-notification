@@ -37,39 +37,39 @@ public class IONotificationExceptionHandler {
             SendNotificationInvocationException.class,
             RetrieveSenderProfileInvocationException.class})
     public ResponseEntity<IoNotificationErrorDTO> handleFeignClientException(RuntimeException ex, HttpServletRequest request) {
-        return handleException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, IoNotificationErrorDTO.CodeEnum.IO_NOTIFICATION_GENERIC_ERROR, false);
+        return handleException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, IoNotificationErrorDTO.CategoryEnum.IO_NOTIFICATION_GENERIC_ERROR, false);
     }
 
     @ExceptionHandler(IOWrongPayloadException.class)
     public ResponseEntity<IoNotificationErrorDTO> handleWrongPayloadException(Exception ex, HttpServletRequest request) {
-        return handleException(ex, request, HttpStatus.BAD_REQUEST, IoNotificationErrorDTO.CodeEnum.IO_NOTIFICATION_WRONG_PAYLOAD);
+        return handleException(ex, request, HttpStatus.BAD_REQUEST, IoNotificationErrorDTO.CategoryEnum.IO_NOTIFICATION_WRONG_PAYLOAD);
     }
 
     @ExceptionHandler({ServiceAlreadyDeletedException.class})
     public ResponseEntity<IoNotificationErrorDTO> handleServiceAlreadyDeletedException(RuntimeException ex, HttpServletRequest request) {
-        return handleException(ex, request, HttpStatus.FORBIDDEN, IoNotificationErrorDTO.CodeEnum.IO_NOTIFICATION_SERVICE_ALREADY_DELETED);
+        return handleException(ex, request, HttpStatus.FORBIDDEN, IoNotificationErrorDTO.CategoryEnum.IO_NOTIFICATION_SERVICE_ALREADY_DELETED);
     }
 
     @ExceptionHandler({ServiceNotFoundException.class})
     public ResponseEntity<IoNotificationErrorDTO> handleNotFoundException(RuntimeException ex, HttpServletRequest request) {
-        return handleException(ex, request, HttpStatus.NOT_FOUND, IoNotificationErrorDTO.CodeEnum.IO_NOTIFICATION_SERVICE_NOT_FOUND);
+        return handleException(ex, request, HttpStatus.NOT_FOUND, IoNotificationErrorDTO.CategoryEnum.IO_NOTIFICATION_SERVICE_NOT_FOUND);
     }
 
     @ExceptionHandler({ValidationException.class, HttpMessageNotReadableException.class, MethodArgumentNotValidException.class, MethodArgumentTypeMismatchException.class})
     public ResponseEntity<IoNotificationErrorDTO> handleViolationException(Exception ex, HttpServletRequest request) {
-        return handleException(ex, request, HttpStatus.BAD_REQUEST, IoNotificationErrorDTO.CodeEnum.IO_NOTIFICATION_BAD_REQUEST);
+        return handleException(ex, request, HttpStatus.BAD_REQUEST, IoNotificationErrorDTO.CategoryEnum.IO_NOTIFICATION_BAD_REQUEST);
     }
 
     @ExceptionHandler({ServletException.class, ErrorResponseException.class})
     public ResponseEntity<IoNotificationErrorDTO> handleServletException(Exception ex, HttpServletRequest request) {
         HttpStatusCode httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        IoNotificationErrorDTO.CodeEnum errorCode = IoNotificationErrorDTO.CodeEnum.IO_NOTIFICATION_GENERIC_ERROR;
+        IoNotificationErrorDTO.CategoryEnum errorCode = IoNotificationErrorDTO.CategoryEnum.IO_NOTIFICATION_GENERIC_ERROR;
         if (ex instanceof ErrorResponse errorResponse) {
             httpStatus = errorResponse.getStatusCode();
             if (httpStatus.isSameCodeAs(HttpStatus.NOT_FOUND)) {
-                errorCode = IoNotificationErrorDTO.CodeEnum.IO_NOTIFICATION_NOT_FOUND;
+                errorCode = IoNotificationErrorDTO.CategoryEnum.IO_NOTIFICATION_NOT_FOUND;
             } else if (httpStatus.is4xxClientError()) {
-                errorCode = IoNotificationErrorDTO.CodeEnum.IO_NOTIFICATION_BAD_REQUEST;
+                errorCode = IoNotificationErrorDTO.CategoryEnum.IO_NOTIFICATION_BAD_REQUEST;
             }
         }
         return handleException(ex, request, httpStatus, errorCode);
@@ -77,15 +77,15 @@ public class IONotificationExceptionHandler {
 
     @ExceptionHandler({RuntimeException.class})
     public ResponseEntity<IoNotificationErrorDTO> handleRuntimeException(RuntimeException ex, HttpServletRequest request) {
-        return handleException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, IoNotificationErrorDTO.CodeEnum.IO_NOTIFICATION_GENERIC_ERROR);
+        return handleException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, IoNotificationErrorDTO.CategoryEnum.IO_NOTIFICATION_GENERIC_ERROR);
     }
 
-    static ResponseEntity<IoNotificationErrorDTO> handleException(Exception ex, HttpServletRequest request, HttpStatusCode httpStatus, IoNotificationErrorDTO.CodeEnum errorEnum) {
+    static ResponseEntity<IoNotificationErrorDTO> handleException(Exception ex, HttpServletRequest request, HttpStatusCode httpStatus, IoNotificationErrorDTO.CategoryEnum errorEnum) {
         boolean printStackTrace = httpStatus.is5xxServerError();
         return handleException(ex, request, httpStatus, errorEnum, printStackTrace);
     }
 
-    static ResponseEntity<IoNotificationErrorDTO> handleException(Exception ex, HttpServletRequest request, HttpStatusCode httpStatus, IoNotificationErrorDTO.CodeEnum errorEnum, boolean printStackTrace) {
+    static ResponseEntity<IoNotificationErrorDTO> handleException(Exception ex, HttpServletRequest request, HttpStatusCode httpStatus, IoNotificationErrorDTO.CategoryEnum errorEnum, boolean printStackTrace) {
         logException(ex, request, httpStatus, printStackTrace);
 
         String message = buildReturnedMessage(ex);
