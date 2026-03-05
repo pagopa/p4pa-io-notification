@@ -52,6 +52,7 @@ val wiremockVersion = "3.13.2"
 val micrometerVersion = "1.6.3"
 val bouncycastleVersion = "1.83"
 val httpClientVersion = "5.6"
+val httpCoreVersion = "5.4.1"
 val fileUploadVersion = "1.6.0"
 val commonsLang3Version = "3.20.0"
 val caffeineVersion = "3.2.3"
@@ -89,6 +90,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.bouncycastle:bcprov-jdk18on:$bouncycastleVersion")
     implementation("org.apache.httpcomponents.client5:httpclient5:$httpClientVersion")
+  implementation("org.apache.httpcomponents.core5:httpcore5:$httpCoreVersion")
     implementation("commons-fileupload:commons-fileupload:$fileUploadVersion")
 
     //	Testing
