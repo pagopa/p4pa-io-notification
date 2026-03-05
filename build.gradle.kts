@@ -60,7 +60,7 @@ val caffeineVersion = "3.2.3"
 val jackson2CoreVersion = "2.21.1"
 val jackson3CoreVersion = "3.1.0"
 
-val springCloudDepsVersion = "2025.1.0"
+val springCloudDepsVersion = "2025.1.1"
 
 dependencyManagement {
     imports {
