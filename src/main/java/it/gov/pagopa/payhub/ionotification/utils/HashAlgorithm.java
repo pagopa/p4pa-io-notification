@@ -17,7 +17,7 @@ public class HashAlgorithm {
     try {
       return MessageDigest.getInstance(algorithm);
     } catch (NoSuchAlgorithmException e) {
-      throw new IllegalStateException("Algorithm not available", e);
+      throw new IllegalStateException("[ALGORITHM_NOT_FOUND] Algorithm not available", e);
     }
   }
 
