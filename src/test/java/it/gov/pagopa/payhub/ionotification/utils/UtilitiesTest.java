@@ -36,6 +36,7 @@ public class UtilitiesTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
+            "AAAAAA00A00A000A", // regexp relaxed in order to match also this, useful to test with IO notification
             "RSSMRA80A01H501U",
             "BNCFNC85T10A123Z",
             "MRALRA90P41H501M",
