@@ -227,11 +227,11 @@
               "listen": "prerequest",
               "script": {
                 "exec": [
-                  "\r",
                   ""
                 ],
                 "type": "text/javascript",
-                "packages": {}
+                "packages": {},
+                "requests": {}
               }
             },
             {
@@ -259,7 +259,8 @@
                   ""
                 ],
                 "type": "text/javascript",
-                "packages": {}
+                "packages": {},
+                "requests": {}
               }
             }
           ],
@@ -340,7 +341,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"serviceId\": \"{{serviceId}}\",\r\n    \"orgId\": \"{{orgId}}\",\r\n    \"debtPositionTypeOrgId\": \"{{debtPositionTypeOrgId}}\",\r\n    \"subject\": \"{{ioTemplateSubject}}\",\r\n    \"markdown\": \"{{ioTemplateMessage}}\",\r\n    \"fiscalCode\": \"{{fiscalCode}}\",\r\n    \"amount\": 10000\r\n}",
+              "raw": "{\r\n    \"serviceId\": \"{{serviceId}}\",\r\n    \"orgId\": \"{{organizationId}}\",\r\n    \"debtPositionTypeOrgId\": \"{{debtPositionTypeOrgId}}\",\r\n    \"subject\": \"{{ioTemplateSubject}}\",\r\n    \"markdown\": \"{{ioTemplateMessage}}\",\r\n    \"fiscalCode\": \"{{fiscalCode}}\",\r\n    \"amount\": 10000\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -550,23 +551,7 @@
       "value": "AAAAAA00A00A000A"
     },
     {
-      "key": "serviceId",
-      "value": ""
-    },
-    {
-      "key": "userId",
-      "value": ""
-    },
-    {
       "key": "accessToken",
-      "value": ""
-    },
-    {
-      "key": "orgId",
-      "value": ""
-    },
-    {
-      "key": "notificationId",
       "value": ""
     },
     {
@@ -586,23 +571,7 @@
       "value": ""
     },
     {
-      "key": "typeKey",
-      "value": ""
-    },
-    {
       "key": "organizationId",
-      "value": ""
-    },
-    {
-      "key": "apiKey",
-      "value": ""
-    },
-    {
-      "key": "ioTemplateSubject",
-      "value": ""
-    },
-    {
-      "key": "ioTemplateMessage",
       "value": ""
     },
     {
@@ -615,6 +584,22 @@
     },
     {
       "key": "debtPositionTypeOrgId",
+      "value": ""
+    },
+    {
+      "key": "serviceId",
+      "value": ""
+    },
+    {
+      "key": "ioTemplateSubject",
+      "value": ""
+    },
+    {
+      "key": "ioTemplateMessage",
+      "value": ""
+    },
+    {
+      "key": "notificationId",
       "value": ""
     }
   ]
