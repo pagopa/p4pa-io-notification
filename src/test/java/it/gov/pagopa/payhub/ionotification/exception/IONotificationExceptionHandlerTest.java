@@ -83,7 +83,7 @@ class IONotificationExceptionHandlerTest {
 
     @BeforeEach
     void init() {
-      TestUtils.clearDefaultTimezone();
+        TestUtils.clearDefaultTimezone();
     }
 
     @Data
@@ -99,12 +99,14 @@ class IONotificationExceptionHandlerTest {
     }
 
     private final String traceId = "TRACEID";
+
     @BeforeEach
-    void setTraceId(){
+    void setTraceId() {
         UtilitiesTest.setTraceId(traceId);
     }
+
     @AfterEach
-    void clearTraceId(){
+    void clearTraceId() {
         UtilitiesTest.clearTraceIdContext();
     }
 
@@ -128,11 +130,13 @@ class IONotificationExceptionHandlerTest {
 
     @Test
     void handleFeignClientException() throws Exception {
-        doThrow(new RetrieveServicesInvocationException("Error")).when(testControllerSpy).testEndpoint(DATA, BODY);
+        doThrow(new RetrieveServicesInvocationException("ERRORCODE", "Error")).when(testControllerSpy).testEndpoint(DATA, BODY);
 
         performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isInternalServerError())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_GENERIC_ERROR"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("ERRORCODE"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[ERRORCODE] Error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
     }
 
@@ -142,7 +146,9 @@ class IONotificationExceptionHandlerTest {
 
         performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_WRONG_PAYLOAD"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_WRONG_PAYLOAD"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[IO_NOTIFICATION_WRONG_PAYLOAD] Error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
     }
 
@@ -152,7 +158,9 @@ class IONotificationExceptionHandlerTest {
 
         performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isForbidden())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_SERVICE_ALREADY_DELETED"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_SERVICE_ALREADY_DELETED"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[IO_NOTIFICATION_SERVICE_ALREADY_DELETED] Error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
     }
 
@@ -162,7 +170,9 @@ class IONotificationExceptionHandlerTest {
 
         performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_SERVICE_NOT_FOUND"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_SERVICE_NOT_FOUND"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[IO_NOTIFICATION_SERVICE_NOT_FOUND] Error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
     }
 
@@ -171,7 +181,8 @@ class IONotificationExceptionHandlerTest {
         performRequest(null, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_BAD_REQUEST"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required request parameter 'data' for method parameter type String is not present"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[IO_NOTIFICATION_BAD_REQUEST] Required request parameter 'data' for method parameter type String is not present"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
 
     }
@@ -183,7 +194,8 @@ class IONotificationExceptionHandlerTest {
         performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isInternalServerError())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_GENERIC_ERROR"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_GENERIC_ERROR"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[IO_NOTIFICATION_GENERIC_ERROR] Error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
     }
 
@@ -195,7 +207,8 @@ class IONotificationExceptionHandlerTest {
         performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isInternalServerError())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_GENERIC_ERROR"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_GENERIC_ERROR"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[IO_NOTIFICATION_GENERIC_ERROR] Error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
     }
 
@@ -204,7 +217,8 @@ class IONotificationExceptionHandlerTest {
         performRequest(DATA, MediaType.parseMediaType("application/hal+json"))
                 .andExpect(MockMvcResultMatchers.status().isNotAcceptable())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_BAD_REQUEST"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No acceptable representation"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[IO_NOTIFICATION_BAD_REQUEST] No acceptable representation"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
     }
 
@@ -213,7 +227,8 @@ class IONotificationExceptionHandlerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/NOTEXISTENTURL"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_NOT_FOUND"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("No static resource NOTEXISTENTURL for request '/NOTEXISTENTURL'."))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_NOT_FOUND"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[IO_NOTIFICATION_NOT_FOUND] No static resource NOTEXISTENTURL for request '/NOTEXISTENTURL'."))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
     }
 
@@ -222,7 +237,19 @@ class IONotificationExceptionHandlerTest {
         performRequest(DATA, MediaType.APPLICATION_JSON, null)
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_BAD_REQUEST"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Required request body is missing"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[IO_NOTIFICATION_BAD_REQUEST] Required request body is missing"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
+    }
+
+    @Test
+    void handleMalformedBodyException() throws Exception {
+        performRequest(DATA, MediaType.APPLICATION_JSON,
+                "{\"")
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[IO_NOTIFICATION_BAD_REQUEST] Cannot parse body. Unexpected end-of-input: was expecting closing '\"' for name"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
     }
 
@@ -232,7 +259,8 @@ class IONotificationExceptionHandlerTest {
                 "{\"notRequiredField\":\"notRequired\",\"lowerCaseAlphabeticField\":\"ABC\"}")
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_BAD_REQUEST"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Invalid request content. lowerCaseAlphabeticField: must match \"[a-z]+\"; requiredField: must not be null"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[IO_NOTIFICATION_BAD_REQUEST] Invalid request content. lowerCaseAlphabeticField: must match \"[a-z]+\"; requiredField: must not be null"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
     }
 
@@ -242,7 +270,8 @@ class IONotificationExceptionHandlerTest {
                 "{\"notRequiredField\":\"notRequired\",\"dateTimeField\":\"2025-02-05\"}")
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_BAD_REQUEST"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Cannot parse body. dateTimeField: Text '2025-02-05' could not be parsed at index 10"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[IO_NOTIFICATION_BAD_REQUEST] Cannot parse body. dateTimeField: Text '2025-02-05' could not be parsed at index 10"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
     }
 
@@ -254,13 +283,15 @@ class IONotificationExceptionHandlerTest {
         performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isInternalServerError())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_GENERIC_ERROR"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("500 INTERNAL_SERVER_ERROR \"Error\""))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_GENERIC_ERROR"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[IO_NOTIFICATION_GENERIC_ERROR] 500 INTERNAL_SERVER_ERROR \"Error\""))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
     }
 
     private final ConstraintViolationException constraintViolationException = new ConstraintViolationException("Error", Set.of(ConstraintViolationImpl.forParameterValidation(
             "error message template", Map.of(), Map.of(), "resolved message", null, null, null, null, PathImpl.createPathFromString("fieldName"), null, null, null
     )));
+
     @Test
     void handleViolationException() throws Exception {
         doThrow(constraintViolationException).when(testControllerSpy).testEndpoint(DATA, BODY);
@@ -268,7 +299,8 @@ class IONotificationExceptionHandlerTest {
         performRequest(DATA, MediaType.APPLICATION_JSON)
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_BAD_REQUEST"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Invalid request content. fieldName: resolved message"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_BAD_REQUEST"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[IO_NOTIFICATION_BAD_REQUEST] Invalid request content. fieldName: resolved message"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
     }
 

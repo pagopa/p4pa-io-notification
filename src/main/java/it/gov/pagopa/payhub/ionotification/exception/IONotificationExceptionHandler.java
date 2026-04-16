@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.hc.client5.http.HttpHostConnectException;
 import org.slf4j.event.Level;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
@@ -25,11 +27,14 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.DatabindException;
 
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Slf4j
 public class IONotificationExceptionHandler {
+
+    private static final String ERROR_MESSAGE_FORMAT = "[%s] %s";
 
     @ExceptionHandler({
             RetrieveServicesInvocationException.class,
@@ -89,12 +94,15 @@ public class IONotificationExceptionHandler {
     static ResponseEntity<IoNotificationErrorDTO> handleException(Exception ex, HttpServletRequest request, HttpStatusCode httpStatus, IoNotificationErrorDTO.CategoryEnum errorEnum, boolean printStackTrace) {
         logException(ex, request, httpStatus, printStackTrace);
 
-        String message = buildReturnedMessage(ex);
+        Pair<String, String> code2message = buildReturnedMessage(ex);
+
+        String code = Objects.requireNonNullElse(code2message.getLeft(), errorEnum.getValue());
+        String message = code2message.getRight();
 
         return ResponseEntity
                 .status(httpStatus)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new IoNotificationErrorDTO(errorEnum, message, Utilities.getTraceId()));
+                .body(new IoNotificationErrorDTO(errorEnum, code, String.format(ERROR_MESSAGE_FORMAT, code, message), Utilities.getTraceId()));
     }
 
     private static void logException(Exception ex, HttpServletRequest request, HttpStatusCode httpStatus, boolean printStackTrace) {
@@ -112,38 +120,49 @@ public class IONotificationExceptionHandler {
         }
     }
 
-    private static String buildReturnedMessage(Exception ex) {
+    private static Pair<String, String> buildReturnedMessage(Exception ex) {
         switch (ex) {
             case HttpMessageNotReadableException httpMessageNotReadableException -> {
+                String errorMsg = "Required request body is missing";
                 if (httpMessageNotReadableException.getCause() instanceof DatabindException jsonMappingException) {
-                    return "Cannot parse body. " +
+                    errorMsg = "Cannot parse body. " +
                             jsonMappingException.getPath().stream()
                                     .map(JacksonException.Reference::getPropertyName)
                                     .collect(Collectors.joining(".")) +
                             ": " + jsonMappingException.getOriginalMessage();
+                } else if (httpMessageNotReadableException.getCause() instanceof JacksonException jacksonException) {
+                    errorMsg = "Cannot parse body. " + jacksonException.getOriginalMessage();
                 }
-                return "Required request body is missing";
+                return Pair.of(IoNotificationErrorDTO.CategoryEnum.IO_NOTIFICATION_BAD_REQUEST.name(), errorMsg);
             }
             case MethodArgumentNotValidException methodArgumentNotValidException -> {
-                return "Invalid request content." +
+                return Pair.of(IoNotificationErrorDTO.CategoryEnum.IO_NOTIFICATION_BAD_REQUEST.name(),
+                        "Invalid request content." +
                         methodArgumentNotValidException.getBindingResult()
                                 .getAllErrors().stream()
                                 .map(e -> " " +
                                         (e instanceof FieldError fieldError ? fieldError.getField() : e.getObjectName()) +
                                         ": " + e.getDefaultMessage())
                                 .sorted()
-                                .collect(Collectors.joining(";"));
+                                .collect(Collectors.joining(";")));
             }
             case ConstraintViolationException constraintViolationException -> {
-                return "Invalid request content." +
+                return Pair.of(IoNotificationErrorDTO.CategoryEnum.IO_NOTIFICATION_BAD_REQUEST.name(),
+                        "Invalid request content." +
                         constraintViolationException.getConstraintViolations()
                                 .stream()
                                 .map(e -> " " + e.getPropertyPath() + ": " + e.getMessage())
                                 .sorted()
-                                .collect(Collectors.joining(";"));
+                                .collect(Collectors.joining(";")));
+            }
+            case BaseBusinessException businessException -> {
+                return Pair.of(businessException.getCode(), businessException.getMessage());
             }
             default -> {
-                return ex.getMessage();
+                if (ex.getCause() instanceof HttpHostConnectException) {
+                    return Pair.of("CONNECTION_ERROR", ex.getMessage());
+                }
+                return Pair.of(null, ex.getMessage());
             }
         }
     }

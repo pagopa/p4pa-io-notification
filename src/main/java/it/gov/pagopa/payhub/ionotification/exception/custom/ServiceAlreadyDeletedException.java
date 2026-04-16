@@ -1,8 +1,10 @@
 package it.gov.pagopa.payhub.ionotification.exception.custom;
 
-public class ServiceAlreadyDeletedException extends RuntimeException {
+import it.gov.pagopa.payhub.ionotification.utils.ErrorCodeConstants;
+
+public class ServiceAlreadyDeletedException extends BaseBusinessException {
 
     public ServiceAlreadyDeletedException(String message){
-        super(message);
+        super(ErrorCodeConstants.ERROR_CODE_IO_NOTIFICATION_SERVICE_ALREADY_DELETED, message);
     }
 }
