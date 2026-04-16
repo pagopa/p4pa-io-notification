@@ -60,7 +60,8 @@ public class IOManageServiceTest {
         ServiceNotFoundException exception =assertThrows(ServiceNotFoundException.class, () ->
                 service.getService(ENTE_ID, TIPO_DOVUTO_ID));
 
-        assertEquals("[IO_NOTIFICATION_SERVICE_NOT_FOUND] The service for 456 associated with 123 does not exist", exception.getMessage());
+        assertEquals("IO_NOTIFICATION_SERVICE_NOT_FOUND",exception.getCode());
+        assertEquals("The service for 456 associated with 123 does not exist", exception.getMessage());
     }
 
     @Test
