@@ -1,8 +1,8 @@
 package it.gov.pagopa.payhub.ionotification.exception.custom;
 
-public class CreateServiceInvocationException extends RuntimeException{
+public class CreateServiceInvocationException extends BaseBusinessException{
 
-    public CreateServiceInvocationException(String message){
-        super(message);
+    public CreateServiceInvocationException(String code, String message){
+        super(code, message);
     }
 }

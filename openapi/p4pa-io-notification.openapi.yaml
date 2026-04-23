@@ -398,6 +398,7 @@ components:
       type: object
       required:
         - category
+        - code
         - message
       properties:
         category:
@@ -411,6 +412,8 @@ components:
             - IO_NOTIFICATION_TOO_MANY_REQUESTS
             - IO_NOTIFICATION_INVALID_REQUEST
             - IO_NOTIFICATION_BAD_REQUEST
+        code:
+          type: string
         message:
           type: string
         traceId:
