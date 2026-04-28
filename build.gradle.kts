@@ -57,7 +57,6 @@ val fileUploadVersion = "1.6.0"
 val commonsLang3Version = "3.20.0"
 val caffeineVersion = "3.2.3"
 
-
 val springCloudDepsVersion = "2025.1.1"
 
 dependencyManagement {
