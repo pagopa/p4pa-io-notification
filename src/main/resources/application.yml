@@ -105,6 +105,7 @@ data-cipher:
   encrypt-psw: "\${DATA_CIPHER_ENCRYPT_PASSWORD:PWD}"
 
 springdoc:
+  api-docs.version: openapi_3_0
   writer-with-default-pretty-printer: true
 
 jwt:
