@@ -1,4 +1,5 @@
 import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+import java.util.*
 import com.github.jk1.license.render.*
 import com.github.jk1.license.filter.*
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
@@ -12,6 +13,7 @@ plugins {
     id("org.sonarqube") version "7.2.3.7755"
     id("com.github.ben-manes.versions") version "0.54.0"
     id("org.openapi.generator") version "7.21.0"
+    id("org.ajoberstar.grgit") version "5.3.2"
     id("com.gorylenko.gradle-git-properties") version "2.5.7"
     id("com.github.jk1.dependency-license-report") version "3.1.2"
 }
@@ -193,13 +195,21 @@ openApiGenerate {
     )
 }
 
+var targetEnv = when (Objects.requireNonNullElse(
+    System.getProperty("targetBranch"),
+    grgit.branch.current().name
+)) {
+    "uat" -> "uat"
+    "main" -> "main"
+    else -> "develop"
+}
 
 tasks.register<GenerateTask>("openApiGenerateORGANIZATION") {
     group = "AutomaticallyGeneratedCode"
     description = "openapi"
 
     generatorName.set("java")
-    remoteInputSpec.set("https://raw.githubusercontent.com/pagopa/p4pa-organization/refs/heads/develop/openapi/generated.openapi.json")
+    remoteInputSpec.set("https://raw.githubusercontent.com/pagopa/p4pa-doc/refs/heads/main/openapi/$targetEnv/internal/p4pa-organization.generated.openapi.json")
     outputDir.set("$projectDir/build/generated")
     invokerPackage.set("it.gov.pagopa.pu.organization.generated")
     apiPackage.set("it.gov.pagopa.pu.organization.client.generated")
