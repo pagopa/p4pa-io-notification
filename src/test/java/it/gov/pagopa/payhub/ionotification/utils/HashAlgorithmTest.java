@@ -1,5 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.utils;
 
+import it.gov.pagopa.payhub.ionotification.exception.custom.IllegalStateBusinessException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -23,9 +24,14 @@ class HashAlgorithmTest {
 
   @Test
   void givenInvalidAlgorithmWhenHashThenNoSuchAlgorithmException() {
-    //Given
+    // Given
     hashAlgorithm = new HashAlgorithm("invalidAlgorithm", Base64.getDecoder().decode("PEPPER"));
-    //Then
-    Assertions.assertThrows(IllegalStateException.class, () -> hashAlgorithm.apply("TEXT"));
+
+    // When
+    IllegalStateBusinessException resultException = Assertions.assertThrows(IllegalStateBusinessException.class, () -> hashAlgorithm.apply("TEXT"));
+
+    // Then
+    Assertions.assertEquals("ALGORITHM_NOT_FOUND", resultException.getCode());
+    Assertions.assertEquals("Algorithm not available", resultException.getMessage());
   }
 }

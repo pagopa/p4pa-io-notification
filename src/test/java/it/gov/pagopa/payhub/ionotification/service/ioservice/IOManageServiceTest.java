@@ -1,6 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.service.ioservice;
 
-import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
+import it.gov.pagopa.payhub.ionotification.connector.io.IORestConnector;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IOServiceMapper;
 import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceAlreadyDeletedException;
 import it.gov.pagopa.payhub.ionotification.exception.custom.ServiceNotFoundException;
@@ -40,7 +40,7 @@ public class IOManageServiceTest {
     @Test
     void givenGetServiceThenSuccess(){
         IOService serviceModel = mapIoService(createServiceRequestDTO());
-        when(ioServiceRepository.findByEnteIdAndTipoDovutoId(ENTE_ID, TIPO_DOVUTO_ID))
+        when(ioServiceRepository.findByOrganizationIdAndDebtPositionTypeOrgId(ENTE_ID, TIPO_DOVUTO_ID))
                 .thenReturn(Optional.of(serviceModel));
 
         when(serviceMapper.mapService(serviceModel)).thenReturn(getServiceResponse());
@@ -48,18 +48,19 @@ public class IOManageServiceTest {
         ServiceDTO serviceDTO = service.getService(ENTE_ID, TIPO_DOVUTO_ID);
 
         assertNotNull(serviceDTO);
-        verify(ioServiceRepository, times(1)).findByEnteIdAndTipoDovutoId(ENTE_ID, TIPO_DOVUTO_ID);
+        verify(ioServiceRepository, times(1)).findByOrganizationIdAndDebtPositionTypeOrgId(ENTE_ID, TIPO_DOVUTO_ID);
     }
 
     @Test
     void givenGetServiceWhenServiceNotFoundThenThrowServiceNotFoundException(){
 
-        when(ioServiceRepository.findByEnteIdAndTipoDovutoId(ENTE_ID, TIPO_DOVUTO_ID))
+        when(ioServiceRepository.findByOrganizationIdAndDebtPositionTypeOrgId(ENTE_ID, TIPO_DOVUTO_ID))
                 .thenReturn(Optional.empty());
 
         ServiceNotFoundException exception =assertThrows(ServiceNotFoundException.class, () ->
                 service.getService(ENTE_ID, TIPO_DOVUTO_ID));
 
+        assertEquals("IO_NOTIFICATION_SERVICE_NOT_FOUND",exception.getCode());
         assertEquals("The service for 456 associated with 123 does not exist", exception.getMessage());
     }
 

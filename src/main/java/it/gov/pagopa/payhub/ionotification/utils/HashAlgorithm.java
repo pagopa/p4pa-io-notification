@@ -1,5 +1,7 @@
 package it.gov.pagopa.payhub.ionotification.utils;
 
+import it.gov.pagopa.payhub.ionotification.exception.custom.IllegalStateBusinessException;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -17,7 +19,7 @@ public class HashAlgorithm {
     try {
       return MessageDigest.getInstance(algorithm);
     } catch (NoSuchAlgorithmException e) {
-      throw new IllegalStateException("Algorithm not available", e);
+      throw new IllegalStateBusinessException(ErrorCodeConstants.ERROR_CODE_ALGORITHM_NOT_FOUND, "Algorithm not available", e);
     }
   }
 

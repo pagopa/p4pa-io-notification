@@ -6,19 +6,19 @@ info:
 servers:
   - url: "http://localhost:8080/ionotification"
 paths:
-  /service/{enteId}/{tipoDovutoId}:
+  /service/{organizationId}/{debtPositionTypeOrgId}:
     post:
       tags:
         - ioNotification
       operationId: createService
       parameters:
-        - name: enteId
+        - name: organizationId
           in: path
           required: true
           schema:
             type: integer
             format: int64
-        - name: tipoDovutoId
+        - name: debtPositionTypeOrgId
           in: path
           required: true
           schema:
@@ -62,13 +62,13 @@ paths:
         - ioNotification
       operationId: getService
       parameters:
-        - name: enteId
+        - name: organizationId
           in: path
           required: true
           schema:
             type: integer
             format: int64
-        - name: tipoDovutoId
+        - name: debtPositionTypeOrgId
           in: path
           required: true
           schema:
@@ -147,10 +147,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NotificationQueueDTO'
+              $ref: '#/components/schemas/NotificationRequestDTO'
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponseDTO'
         '401':
           description: Authentication failed
           content:
@@ -187,29 +191,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IoNotificationErrorDTO'
-  /message/{userId}/{enteId}/{tipoDovutoId}:
+  /{notificationId}/message:
     delete:
       tags:
         - ioNotification
       operationId: deleteNotification
       parameters:
-        - name: userId
+        - name: notificationId
           in: path
           required: true
           schema:
             type: string
-        - name: enteId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: tipoDovutoId
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
       responses:
         '200':
           description: OK
@@ -364,38 +356,52 @@ components:
           type: number
           x-field-extra-annotation: |-
             @JsonProperty("topic_id")
-    NotificationQueueDTO:
+    NotificationRequestDTO:
       type: object
       required:
-        - fiscalCode
-        - enteId
-        - tipoDovutoId
+        - serviceId
+        - subject
+        - markdown
       properties:
+        serviceId:
+          type: string
+        orgId:
+          type: integer
+          format: int64
+        debtPositionTypeOrgId:
+          type: integer
+          format: int64
+        nav:
+          type: string
+        subject:
+          type: string
+        markdown:
+          type: string
+        personEntityType:
+          type: string
+          enum:
+            - F
+            - G
         fiscalCode:
           type: string
-        enteId:
-          type: integer
-          format: int64
-        tipoDovutoId:
-          type: integer
-          format: int64
-        operationType:
-          type: string
-        paymentDate:
+        orgFiscalCode:
           type: string
         amount:
-          type: string
-        iuv:
-          type: string
-        paymentReason:
+          type: integer
+          format: int64
+    MessageResponseDTO:
+      type: object
+      properties:
+        notificationId:
           type: string
     IoNotificationErrorDTO:
       type: object
       required:
+        - category
         - code
         - message
       properties:
-        code:
+        category:
           type: string
           enum:
             - IO_NOTIFICATION_SERVICE_NOT_FOUND
@@ -406,5 +412,9 @@ components:
             - IO_NOTIFICATION_TOO_MANY_REQUESTS
             - IO_NOTIFICATION_INVALID_REQUEST
             - IO_NOTIFICATION_BAD_REQUEST
+        code:
+          type: string
         message:
+          type: string
+        traceId:
           type: string

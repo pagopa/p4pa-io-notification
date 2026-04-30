@@ -1,11 +1,9 @@
 package it.gov.pagopa.payhub.ionotification.service;
 
+import it.gov.pagopa.payhub.ionotification.dto.generated.*;
 import it.gov.pagopa.payhub.ionotification.service.ioservice.IOManageService;
 import it.gov.pagopa.payhub.ionotification.service.ioservice.IOServiceCreationService;
 import it.gov.pagopa.payhub.ionotification.service.notify.IONotificationService;
-import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationQueueDTO;
-import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
-import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,18 +20,18 @@ public class IOServiceImpl implements IOService {
     }
 
     @Override
-    public void createService(Long enteId, Long tipoDovutoId, ServiceRequestDTO serviceRequestDTO) {
-        ioServiceCreationService.createService(enteId, tipoDovutoId, serviceRequestDTO);
+    public void createService(Long organizationId, Long debtPositionTypeOrgId, ServiceRequestDTO serviceRequestDTO) {
+        ioServiceCreationService.createService(organizationId, debtPositionTypeOrgId, serviceRequestDTO);
     }
 
     @Override
-    public void sendMessage(NotificationQueueDTO notificationQueueDTO) {
-        ioNotificationService.sendMessage(notificationQueueDTO);
+    public MessageResponseDTO sendMessage(String accessToken, NotificationRequestDTO notificationRequestDTO) {
+        return ioNotificationService.sendMessage(accessToken, notificationRequestDTO);
     }
 
     @Override
-    public ServiceDTO getService(Long enteId, Long tipoDovutoId) {
-        return ioManageService.getService(enteId, tipoDovutoId);
+    public ServiceDTO getService(Long organizationId, Long debtPositionTypeOrgId) {
+        return ioManageService.getService(organizationId, debtPositionTypeOrgId);
     }
 
     @Override
@@ -42,12 +40,7 @@ public class IOServiceImpl implements IOService {
     }
 
     @Override
-    public void sendNotification(NotificationQueueDTO notificationQueueDTO) {
-        ioNotificationService.sendNotification(notificationQueueDTO);
-    }
-
-    @Override
-    public void deleteNotification(String userId, Long enteId, Long tipoDovutoId) {
-        ioNotificationService.deleteNotification(userId, enteId, tipoDovutoId);
+    public void deleteNotification(String notificationId) {
+        ioNotificationService.deleteNotification(notificationId);
     }
 }

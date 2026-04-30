@@ -1,24 +1,25 @@
 package it.gov.pagopa.payhub.ionotification.service.notify;
 
-import it.gov.pagopa.payhub.ionotification.connector.IORestConnector;
+import it.gov.pagopa.payhub.ionotification.connector.io.IORestConnector;
+import it.gov.pagopa.payhub.ionotification.connector.organization.OrganizationService;
 import it.gov.pagopa.payhub.ionotification.dto.*;
+import it.gov.pagopa.payhub.ionotification.dto.generated.MessageResponseDTO;
+import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationRequestDTO;
 import it.gov.pagopa.payhub.ionotification.dto.mapper.IONotificationMapper;
 import it.gov.pagopa.payhub.ionotification.enums.NotificationStatus;
-import it.gov.pagopa.payhub.ionotification.event.producer.IONotificationProducer;
-import it.gov.pagopa.payhub.ionotification.exception.custom.SenderNotAllowedException;
 import it.gov.pagopa.payhub.ionotification.model.IONotification;
-import it.gov.pagopa.payhub.ionotification.model.IOService;
 import it.gov.pagopa.payhub.ionotification.repository.IONotificationRepository;
-import it.gov.pagopa.payhub.ionotification.repository.IOServiceRepository;
 import it.gov.pagopa.payhub.ionotification.service.UserIdObfuscatorService;
-import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationQueueDTO;
+import it.gov.pagopa.payhub.ionotification.utils.Utilities;
+import it.gov.pagopa.pu.organization.dto.generated.OrganizationApiKeyType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static it.gov.pagopa.payhub.ionotification.enums.NotificationStatus.*;
+import static it.gov.pagopa.payhub.ionotification.enums.NotificationStatus.KO_SENDER_NOT_ALLOWED;
+import static it.gov.pagopa.payhub.ionotification.enums.NotificationStatus.OK;
 
 @Service
 @Slf4j
@@ -26,132 +27,99 @@ public class IONotificationServiceImpl implements IONotificationService {
 
     private final IONotificationRepository ioNotificationRepository;
     private final IORestConnector connector;
-    private final IONotificationProducer ioNotificationProducer;
     private final IONotificationMapper ioNotificationMapper;
-    private final IOServiceRepository ioServiceRepository;
     private final UserIdObfuscatorService obfuscatorService;
+    private final OrganizationService organizationService;
     private final Long timeToLive;
-    private final String subject;
-    private final String markdown;
+
     public IONotificationServiceImpl(IONotificationRepository ioNotificationRepository,
                                      IORestConnector connector,
-                                     IONotificationProducer ioNotificationProducer,
                                      IONotificationMapper ioNotificationMapper,
-                                     IOServiceRepository ioServiceRepository, UserIdObfuscatorService obfuscatorService,
-                                     @Value("${rest-client.backend-io-manage.notification.ttl}") Long timeToLive,
-                                     @Value("${rest-client.backend-io-manage.notification.subject}") String subject,
-                                     @Value("${rest-client.backend-io-manage.notification.markdown}") String markdown) {
+                                     UserIdObfuscatorService obfuscatorService, OrganizationService organizationService,
+                                     @Value("${rest.backend-io-manage.notification.ttl}") Long timeToLive) {
         this.ioNotificationRepository = ioNotificationRepository;
         this.connector = connector;
-        this.ioNotificationProducer = ioNotificationProducer;
         this.ioNotificationMapper = ioNotificationMapper;
-        this.ioServiceRepository = ioServiceRepository;
         this.obfuscatorService = obfuscatorService;
+        this.organizationService = organizationService;
         this.timeToLive = timeToLive;
-        this.subject = subject;
-        this.markdown = markdown;
     }
 
     @Override
-    public void sendMessage(NotificationQueueDTO notificationQueueDTO) {
-        log.info("Sending message to notify of type {}", notificationQueueDTO.getOperationType());
-        ioNotificationProducer.sendNotification(notificationQueueDTO);
-    }
-
-    @Override
-    public void sendNotification(NotificationQueueDTO notificationQueueDTO) {
-        Optional<IOService> ioService = retrieveIOService(notificationQueueDTO);
-        if (ioService.isPresent()) {
-            String token = retrieveTokenIO(ioService.get());
-            if (isSenderAllowed(notificationQueueDTO, ioService.get(), token)) {
-                sendNotification(notificationQueueDTO, ioService.get(), token);
+    public MessageResponseDTO sendMessage(String accessToken, NotificationRequestDTO notificationRequestDTO) {
+        log.info("Sending notification to organizationId {} and debtPositionTypeOrgId {} related to nav {}",
+                notificationRequestDTO.getOrgId(), notificationRequestDTO.getDebtPositionTypeOrgId(), notificationRequestDTO.getNav());
+        String apiKey = organizationService.getOrganizationApiKey(accessToken, notificationRequestDTO.getOrgId(), OrganizationApiKeyType.IO);
+        if (apiKey != null) {
+            String token = retrieveTokenIO(notificationRequestDTO.getServiceId(), apiKey);
+            if (isSenderAllowed(notificationRequestDTO, token)) {
+                String notificationId = sendNotification(notificationRequestDTO, token);
+                return MessageResponseDTO.builder().notificationId(notificationId).build();
             }
+        } else {
+            log.info("No ApiKey configured for IO service on organization {}", notificationRequestDTO.getOrgId());
         }
+        return null;
     }
 
     @Override
-    public void deleteNotification(String userId, Long enteId, Long tipoDovutoId) {
-        Optional<IONotification> ioNotification = ioNotificationRepository
-                .findByUserIdAndEnteIdAndTipoDovutoId(userId, enteId, tipoDovutoId);
+    public void deleteNotification(String notificationId) {
+        Optional<IONotification> ioNotification = ioNotificationRepository.findByNotificationId(notificationId);
 
         if (ioNotification.isPresent()) {
-            log.info("Deleting notification {}", ioNotification.get().getNotificationId());
+            log.info("Deleting notification {}", notificationId);
             ioNotificationRepository.delete(ioNotification.get());
         }
-
     }
 
-    private Optional<IOService> retrieveIOService(NotificationQueueDTO notificationQueueDTO) {
-        log.info("Search service for {} and {}", notificationQueueDTO.getEnteId(), notificationQueueDTO.getTipoDovutoId());
-        Optional<IOService> ioService = ioServiceRepository
-                .findByEnteIdAndTipoDovutoId(notificationQueueDTO.getEnteId(), notificationQueueDTO.getTipoDovutoId());
-
-        if (ioService.isEmpty()) {
-            log.error("There is no service for organizationId {} and tipoDovutoId {}",
-                    notificationQueueDTO.getEnteId(), notificationQueueDTO.getTipoDovutoId());
-
-            saveNotification(notificationQueueDTO, null, null, KO_SERVICE_NOT_FOUND);
-        }
-        return ioService;
-    }
-
-    private String retrieveTokenIO(IOService ioService) {
-        log.info("Retrieve token from IO for service {}", ioService.getServiceId());
-        KeysDTO keys = connector.getServiceKeys(ioService.getServiceId());
+    private String retrieveTokenIO(String serviceId, String apiKey) {
+        log.debug("Retrieve token from IO for service {}", serviceId);
+        KeysDTO keys = connector.getServiceKeys(serviceId, apiKey);
         return keys.getPrimaryKey();
     }
 
-    private boolean isSenderAllowed(NotificationQueueDTO notificationQueueDTO, IOService ioService, String token) {
-        FiscalCodeDTO fiscalCode = ioNotificationMapper.mapToGetProfile(notificationQueueDTO);
-        try{
-            log.info("Verify if user is allowed to receive notification");
-            ProfileResource profileResource = connector.getProfile(fiscalCode, token);
-            if (!profileResource.isSenderAllowed()) {
-                return handleSenderNotAllowed(notificationQueueDTO, ioService);
-            }
-        } catch (SenderNotAllowedException e) {
-            return handleSenderNotAllowed(notificationQueueDTO, ioService);
+    private boolean isSenderAllowed(NotificationRequestDTO notificationRequestDTO, String token) {
+        FiscalCodeDTO fiscalCode = ioNotificationMapper.mapToGetProfile(notificationRequestDTO);
+
+        if (!Utilities.checkFiscalCode(fiscalCode.getFiscalCode())) {
+            return handleSenderNotAllowed(notificationRequestDTO);
+        }
+
+        log.debug("Verify if user is allowed to receive notification");
+        ProfileResource profileResource = connector.getProfile(fiscalCode, token);
+        if (profileResource == null || !profileResource.isSenderAllowed()) {
+            return handleSenderNotAllowed(notificationRequestDTO);
         }
         return true;
     }
 
-    private boolean handleSenderNotAllowed(NotificationQueueDTO notificationQueueDTO, IOService ioService) {
+    private boolean handleSenderNotAllowed(NotificationRequestDTO notificationRequestDTO) {
         log.info("The user is not enabled to receive notifications");
-        saveNotification(notificationQueueDTO, ioService, null, KO_SENDER_NOT_ALLOWED);
+        saveNotification(notificationRequestDTO, null, KO_SENDER_NOT_ALLOWED);
         return false;
     }
 
-    private void sendNotification(NotificationQueueDTO notificationQueueDTO, IOService ioService, String token) {
-        // To be replaced once IoNotification is corrected to accept subject and markdown in input
-        String message = "DebtPositionNotification";
-        String customSubject = subject.replace("%tipoDovutoName%", ioService.getServiceName() != null ? ioService.getServiceName() : message);
-        String customMarkdown = markdown
-                .replace("%amount%", notificationQueueDTO.getAmount() != null ? notificationQueueDTO.getAmount() : message)
-                .replace("%paymentDate%", notificationQueueDTO.getPaymentDate() != null ? notificationQueueDTO.getPaymentDate() : message)
-                .replace("%iuv%", notificationQueueDTO.getIuv() != null ? notificationQueueDTO.getIuv() : message)
-                .replace("%paymentReason%", notificationQueueDTO.getPaymentReason() != null ? notificationQueueDTO.getPaymentReason() : message);
+    private String sendNotification(NotificationRequestDTO notificationRequestDTO, String token) {
 
         NotificationDTO notificationDTO = ioNotificationMapper
-                .mapToQueue(notificationQueueDTO.getFiscalCode(), timeToLive, customSubject, customMarkdown);
+                .map(timeToLive, notificationRequestDTO);
 
-        log.info("Sending notification to IO");
+        log.debug("Sending notification to IO");
         NotificationResource notificationResource = connector.sendNotification(notificationDTO, token);
-        saveNotification(notificationQueueDTO, ioService, notificationResource.getId(), OK);
+        saveNotification(notificationRequestDTO, notificationResource.getId(), OK);
+
+        return notificationResource.getId();
     }
-    private void saveNotification(NotificationQueueDTO notificationQueueDTO, IOService ioService, String notificationId, NotificationStatus status) {
+
+    private void saveNotification(NotificationRequestDTO notificationRequestDTO, String notificationId, NotificationStatus status) {
         IONotification ioNotification = ioNotificationMapper
-                .mapToSaveNotification(notificationQueueDTO, status, encryptFiscalCode(notificationQueueDTO.getFiscalCode()));
+                .mapToSaveNotification(notificationRequestDTO, status, encryptFiscalCode(notificationRequestDTO.getFiscalCode()));
 
         if (notificationId != null) {
             ioNotification.setNotificationId(notificationId);
         }
 
-        if (ioService != null) {
-            ioNotification.setEnteName(ioService.getOrganizationName());
-            ioNotification.setTipoDovutoName(ioService.getServiceName());
-        }
-
-        log.info("Saving notification with status {}", status);
+        log.debug("Saving notification with status {}", status);
         ioNotificationRepository.save(ioNotification);
     }
 
