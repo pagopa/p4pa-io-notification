@@ -26,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ServerErrorException;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
@@ -285,6 +287,19 @@ class IONotificationExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_GENERIC_ERROR"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_GENERIC_ERROR"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[IO_NOTIFICATION_GENERIC_ERROR] 500 INTERNAL_SERVER_ERROR \"Error\""))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
+    }
+
+    @Test
+    void handleHttpClientErrorTooManyRequestsException() throws Exception {
+        doThrow(HttpClientErrorException.create(HttpStatus.TOO_MANY_REQUESTS, "TooManyRequests", null, null, null))
+                .when(requestMappingHandlerAdapterSpy).handle(any(), any(), any());
+
+        performRequest(DATA, MediaType.APPLICATION_JSON)
+                .andExpect(MockMvcResultMatchers.status().isTooManyRequests())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.category").value("IO_NOTIFICATION_TOO_MANY_REQUESTS"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code").value("IO_NOTIFICATION_TOO_MANY_REQUESTS"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("[IO_NOTIFICATION_TOO_MANY_REQUESTS] 429 TooManyRequests"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
     }
 
