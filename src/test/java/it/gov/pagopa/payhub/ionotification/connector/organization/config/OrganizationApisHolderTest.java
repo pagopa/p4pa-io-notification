@@ -41,7 +41,7 @@ class OrganizationApisHolderTest extends BaseApiHolderTest {
   void whenGetOrganizationEntityControllerApiThenAuthenticationShouldBeSetInThreadSafeMode() throws InterruptedException {
     assertAuthenticationShouldBeSetInThreadSafeMode(
       accessToken -> organizationApisHolder.getOrganizationApi(accessToken)
-              .getOrganizationApiKey(1L, OrganizationApiKeyType.IO),
+              .getOrganizationApiKey(1L, OrganizationApiKeyType.IO, null),
             String.class,
       organizationApisHolder::unload);
   }
