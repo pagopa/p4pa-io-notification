@@ -18,6 +18,6 @@ public class OrganizationClient {
     }
 
     public String getOrganizationApiKey(String accessToken, Long organizationId, OrganizationApiKeyType keyType) {
-        return organizationApisHolder.getOrganizationApi(accessToken).getOrganizationApiKey(organizationId, keyType);
+        return organizationApisHolder.getOrganizationApi(accessToken).getOrganizationApiKey(organizationId, keyType, null);
     }
 }
