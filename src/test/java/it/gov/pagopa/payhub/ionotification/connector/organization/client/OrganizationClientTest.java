@@ -45,7 +45,7 @@ class OrganizationClientTest {
     Mockito.when(organizationApisHolderMock.getOrganizationApi(accessToken))
       .thenReturn(organizationApi);
 
-    Mockito.when(organizationApi.getOrganizationApiKey(organizationId, OrganizationApiKeyType.IO))
+    Mockito.when(organizationApi.getOrganizationApiKey(organizationId, OrganizationApiKeyType.IO, null))
             .thenReturn(expectedApiKey);
 
     // When
@@ -54,6 +54,6 @@ class OrganizationClientTest {
     // Then
     Assertions.assertSame(expectedApiKey, result);
     Mockito.verify(organizationApisHolderMock).getOrganizationApi(accessToken);
-    Mockito.verify(organizationApi).getOrganizationApiKey(organizationId, OrganizationApiKeyType.IO);
+    Mockito.verify(organizationApi).getOrganizationApiKey(organizationId, OrganizationApiKeyType.IO, null);
   }
 }
