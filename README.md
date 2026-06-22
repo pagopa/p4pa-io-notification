@@ -23,6 +23,7 @@ See [Postman collection](/postman/p4pa-io-notification-E2E.postman_collection.js
 * `POST /ionotification/message`: To send a message using IO.
 
 ### 📌 Common HTTP status returned:
+* `200`: Successful operation;
 * `401`: Invalid access token provided, thus a new login is required;
 * `403`: Trying to access a not authorized resource.
 
