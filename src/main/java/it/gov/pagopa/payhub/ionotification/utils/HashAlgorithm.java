@@ -1,6 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.utils;
 
-import it.gov.pagopa.payhub.ionotification.exception.custom.IllegalStateBusinessException;
+import it.gov.pagopa.payhub.ionotification.exception.common.IllegalStateBusinessException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

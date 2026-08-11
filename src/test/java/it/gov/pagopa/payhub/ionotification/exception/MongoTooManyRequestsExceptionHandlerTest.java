@@ -5,6 +5,7 @@ import com.mongodb.MongoWriteException;
 import com.mongodb.ServerAddress;
 import com.mongodb.WriteError;
 import it.gov.pagopa.payhub.ionotification.config.json.JsonConfig;
+import it.gov.pagopa.payhub.ionotification.exception.common.CommonExceptionHandlerTest;
 import it.gov.pagopa.payhub.ionotification.utils.UtilitiesTest;
 import org.bson.BsonDocument;
 import org.junit.jupiter.api.AfterEach;
@@ -46,7 +47,7 @@ class MongoTooManyRequestsExceptionHandlerTest {
     private MockMvc mockMvc;
 
     @MockitoSpyBean
-    private IONotificationExceptionHandlerTest.TestController testControllerSpy;
+    private CommonExceptionHandlerTest.TestController testControllerSpy;
 
     private final String traceId = "TRACEID";
 
@@ -126,7 +127,8 @@ class MongoTooManyRequestsExceptionHandlerTest {
                         .accept(MediaType.APPLICATION_JSON)
                         .content("{\"requiredField\":\"data\"}"))
                 .andExpect(MockMvcResultMatchers.status().isInternalServerError())
-                .andExpect(MockMvcResultMatchers.content().json("{\"message\":\"[IO_NOTIFICATION_GENERIC_ERROR] DUMMY\"}", JsonCompareMode.LENIENT))
+                .andExpect(MockMvcResultMatchers.content().json("{\"code\":\"IO_NOTIFICATION_GENERIC_ERROR\"}", JsonCompareMode.LENIENT))
+                .andExpect(MockMvcResultMatchers.content().json("{\"message\":\"DUMMY\"}", JsonCompareMode.LENIENT))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.traceId").value(traceId));
     }
 
