@@ -59,6 +59,7 @@ val lz4JavaVersion = "1.11.1"
 val fileUploadVersion = "1.6.0"
 val commonsLang3Version = "3.20.0"
 val caffeineVersion = "3.2.4"
+val podamVersion = "8.0.2.RELEASE"
 
 val springCloudDepsVersion = "2025.1.2"
 
@@ -103,6 +104,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core")
     testImplementation("org.projectlombok:lombok")
     testImplementation("org.wiremock:wiremock-standalone:$wiremockVersion")
+    testImplementation("uk.co.jemos.podam:podam:${podamVersion}")
 
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
