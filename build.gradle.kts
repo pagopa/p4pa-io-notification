@@ -7,12 +7,12 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     java
-    id("org.springframework.boot") version "4.1.0"
+    id("org.springframework.boot") version "4.1.1"
     id("io.spring.dependency-management") version "1.1.7"
     jacoco
-    id("org.sonarqube") version "7.3.1.8318"
+    id("org.sonarqube") version "7.4.0.8496"
     id("com.github.ben-manes.versions") version "0.54.0"
-    id("org.openapi.generator") version "7.23.0"
+    id("org.openapi.generator") version "7.25.0"
     id("org.ajoberstar.grgit") version "5.3.2"
     id("com.gorylenko.gradle-git-properties") version "4.0.1"
     id("com.github.jk1.dependency-license-report") version "3.1.4"
@@ -39,28 +39,29 @@ licenseReport {
     outputDir = "$projectDir/dependency-licenses"
     filters = arrayOf(SpdxLicenseBundleNormalizer())
 }
-tasks.classes {
-    finalizedBy(tasks.generateLicenseReport)
+tasks.dependencies {
+  finalizedBy(tasks.generateLicenseReport)
 }
 
 repositories {
     mavenCentral()
 }
 
-val springDocOpenApiVersion = "3.0.3"
-val openApiToolsVersion = "0.2.10"
+val springDocOpenApiVersion = "3.1.0"
+val openApiToolsVersion = "0.2.11"
 val wiremockVersion = "3.13.2"
-val micrometerVersion = "1.7.0"
-val bouncycastleVersion = "1.84"
-val httpClientVersion = "5.6.1"
-val httpCoreVersion = "5.4.2"
+val micrometerVersion = "1.7.1"
+val bouncycastleVersion = "1.85.2"
+val httpClientVersion = "5.6.4"
+val httpCoreVersion = "5.4.3"
 val kafkaAppender = "0.2.0-RC2"
-val lz4JavaVersion = "1.11.0"
+val lz4JavaVersion = "1.11.2"
 val fileUploadVersion = "1.6.0"
 val commonsLang3Version = "3.20.0"
 val caffeineVersion = "3.2.4"
+val podamVersion = "8.0.2.RELEASE"
 
-val springCloudDepsVersion = "2025.1.2"
+val springCloudDepsVersion = "2025.1.3"
 
 dependencyManagement {
     imports {
@@ -88,6 +89,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.bouncycastle:bcprov-jdk18on:$bouncycastleVersion")
     implementation("org.apache.httpcomponents.client5:httpclient5:$httpClientVersion")
+    implementation("org.apache.httpcomponents.core5:httpcore5-h2:$httpCoreVersion")
     implementation("org.apache.httpcomponents.core5:httpcore5:$httpCoreVersion")
     implementation("com.github.danielwegener:logback-kafka-appender:$kafkaAppender") {
         exclude(group = "org.lz4", module = "lz4-java")
@@ -103,6 +105,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core")
     testImplementation("org.projectlombok:lombok")
     testImplementation("org.wiremock:wiremock-standalone:$wiremockVersion")
+    testImplementation("uk.co.jemos.podam:podam:${podamVersion}")
 
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")

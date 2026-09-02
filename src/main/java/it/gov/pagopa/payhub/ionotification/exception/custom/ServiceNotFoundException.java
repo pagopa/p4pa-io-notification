@@ -1,5 +1,6 @@
 package it.gov.pagopa.payhub.ionotification.exception.custom;
 
+import it.gov.pagopa.payhub.ionotification.exception.common.BaseBusinessException;
 import it.gov.pagopa.payhub.ionotification.utils.ErrorCodeConstants;
 
 public class ServiceNotFoundException extends BaseBusinessException {

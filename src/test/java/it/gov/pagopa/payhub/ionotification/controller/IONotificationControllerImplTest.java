@@ -1,12 +1,12 @@
 package it.gov.pagopa.payhub.ionotification.controller;
 
+import io.micrometer.tracing.Tracer;
 import it.gov.pagopa.payhub.ionotification.dto.generated.MessageResponseDTO;
 import it.gov.pagopa.payhub.ionotification.dto.generated.NotificationRequestDTO;
 import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceDTO;
 import it.gov.pagopa.payhub.ionotification.dto.generated.ServiceRequestDTO;
 import it.gov.pagopa.payhub.ionotification.service.IOService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -39,6 +39,8 @@ class IONotificationControllerImplTest {
 
     @MockitoBean
     private IOService ioService;
+    @MockitoBean
+    private Tracer tracerMock;
 
     @Test
     void givenCreateServiceThenSuccess() throws Exception {
@@ -60,7 +62,7 @@ class IONotificationControllerImplTest {
         NotificationRequestDTO notificationRequestDTO = buildNotificationRequestDTO();
         MessageResponseDTO messageResponseDTO = MessageResponseDTO.builder().notificationId("id").build();
 
-        Mockito.when(ioService.sendMessage(null, notificationRequestDTO))
+        when(ioService.sendMessage(null, notificationRequestDTO))
                 .thenReturn(messageResponseDTO);
 
         MvcResult result = mockMvc.perform(
