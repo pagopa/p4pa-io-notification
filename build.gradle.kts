@@ -63,6 +63,9 @@ val podamVersion = "8.0.2.RELEASE"
 
 val springCloudDepsVersion = "2025.1.3"
 
+// CVE Security dependencies
+val tomcatEmbedCoreVersion = "11.0.25"
+
 dependencyManagement {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudDepsVersion")
@@ -97,6 +100,13 @@ dependencies {
     implementation("at.yawk.lz4:lz4-java:$lz4JavaVersion")
     implementation("commons-fileupload:commons-fileupload:$fileUploadVersion")
 
+    // CVE Security dependencies
+    implementation("org.apache.tomcat.embed:tomcat-embed-core:$tomcatEmbedCoreVersion")
+
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+    testAnnotationProcessor("org.projectlombok:lombok")
+
     //	Testing
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")
@@ -105,11 +115,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core")
     testImplementation("org.projectlombok:lombok")
     testImplementation("org.wiremock:wiremock-standalone:$wiremockVersion")
-    testImplementation("uk.co.jemos.podam:podam:${podamVersion}")
-
-    compileOnly("org.projectlombok:lombok")
-    annotationProcessor("org.projectlombok:lombok")
-    testAnnotationProcessor("org.projectlombok:lombok")
+    testImplementation("uk.co.jemos.podam:podam:$podamVersion")
 
 }
 
