@@ -7,13 +7,12 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
     java
-    id("org.springframework.boot") version "4.1.1"
+    id("org.springframework.boot") version "4.1.2"
     id("io.spring.dependency-management") version "1.1.7"
     jacoco
-    id("org.sonarqube") version "7.4.0.8496"
-    id("com.github.ben-manes.versions") version "0.54.0"
-    id("org.openapi.generator") version "7.25.0"
-    id("org.ajoberstar.grgit") version "5.3.2"
+    id("org.sonarqube") version "7.5.0.8588"
+    id("org.openapi.generator") version "7.26.0"
+    id("org.ajoberstar.grgit") version "5.3.3"
     id("com.gorylenko.gradle-git-properties") version "4.0.1"
     id("com.github.jk1.dependency-license-report") version "3.1.4"
 }
@@ -40,7 +39,7 @@ licenseReport {
     filters = arrayOf(SpdxLicenseBundleNormalizer())
 }
 tasks.dependencies {
-  finalizedBy(tasks.generateLicenseReport)
+    finalizedBy(tasks.generateLicenseReport)
 }
 
 repositories {
@@ -48,25 +47,24 @@ repositories {
 }
 
 val springDocOpenApiVersion = "3.1.1"
-val openApiToolsVersion = "0.2.11"
+val openApiToolsVersion = "0.2.12"
 val wiremockVersion = "3.13.2"
-val micrometerVersion = "1.7.1"
+val micrometerOtelBridgeVersion = "1.7.2"
+val micrometerPrometheusVersion = "1.17.2"
 val bouncycastleVersion = "1.86"
-val httpClientVersion = "5.6.4"
+val httpClientVersion = "5.6.5"
 val httpCoreVersion = "5.4.4"
 val kafkaAppender = "0.2.0-RC2"
-val lz4JavaVersion = "1.12.0"
+val lz4JavaVersion = "1.12.1"
 val fileUploadVersion = "1.6.0"
-val commonsLang3Version = "3.20.0"
-val caffeineVersion = "3.3.0"
+val commonsLang3Version = "3.21.0"
+val caffeineVersion = "3.3.1"
 val podamVersion = "8.0.2.RELEASE"
 
 val springCloudDepsVersion = "2025.1.3"
 
 // CVE Security dependencies
-val tomcatEmbedCoreVersion = "11.0.26"
 val jackson2DatabindVersion = "2.22.3"
-val jackson3DatabindVersion = "3.1.7"
 
 dependencyManagement {
     imports {
@@ -81,8 +79,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-security-oauth2-resource-server")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("io.micrometer:micrometer-tracing-bridge-otel:$micrometerVersion")
-    implementation("io.micrometer:micrometer-registry-prometheus")
+    implementation("io.micrometer:micrometer-tracing-bridge-otel:$micrometerOtelBridgeVersion")
+    implementation("io.micrometer:micrometer-registry-prometheus:$micrometerPrometheusVersion")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocOpenApiVersion") {
         exclude(group = "org.apache.commons", module = "commons-lang3")
     }
@@ -103,9 +101,7 @@ dependencies {
     implementation("commons-fileupload:commons-fileupload:$fileUploadVersion")
 
     // CVE Security dependencies
-    implementation("org.apache.tomcat.embed:tomcat-embed-core:$tomcatEmbedCoreVersion")
     implementation("com.fasterxml.jackson.core:jackson-databind:$jackson2DatabindVersion")
-    implementation("tools.jackson.core:jackson-databind:$jackson3DatabindVersion")
 
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
@@ -158,6 +154,25 @@ val projectInfo = mapOf(
     "version" to project.version
 )
 
+configure<SourceSetContainer> {
+    named("main") {
+        java.srcDir("$projectDir/build/generated/src/main/java")
+    }
+}
+
+springBoot {
+    buildInfo()
+    mainClass.value("it.gov.pagopa.payhub.ionotification.IONotificationApplication")
+}
+
+tasks.named<com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask>("dependencyUpdates") {
+    revision = "release"
+    outputFormatter = "json"
+    checkForGradleUpdate = false
+    checkEmbeddedKotlin = false
+    rejectPreReleases = true
+}
+
 tasks {
     val processResources by getting(ProcessResources::class) {
         filesMatching("**/application.yml") {
@@ -179,17 +194,6 @@ tasks.register("dependenciesBuild") {
         "openApiGenerate",
         "openApiGenerateORGANIZATION"
     )
-}
-
-configure<SourceSetContainer> {
-    named("main") {
-        java.srcDir("$projectDir/build/generated/src/main/java")
-    }
-}
-
-springBoot {
-    buildInfo()
-    mainClass.value("it.gov.pagopa.payhub.ionotification.IONotificationApplication")
 }
 
 openApiGenerate {
